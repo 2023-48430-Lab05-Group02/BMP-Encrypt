@@ -2,10 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "untitled.exe"
-		},
-		{
-			"path" : "untitled.pdb"
+			"path" : "untitled"
 		}
 	],
 	"backtrace" : 1,
@@ -38,7 +35,10 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /Zi /Ob0 /Od /RTC1 -MDd"
+					"fragment" : "-g -fdiagnostics-color=always"
+				},
+				{
+					"fragment" : "-std=gnu99"
 				}
 			],
 			"language" : "C",
@@ -62,22 +62,18 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /Zi /Ob0 /Od /RTC1 -MDd",
+				"fragment" : "-g",
 				"role" : "flags"
 			},
 			{
-				"fragment" : "/machine:X86 /debug /INCREMENTAL /subsystem:console",
+				"fragment" : "",
 				"role" : "flags"
-			},
-			{
-				"fragment" : "kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib",
-				"role" : "libraries"
 			}
 		],
 		"language" : "C"
 	},
 	"name" : "untitled",
-	"nameOnDisk" : "untitled.exe",
+	"nameOnDisk" : "untitled",
 	"paths" : 
 	{
 		"build" : ".",

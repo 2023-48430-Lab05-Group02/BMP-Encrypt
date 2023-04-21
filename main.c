@@ -1,5 +1,11 @@
 #include <stdio.h>
+
 #include "datatypes/bool.h"
+
+#include "bmp.h"
+#include "encryption.h"
+#include "input.h"
+#include "rle.h"
 
 int main(int argc, char* argv[]){
     // Initialize program
