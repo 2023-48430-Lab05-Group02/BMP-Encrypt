@@ -6,7 +6,8 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-void print_menu();
+void print_menu_help();
+void print_menu_interactive();
 
 int input_number(int min, int max, char error_message[]);
 int input_string(char* str[], int max_length);
