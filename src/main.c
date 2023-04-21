@@ -1,3 +1,8 @@
+// 48430 Introduction to C Programming
+// Lab: 5, Group: 2
+// Created by Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad
+// <Compilation Instructions Here, Other Notes>
+
 // The 4 libraries we are allowed.
 #include <stdio.h>
 #include <string.h>

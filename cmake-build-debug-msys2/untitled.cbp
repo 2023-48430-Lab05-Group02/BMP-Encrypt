@@ -24,7 +24,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="D:/Code/UTS/BMP-Encrypt/."/>
+					<Add directory="D:/Code/UTS/BMP-Encrypt/./src"/>
 					<Add directory="C:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include"/>
 					<Add directory="C:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../include"/>
 					<Add directory="C:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed"/>
@@ -43,7 +43,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="D:/Code/UTS/BMP-Encrypt/."/>
+					<Add directory="D:/Code/UTS/BMP-Encrypt/./src"/>
 					<Add directory="C:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include"/>
 					<Add directory="C:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../include"/>
 					<Add directory="C:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed"/>
@@ -76,31 +76,31 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="D:/Code/UTS/BMP-Encrypt/bmp.c">
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/src/bmp.c">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="D:/Code/UTS/BMP-Encrypt/bmp.h">
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/src/bmp.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="D:/Code/UTS/BMP-Encrypt/encryption.c">
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/src/encryption.c">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="D:/Code/UTS/BMP-Encrypt/encryption.h">
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/src/encryption.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="D:/Code/UTS/BMP-Encrypt/input.c">
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/src/input.c">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="D:/Code/UTS/BMP-Encrypt/input.h">
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/src/input.h">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="D:/Code/UTS/BMP-Encrypt/main.c">
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/src/main.c">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="D:/Code/UTS/BMP-Encrypt/rle.c">
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/src/rle.c">
 			<Option target="untitled"/>
 		</Unit>
-		<Unit filename="D:/Code/UTS/BMP-Encrypt/rle.h">
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/src/rle.h">
 			<Option target="untitled"/>
 		</Unit>
 		<Unit filename="D:/Code/UTS/BMP-Encrypt/CMakeLists.txt">

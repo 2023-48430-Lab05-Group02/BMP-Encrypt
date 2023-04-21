@@ -1,6 +1,7 @@
-//
-// Created by xmach on 21/04/2023.
-//
+// 48430 Introduction to C Programming
+// Lab: 5, Group: 2
+// Created by Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad
+// Person Responsible For File:
 
 #include "rle.h"
 

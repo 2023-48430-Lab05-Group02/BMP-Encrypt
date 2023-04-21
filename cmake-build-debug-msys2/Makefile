@@ -128,125 +128,125 @@ untitled/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/build
 .PHONY : untitled/fast
 
-bmp.obj: bmp.c.obj
-.PHONY : bmp.obj
+src/bmp.obj: src/bmp.c.obj
+.PHONY : src/bmp.obj
 
 # target to build an object file
-bmp.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/bmp.c.obj
-.PHONY : bmp.c.obj
+src/bmp.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/src/bmp.c.obj
+.PHONY : src/bmp.c.obj
 
-bmp.i: bmp.c.i
-.PHONY : bmp.i
+src/bmp.i: src/bmp.c.i
+.PHONY : src/bmp.i
 
 # target to preprocess a source file
-bmp.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/bmp.c.i
-.PHONY : bmp.c.i
+src/bmp.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/src/bmp.c.i
+.PHONY : src/bmp.c.i
 
-bmp.s: bmp.c.s
-.PHONY : bmp.s
+src/bmp.s: src/bmp.c.s
+.PHONY : src/bmp.s
 
 # target to generate assembly for a file
-bmp.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/bmp.c.s
-.PHONY : bmp.c.s
+src/bmp.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/src/bmp.c.s
+.PHONY : src/bmp.c.s
 
-encryption.obj: encryption.c.obj
-.PHONY : encryption.obj
+src/encryption.obj: src/encryption.c.obj
+.PHONY : src/encryption.obj
 
 # target to build an object file
-encryption.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/encryption.c.obj
-.PHONY : encryption.c.obj
+src/encryption.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/src/encryption.c.obj
+.PHONY : src/encryption.c.obj
 
-encryption.i: encryption.c.i
-.PHONY : encryption.i
+src/encryption.i: src/encryption.c.i
+.PHONY : src/encryption.i
 
 # target to preprocess a source file
-encryption.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/encryption.c.i
-.PHONY : encryption.c.i
+src/encryption.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/src/encryption.c.i
+.PHONY : src/encryption.c.i
 
-encryption.s: encryption.c.s
-.PHONY : encryption.s
+src/encryption.s: src/encryption.c.s
+.PHONY : src/encryption.s
 
 # target to generate assembly for a file
-encryption.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/encryption.c.s
-.PHONY : encryption.c.s
+src/encryption.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/src/encryption.c.s
+.PHONY : src/encryption.c.s
 
-input.obj: input.c.obj
-.PHONY : input.obj
+src/input.obj: src/input.c.obj
+.PHONY : src/input.obj
 
 # target to build an object file
-input.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/input.c.obj
-.PHONY : input.c.obj
+src/input.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/src/input.c.obj
+.PHONY : src/input.c.obj
 
-input.i: input.c.i
-.PHONY : input.i
+src/input.i: src/input.c.i
+.PHONY : src/input.i
 
 # target to preprocess a source file
-input.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/input.c.i
-.PHONY : input.c.i
+src/input.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/src/input.c.i
+.PHONY : src/input.c.i
 
-input.s: input.c.s
-.PHONY : input.s
+src/input.s: src/input.c.s
+.PHONY : src/input.s
 
 # target to generate assembly for a file
-input.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/input.c.s
-.PHONY : input.c.s
+src/input.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/src/input.c.s
+.PHONY : src/input.c.s
 
-main.obj: main.c.obj
-.PHONY : main.obj
+src/main.obj: src/main.c.obj
+.PHONY : src/main.obj
 
 # target to build an object file
-main.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/main.c.obj
-.PHONY : main.c.obj
+src/main.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/src/main.c.obj
+.PHONY : src/main.c.obj
 
-main.i: main.c.i
-.PHONY : main.i
+src/main.i: src/main.c.i
+.PHONY : src/main.i
 
 # target to preprocess a source file
-main.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/main.c.i
-.PHONY : main.c.i
+src/main.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/src/main.c.i
+.PHONY : src/main.c.i
 
-main.s: main.c.s
-.PHONY : main.s
+src/main.s: src/main.c.s
+.PHONY : src/main.s
 
 # target to generate assembly for a file
-main.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/main.c.s
-.PHONY : main.c.s
+src/main.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/src/main.c.s
+.PHONY : src/main.c.s
 
-rle.obj: rle.c.obj
-.PHONY : rle.obj
+src/rle.obj: src/rle.c.obj
+.PHONY : src/rle.obj
 
 # target to build an object file
-rle.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/rle.c.obj
-.PHONY : rle.c.obj
+src/rle.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/src/rle.c.obj
+.PHONY : src/rle.c.obj
 
-rle.i: rle.c.i
-.PHONY : rle.i
+src/rle.i: src/rle.c.i
+.PHONY : src/rle.i
 
 # target to preprocess a source file
-rle.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/rle.c.i
-.PHONY : rle.c.i
+src/rle.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/src/rle.c.i
+.PHONY : src/rle.c.i
 
-rle.s: rle.c.s
-.PHONY : rle.s
+src/rle.s: src/rle.c.s
+.PHONY : src/rle.s
 
 # target to generate assembly for a file
-rle.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/rle.c.s
-.PHONY : rle.c.s
+src/rle.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled.dir\build.make CMakeFiles/untitled.dir/src/rle.c.s
+.PHONY : src/rle.c.s
 
 # Help Target
 help:
@@ -257,21 +257,21 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... untitled
-	@echo ... bmp.obj
-	@echo ... bmp.i
-	@echo ... bmp.s
-	@echo ... encryption.obj
-	@echo ... encryption.i
-	@echo ... encryption.s
-	@echo ... input.obj
-	@echo ... input.i
-	@echo ... input.s
-	@echo ... main.obj
-	@echo ... main.i
-	@echo ... main.s
-	@echo ... rle.obj
-	@echo ... rle.i
-	@echo ... rle.s
+	@echo ... src/bmp.obj
+	@echo ... src/bmp.i
+	@echo ... src/bmp.s
+	@echo ... src/encryption.obj
+	@echo ... src/encryption.i
+	@echo ... src/encryption.s
+	@echo ... src/input.obj
+	@echo ... src/input.i
+	@echo ... src/input.s
+	@echo ... src/main.obj
+	@echo ... src/main.i
+	@echo ... src/main.s
+	@echo ... src/rle.obj
+	@echo ... src/rle.i
+	@echo ... src/rle.s
 .PHONY : help
 
 

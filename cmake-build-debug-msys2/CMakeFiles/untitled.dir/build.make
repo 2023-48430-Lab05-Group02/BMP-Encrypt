@@ -68,97 +68,97 @@ include CMakeFiles/untitled.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/untitled.dir/flags.make
 
-CMakeFiles/untitled.dir/main.c.obj: CMakeFiles/untitled.dir/flags.make
-CMakeFiles/untitled.dir/main.c.obj: CMakeFiles/untitled.dir/includes_C.rsp
-CMakeFiles/untitled.dir/main.c.obj: ../main.c
-CMakeFiles/untitled.dir/main.c.obj: CMakeFiles/untitled.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\Code\UTS\BMP-Encrypt\cmake-build-debug-msys2\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/untitled.dir/main.c.obj"
-	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/untitled.dir/main.c.obj -MF CMakeFiles\untitled.dir\main.c.obj.d -o CMakeFiles\untitled.dir\main.c.obj -c D:\Code\UTS\BMP-Encrypt\main.c
+CMakeFiles/untitled.dir/src/main.c.obj: CMakeFiles/untitled.dir/flags.make
+CMakeFiles/untitled.dir/src/main.c.obj: CMakeFiles/untitled.dir/includes_C.rsp
+CMakeFiles/untitled.dir/src/main.c.obj: ../src/main.c
+CMakeFiles/untitled.dir/src/main.c.obj: CMakeFiles/untitled.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\Code\UTS\BMP-Encrypt\cmake-build-debug-msys2\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/untitled.dir/src/main.c.obj"
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/untitled.dir/src/main.c.obj -MF CMakeFiles\untitled.dir\src\main.c.obj.d -o CMakeFiles\untitled.dir\src\main.c.obj -c D:\Code\UTS\BMP-Encrypt\src\main.c
 
-CMakeFiles/untitled.dir/main.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/untitled.dir/main.c.i"
-	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\Code\UTS\BMP-Encrypt\main.c > CMakeFiles\untitled.dir\main.c.i
+CMakeFiles/untitled.dir/src/main.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/untitled.dir/src/main.c.i"
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\Code\UTS\BMP-Encrypt\src\main.c > CMakeFiles\untitled.dir\src\main.c.i
 
-CMakeFiles/untitled.dir/main.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/untitled.dir/main.c.s"
-	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\Code\UTS\BMP-Encrypt\main.c -o CMakeFiles\untitled.dir\main.c.s
+CMakeFiles/untitled.dir/src/main.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/untitled.dir/src/main.c.s"
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\Code\UTS\BMP-Encrypt\src\main.c -o CMakeFiles\untitled.dir\src\main.c.s
 
-CMakeFiles/untitled.dir/bmp.c.obj: CMakeFiles/untitled.dir/flags.make
-CMakeFiles/untitled.dir/bmp.c.obj: CMakeFiles/untitled.dir/includes_C.rsp
-CMakeFiles/untitled.dir/bmp.c.obj: ../bmp.c
-CMakeFiles/untitled.dir/bmp.c.obj: CMakeFiles/untitled.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\Code\UTS\BMP-Encrypt\cmake-build-debug-msys2\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/untitled.dir/bmp.c.obj"
-	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/untitled.dir/bmp.c.obj -MF CMakeFiles\untitled.dir\bmp.c.obj.d -o CMakeFiles\untitled.dir\bmp.c.obj -c D:\Code\UTS\BMP-Encrypt\bmp.c
+CMakeFiles/untitled.dir/src/bmp.c.obj: CMakeFiles/untitled.dir/flags.make
+CMakeFiles/untitled.dir/src/bmp.c.obj: CMakeFiles/untitled.dir/includes_C.rsp
+CMakeFiles/untitled.dir/src/bmp.c.obj: ../src/bmp.c
+CMakeFiles/untitled.dir/src/bmp.c.obj: CMakeFiles/untitled.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\Code\UTS\BMP-Encrypt\cmake-build-debug-msys2\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/untitled.dir/src/bmp.c.obj"
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/untitled.dir/src/bmp.c.obj -MF CMakeFiles\untitled.dir\src\bmp.c.obj.d -o CMakeFiles\untitled.dir\src\bmp.c.obj -c D:\Code\UTS\BMP-Encrypt\src\bmp.c
 
-CMakeFiles/untitled.dir/bmp.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/untitled.dir/bmp.c.i"
-	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\Code\UTS\BMP-Encrypt\bmp.c > CMakeFiles\untitled.dir\bmp.c.i
+CMakeFiles/untitled.dir/src/bmp.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/untitled.dir/src/bmp.c.i"
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\Code\UTS\BMP-Encrypt\src\bmp.c > CMakeFiles\untitled.dir\src\bmp.c.i
 
-CMakeFiles/untitled.dir/bmp.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/untitled.dir/bmp.c.s"
-	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\Code\UTS\BMP-Encrypt\bmp.c -o CMakeFiles\untitled.dir\bmp.c.s
+CMakeFiles/untitled.dir/src/bmp.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/untitled.dir/src/bmp.c.s"
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\Code\UTS\BMP-Encrypt\src\bmp.c -o CMakeFiles\untitled.dir\src\bmp.c.s
 
-CMakeFiles/untitled.dir/encryption.c.obj: CMakeFiles/untitled.dir/flags.make
-CMakeFiles/untitled.dir/encryption.c.obj: CMakeFiles/untitled.dir/includes_C.rsp
-CMakeFiles/untitled.dir/encryption.c.obj: ../encryption.c
-CMakeFiles/untitled.dir/encryption.c.obj: CMakeFiles/untitled.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\Code\UTS\BMP-Encrypt\cmake-build-debug-msys2\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/untitled.dir/encryption.c.obj"
-	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/untitled.dir/encryption.c.obj -MF CMakeFiles\untitled.dir\encryption.c.obj.d -o CMakeFiles\untitled.dir\encryption.c.obj -c D:\Code\UTS\BMP-Encrypt\encryption.c
+CMakeFiles/untitled.dir/src/encryption.c.obj: CMakeFiles/untitled.dir/flags.make
+CMakeFiles/untitled.dir/src/encryption.c.obj: CMakeFiles/untitled.dir/includes_C.rsp
+CMakeFiles/untitled.dir/src/encryption.c.obj: ../src/encryption.c
+CMakeFiles/untitled.dir/src/encryption.c.obj: CMakeFiles/untitled.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\Code\UTS\BMP-Encrypt\cmake-build-debug-msys2\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/untitled.dir/src/encryption.c.obj"
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/untitled.dir/src/encryption.c.obj -MF CMakeFiles\untitled.dir\src\encryption.c.obj.d -o CMakeFiles\untitled.dir\src\encryption.c.obj -c D:\Code\UTS\BMP-Encrypt\src\encryption.c
 
-CMakeFiles/untitled.dir/encryption.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/untitled.dir/encryption.c.i"
-	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\Code\UTS\BMP-Encrypt\encryption.c > CMakeFiles\untitled.dir\encryption.c.i
+CMakeFiles/untitled.dir/src/encryption.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/untitled.dir/src/encryption.c.i"
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\Code\UTS\BMP-Encrypt\src\encryption.c > CMakeFiles\untitled.dir\src\encryption.c.i
 
-CMakeFiles/untitled.dir/encryption.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/untitled.dir/encryption.c.s"
-	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\Code\UTS\BMP-Encrypt\encryption.c -o CMakeFiles\untitled.dir\encryption.c.s
+CMakeFiles/untitled.dir/src/encryption.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/untitled.dir/src/encryption.c.s"
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\Code\UTS\BMP-Encrypt\src\encryption.c -o CMakeFiles\untitled.dir\src\encryption.c.s
 
-CMakeFiles/untitled.dir/input.c.obj: CMakeFiles/untitled.dir/flags.make
-CMakeFiles/untitled.dir/input.c.obj: CMakeFiles/untitled.dir/includes_C.rsp
-CMakeFiles/untitled.dir/input.c.obj: ../input.c
-CMakeFiles/untitled.dir/input.c.obj: CMakeFiles/untitled.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\Code\UTS\BMP-Encrypt\cmake-build-debug-msys2\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/untitled.dir/input.c.obj"
-	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/untitled.dir/input.c.obj -MF CMakeFiles\untitled.dir\input.c.obj.d -o CMakeFiles\untitled.dir\input.c.obj -c D:\Code\UTS\BMP-Encrypt\input.c
+CMakeFiles/untitled.dir/src/input.c.obj: CMakeFiles/untitled.dir/flags.make
+CMakeFiles/untitled.dir/src/input.c.obj: CMakeFiles/untitled.dir/includes_C.rsp
+CMakeFiles/untitled.dir/src/input.c.obj: ../src/input.c
+CMakeFiles/untitled.dir/src/input.c.obj: CMakeFiles/untitled.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\Code\UTS\BMP-Encrypt\cmake-build-debug-msys2\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/untitled.dir/src/input.c.obj"
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/untitled.dir/src/input.c.obj -MF CMakeFiles\untitled.dir\src\input.c.obj.d -o CMakeFiles\untitled.dir\src\input.c.obj -c D:\Code\UTS\BMP-Encrypt\src\input.c
 
-CMakeFiles/untitled.dir/input.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/untitled.dir/input.c.i"
-	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\Code\UTS\BMP-Encrypt\input.c > CMakeFiles\untitled.dir\input.c.i
+CMakeFiles/untitled.dir/src/input.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/untitled.dir/src/input.c.i"
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\Code\UTS\BMP-Encrypt\src\input.c > CMakeFiles\untitled.dir\src\input.c.i
 
-CMakeFiles/untitled.dir/input.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/untitled.dir/input.c.s"
-	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\Code\UTS\BMP-Encrypt\input.c -o CMakeFiles\untitled.dir\input.c.s
+CMakeFiles/untitled.dir/src/input.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/untitled.dir/src/input.c.s"
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\Code\UTS\BMP-Encrypt\src\input.c -o CMakeFiles\untitled.dir\src\input.c.s
 
-CMakeFiles/untitled.dir/rle.c.obj: CMakeFiles/untitled.dir/flags.make
-CMakeFiles/untitled.dir/rle.c.obj: CMakeFiles/untitled.dir/includes_C.rsp
-CMakeFiles/untitled.dir/rle.c.obj: ../rle.c
-CMakeFiles/untitled.dir/rle.c.obj: CMakeFiles/untitled.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\Code\UTS\BMP-Encrypt\cmake-build-debug-msys2\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/untitled.dir/rle.c.obj"
-	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/untitled.dir/rle.c.obj -MF CMakeFiles\untitled.dir\rle.c.obj.d -o CMakeFiles\untitled.dir\rle.c.obj -c D:\Code\UTS\BMP-Encrypt\rle.c
+CMakeFiles/untitled.dir/src/rle.c.obj: CMakeFiles/untitled.dir/flags.make
+CMakeFiles/untitled.dir/src/rle.c.obj: CMakeFiles/untitled.dir/includes_C.rsp
+CMakeFiles/untitled.dir/src/rle.c.obj: ../src/rle.c
+CMakeFiles/untitled.dir/src/rle.c.obj: CMakeFiles/untitled.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\Code\UTS\BMP-Encrypt\cmake-build-debug-msys2\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/untitled.dir/src/rle.c.obj"
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/untitled.dir/src/rle.c.obj -MF CMakeFiles\untitled.dir\src\rle.c.obj.d -o CMakeFiles\untitled.dir\src\rle.c.obj -c D:\Code\UTS\BMP-Encrypt\src\rle.c
 
-CMakeFiles/untitled.dir/rle.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/untitled.dir/rle.c.i"
-	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\Code\UTS\BMP-Encrypt\rle.c > CMakeFiles\untitled.dir\rle.c.i
+CMakeFiles/untitled.dir/src/rle.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/untitled.dir/src/rle.c.i"
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\Code\UTS\BMP-Encrypt\src\rle.c > CMakeFiles\untitled.dir\src\rle.c.i
 
-CMakeFiles/untitled.dir/rle.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/untitled.dir/rle.c.s"
-	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\Code\UTS\BMP-Encrypt\rle.c -o CMakeFiles\untitled.dir\rle.c.s
+CMakeFiles/untitled.dir/src/rle.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/untitled.dir/src/rle.c.s"
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\Code\UTS\BMP-Encrypt\src\rle.c -o CMakeFiles\untitled.dir\src\rle.c.s
 
 # Object files for target untitled
 untitled_OBJECTS = \
-"CMakeFiles/untitled.dir/main.c.obj" \
-"CMakeFiles/untitled.dir/bmp.c.obj" \
-"CMakeFiles/untitled.dir/encryption.c.obj" \
-"CMakeFiles/untitled.dir/input.c.obj" \
-"CMakeFiles/untitled.dir/rle.c.obj"
+"CMakeFiles/untitled.dir/src/main.c.obj" \
+"CMakeFiles/untitled.dir/src/bmp.c.obj" \
+"CMakeFiles/untitled.dir/src/encryption.c.obj" \
+"CMakeFiles/untitled.dir/src/input.c.obj" \
+"CMakeFiles/untitled.dir/src/rle.c.obj"
 
 # External object files for target untitled
 untitled_EXTERNAL_OBJECTS =
 
-untitled.exe: CMakeFiles/untitled.dir/main.c.obj
-untitled.exe: CMakeFiles/untitled.dir/bmp.c.obj
-untitled.exe: CMakeFiles/untitled.dir/encryption.c.obj
-untitled.exe: CMakeFiles/untitled.dir/input.c.obj
-untitled.exe: CMakeFiles/untitled.dir/rle.c.obj
+untitled.exe: CMakeFiles/untitled.dir/src/main.c.obj
+untitled.exe: CMakeFiles/untitled.dir/src/bmp.c.obj
+untitled.exe: CMakeFiles/untitled.dir/src/encryption.c.obj
+untitled.exe: CMakeFiles/untitled.dir/src/input.c.obj
+untitled.exe: CMakeFiles/untitled.dir/src/rle.c.obj
 untitled.exe: CMakeFiles/untitled.dir/build.make
 untitled.exe: CMakeFiles/untitled.dir/linklibs.rsp
 untitled.exe: CMakeFiles/untitled.dir/objects1.rsp

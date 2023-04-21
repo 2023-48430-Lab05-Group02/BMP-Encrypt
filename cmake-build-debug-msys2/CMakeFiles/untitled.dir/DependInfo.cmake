@@ -8,11 +8,11 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "D:/Code/UTS/BMP-Encrypt/bmp.c" "CMakeFiles/untitled.dir/bmp.c.obj" "gcc" "CMakeFiles/untitled.dir/bmp.c.obj.d"
-  "D:/Code/UTS/BMP-Encrypt/encryption.c" "CMakeFiles/untitled.dir/encryption.c.obj" "gcc" "CMakeFiles/untitled.dir/encryption.c.obj.d"
-  "D:/Code/UTS/BMP-Encrypt/input.c" "CMakeFiles/untitled.dir/input.c.obj" "gcc" "CMakeFiles/untitled.dir/input.c.obj.d"
-  "D:/Code/UTS/BMP-Encrypt/main.c" "CMakeFiles/untitled.dir/main.c.obj" "gcc" "CMakeFiles/untitled.dir/main.c.obj.d"
-  "D:/Code/UTS/BMP-Encrypt/rle.c" "CMakeFiles/untitled.dir/rle.c.obj" "gcc" "CMakeFiles/untitled.dir/rle.c.obj.d"
+  "D:/Code/UTS/BMP-Encrypt/src/bmp.c" "CMakeFiles/untitled.dir/src/bmp.c.obj" "gcc" "CMakeFiles/untitled.dir/src/bmp.c.obj.d"
+  "D:/Code/UTS/BMP-Encrypt/src/encryption.c" "CMakeFiles/untitled.dir/src/encryption.c.obj" "gcc" "CMakeFiles/untitled.dir/src/encryption.c.obj.d"
+  "D:/Code/UTS/BMP-Encrypt/src/input.c" "CMakeFiles/untitled.dir/src/input.c.obj" "gcc" "CMakeFiles/untitled.dir/src/input.c.obj.d"
+  "D:/Code/UTS/BMP-Encrypt/src/main.c" "CMakeFiles/untitled.dir/src/main.c.obj" "gcc" "CMakeFiles/untitled.dir/src/main.c.obj.d"
+  "D:/Code/UTS/BMP-Encrypt/src/rle.c" "CMakeFiles/untitled.dir/src/rle.c.obj" "gcc" "CMakeFiles/untitled.dir/src/rle.c.obj.d"
   )
 
 # Targets to which this target links.
