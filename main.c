@@ -5,6 +5,7 @@
 #include <math.h>
 
 #include "datatypes/bool.h"
+#include "datatypes/result.h"
 
 #include "bmp.h"
 #include "encryption.h"
@@ -18,19 +19,23 @@ int main(int argc, char* argv[]){
     bool encrypt_mode = false;
     bool decrypt_mode = false;
 
+    char encryption_key[XOR_KEY_SIZE];
+
     // Process arguments
     for(int i = 0; i < argc; i++) {
-        if(strcmp(argv[i], "--interactive") != 0 ||
-           strcmp(argv[i], "-I") != 0) {
+        if(strcmp(argv[i], "--interactive") == 0 ||
+           strcmp(argv[i], "-I") == 0) {
             interactive_mode = true;
         }
-        if(strcmp(argv[i], "--batch") != 0 || strcmp(argv[i], "-B") != 0) {
+        if(strcmp(argv[i], "--batch") == 0 || strcmp(argv[i], "-B") == 0) {
             batch_mode = true;
         }
-        if(strcmp(argv[i], "--encrypt") != 0 || strcmp(argv[i], "-E") != 0) {
+        if(strcmp(argv[i], "--encrypt") == 0 || strcmp(argv[i], "-E") == 0) {
             encrypt_mode = true;
+            strcpy_s(encryption_key, 256, argv[i + 1]);
+            i++;
         }
-        if(strcmp(argv[i], "--decrypt") != 0 || strcmp(argv[i], "-D") != 0) {
+        if(strcmp(argv[i], "--decrypt") == 0 || strcmp(argv[i], "-D") == 0) {
             decrypt_mode = true;
         }
     }

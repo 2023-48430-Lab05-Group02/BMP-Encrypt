@@ -5,6 +5,10 @@
 #ifndef BMP_H
 #define BMP_H
 
+#include <stdio.h>
+
+#include "datatypes/result.h"
+
 typedef struct BMPFileHeader {
     char bfType[2];
     unsigned long int bfSize;
@@ -32,5 +36,8 @@ typedef struct BMP {
     BMPImageHeader_t image_header;
     char* pixel_data[];
 } BMP_t;
+
+result bmp_from_file(FILE* input_file, BMP_t* bmp);
+result bmp_to_file(FILE* output_file, BMP_t* bmp);
 
 #endif //BMP_H

@@ -1,0 +1,3 @@
+D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/CMakeFiles/untitled.dir
+D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/CMakeFiles/edit_cache.dir
+D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/CMakeFiles/rebuild_cache.dir

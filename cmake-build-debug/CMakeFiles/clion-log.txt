@@ -1,0 +1,30 @@
+"C:\Program Files\JetBrains\CLion 2022.2.1\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - NMake Makefiles" -S D:\Code\UTS\BMP-Encrypt -B D:\Code\UTS\BMP-Encrypt\cmake-build-debug
+-- The C compiler identification is MSVC 19.29.30148.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.29.30133/bin/Hostx86/x86/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: D:/Code/UTS/BMP-Encrypt/cmake-build-debug
+
+Cannot get compiler information:
+	Compiler exited with error code 2: "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\Hostx86\x86\cl.exe" @C:\Users\Administrator\AppData\Local\Temp\1\response-file8159707356175902192 C:\Users\Administrator\AppData\Local\Temp\1\compiler-file9315887208917298457 | @response-file8159707356175902192=/TC /DWIN32 /D_WINDOWS /Zi /Ob0 /Od /RTC1 -MDd -Wall -Werror /Be /Bd /EP
+	Microsoft (R) C/C++ Optimizing Compiler Version 19.29.30148 for x86
+	Copyright (C) Microsoft Corporation.  All rights reserved.
+	
+	all:
+		@cd D:\Code\UTS\BMP-Encrypt\cmake-build-debug
+		@set INCLUDE=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\ATLMFC\include;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include;C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um;C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\ucrt;C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\shared;C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\um;C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\winrt;C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\cppwinrt
+		@set LIB=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\ATLMFC\lib\x86;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\lib\x86;C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\lib\um\x86;C:\Program Files (x86)\Windows Kits\10\lib\10.0.19041.0\ucrt\x86;C:\Program Files (x86)\Windows Kits\10\lib\10.0.19041.0\um\x86
+		@set CL=
+		@set _CL_=
+		@set LINK=
+		C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\Hostx86\x86\cl.exe @<< C:\Users\Administrator\AppData\Local\Temp\1\compiler-file9315887208917298457
+	/TC /DWIN32 /D_WINDOWS /Zi /Ob0 /Od /RTC1 -MDd -Wall -Werror /Be /Bd /EP<<
+	
+	cl /TC /DWIN32 /D_WINDOWS /Zi /Ob0 /Od /RTC1 -MDd -Wall -Werror /Be /Bd /EP
+	cl : Command line error D8021 : invalid numeric argument '/Werror'
+	
+	

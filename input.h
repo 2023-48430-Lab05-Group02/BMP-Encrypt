@@ -3,15 +3,17 @@
 //
 #include <stdio.h>
 
+#include "datatypes/result.h"
+
 #ifndef INPUT_H
 #define INPUT_H
 
 void print_menu_help();
 void print_menu_interactive();
 
-int input_number(int min, int max, char error_message[]);
-int input_string(char* str[], int max_length);
-int file_read(char name[], int length, FILE** file);
-int file_write(char name[], int length, FILE** file);
+result input_number(int* value, int min, int max, char error_message[]);
+result input_string(char* str[], int max_length);
+result file_read(char name[], int length, FILE** file);
+result file_write(char name[], int length, FILE** file);
 
 #endif //INPUT_H

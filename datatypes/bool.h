@@ -2,12 +2,12 @@
 // Created by Macauley Lim on 20/04/2023.
 //
 
-#ifndef __MY_BOOL_H__
-#define __MY_BOOL_H__
+#ifndef BOOL_H
+#define BOOL_H
 
-typedef enum {
+typedef enum bool_enum {
     false = 0,
     true = 1
 } bool;
 
-#endif /* __MY_BOOL_H__ */
+#endif //BOOL_H

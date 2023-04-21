@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="untitled"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="untitled">
+				<Option output="D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/untitled.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="D:/Code/UTS/BMP-Encrypt/."/>
+					<Add directory="C:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include"/>
+					<Add directory="C:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../include"/>
+					<Add directory="C:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 untitled"/>
+					<CompileFile command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="untitled/fast">
+				<Option output="D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/untitled.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="D:/Code/UTS/BMP-Encrypt/."/>
+					<Add directory="C:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include"/>
+					<Add directory="C:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../include"/>
+					<Add directory="C:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 untitled/fast"/>
+					<CompileFile command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/msys64/mingw64/bin/mingw32-make.exe -f &quot;D:/Code/UTS/BMP-Encrypt/cmake-build-debug-msys2/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/bmp.c">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/bmp.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/encryption.c">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/encryption.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/input.c">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/input.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/main.c">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/rle.c">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/rle.h">
+			<Option target="untitled"/>
+		</Unit>
+		<Unit filename="D:/Code/UTS/BMP-Encrypt/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
