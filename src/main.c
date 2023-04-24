@@ -5,9 +5,9 @@
 
 // The 4 libraries we are allowed.
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 #include "datatypes/bool.h"
 #include "datatypes/result.h"
@@ -25,7 +25,7 @@ int main(int argc, char* argv[]){
     bool encrypt_mode = false;
     bool decrypt_mode = false;
 
-    char encryption_key[XOR_KEY_SIZE];
+    unsigned int* encryption_key = malloc(sizeof(unsigned int));
 
     // Process arguments
     for(int i = 0; i < argc; i++) {
@@ -38,11 +38,16 @@ int main(int argc, char* argv[]){
         }
         if(strcmp(argv[i], "--encrypt") == 0 || strcmp(argv[i], "-E") == 0) {
             encrypt_mode = true;
-            strcpy_s(encryption_key, 256, argv[i + 1]);
             i++;
         }
         if(strcmp(argv[i], "--decrypt") == 0 || strcmp(argv[i], "-D") == 0) {
             decrypt_mode = true;
+        }
+        if(strcmp(argv[i], "--key") == 0 || strcmp(argv[i], "-K") == 0) {
+            memcpy(encryption_key, argv[i + 1], 4);
+        }
+        if(strcmp(argv[i], "--password") == 0 || strcmp(argv[i], "-P") == 0) {
+            *encryption_key = fnv1a_hash(argv[i + 1]);
         }
     }
 

@@ -12,19 +12,35 @@ void print_menu_interactive() {
     printf("Interactive Test");
 }
 
-result input_number(int* value, int min, int max, char error_message[]) {
+result_t input_number(int min, int max, char error_message[]) {
+    result_t result;
 
-    return ok;
+    result.ok = false;
+    result.data = "CODE INCOMPLETE";
+
+    return result;
 }
-result input_string(char* str[], int max_length) {
+result_t input_string(char* str[], int max_length) {
+    result_t result;
 
-    return ok;
+    result.ok = false;
+    result.data = "CODE INCOMPLETE";
+
+    return result;
 }
-result file_read(char name[], int length, FILE** file) {
+result_t file_read(char name[], int length) {
+    result_t result;
 
-    return ok;
+    result.ok = false;
+    result.data = "CODE INCOMPLETE";
+
+    return result;
 }
-result file_write(char name[], int length, FILE** file) {
+result_t file_write(char name[], int length) {
+    result_t result;
 
-    return ok;
+    result.ok = false;
+    result.data = "CODE INCOMPLETE";
+
+    return result;
 }

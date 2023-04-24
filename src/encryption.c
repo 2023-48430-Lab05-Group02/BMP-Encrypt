@@ -5,13 +5,24 @@
 
 #include "encryption.h"
 
-// Key size can be received from XOR_KEY_SIZE
-
-result xor_encrypt(char* data[], int length, char key[]) {
-
-    return ok;
+unsigned int fnv1a_hash(const char* str) {
+    return '0';
 }
-result xor_decrypt(char* data[], int length, char key[]) {
 
-    return ok;
+// Key size can be received from XOR_KEY_SIZE
+result_t xor_encrypt(char data[], int length, char* key[]) {
+    result_t result;
+
+    result.ok = false;
+    result.data = "CODE INCOMPLETE";
+
+    return result;
+}
+result_t xor_decrypt(char data[], int length, char* key[]) {
+    result_t result;
+
+    result.ok = false;
+    result.data = "CODE INCOMPLETE";
+
+    return result;
 }

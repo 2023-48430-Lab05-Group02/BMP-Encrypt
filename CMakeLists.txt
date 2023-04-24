@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.23)
 project(untitled C)
 
-add_compile_options(-Wall -Werror)
+add_compile_options(-Wall -Werror -Wextra -Wformat-security -Wduplicated-cond
+        -Wfloat-equal -Wshadow -Wconversion -Wjump-misses-init
+        -Wlogical-not-parentheses -Wnull-dereference)
 
 set(CMAKE_C_STANDARD 99)
 

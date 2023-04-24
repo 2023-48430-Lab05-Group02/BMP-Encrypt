@@ -5,20 +5,36 @@
 
 #include "rle.h"
 
-result rl8_encode(char* data[], int length) {
+result_t rl8_encode(char* data[], int length) {
+    result_t result;
 
-    return ok;
+    result.ok = false;
+    result.data = "CODE INCOMPLETE";
+
+    return result;
 }
-result rl8_decode(char* data[], int length) {
+result_t rl8_decode(char* data[], int length) {
+    result_t result;
 
-    return ok;
+    result.ok = false;
+    result.data = "CODE INCOMPLETE";
+
+    return result;
 }
 
-result rl4_encode(char* data[], int length) {
+result_t rl4_encode(char* data[], int length) {
+    result_t result;
 
-    return ok;
+    result.ok = false;
+    result.data = "CODE INCOMPLETE";
+
+    return result;
 }
-result rl4_decode(char* data[], int length) {
+result_t rl4_decode(char* data[], int length) {
+    result_t result;
 
-    return ok;
+    result.ok = false;
+    result.data = "CODE INCOMPLETE";
+
+    return result;
 }

@@ -5,11 +5,19 @@
 
 #include "bmp.h"
 
-result bmp_from_file(FILE* input_file, BMP_t* bmp) {
+result_t bmp_from_file(FILE* input_file) {
+    result_t result;
 
-    return ok;
+    result.ok = false;
+    result.data = "CODE INCOMPLETE";
+
+    return result;
 }
-result bmp_to_file(FILE* output_file, BMP_t* bmp) {
+result_t bmp_to_file(FILE* output_file, BMP_t* bmp) {
+    result_t result;
 
-    return ok;
+    result.ok = false;
+    result.data = "CODE INCOMPLETE";
+
+    return result;
 }
