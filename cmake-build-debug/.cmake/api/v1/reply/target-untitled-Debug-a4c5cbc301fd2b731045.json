@@ -96,6 +96,14 @@
 					"fragment" : "-Wnull-dereference"
 				},
 				{
+					"backtrace" : 2,
+					"fragment" : "-Wno-unused-variable"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wno-unused-parameter"
+				},
+				{
 					"fragment" : "-std=gnu99"
 				}
 			],

@@ -6,5 +6,5 @@ C_DEFINES =
 
 C_INCLUDES = -I/home/mac/Code/BMP-Encrypt/./src
 
-C_FLAGS = -g -fdiagnostics-color=always -Wall -Werror -Wextra -Wformat-security -Wduplicated-cond -Wfloat-equal -Wshadow -Wconversion -Wjump-misses-init -Wlogical-not-parentheses -Wnull-dereference -std=gnu99
+C_FLAGS = -g -fdiagnostics-color=always -Wall -Werror -Wextra -Wformat-security -Wduplicated-cond -Wfloat-equal -Wshadow -Wconversion -Wjump-misses-init -Wlogical-not-parentheses -Wnull-dereference -Wno-unused-variable -Wno-unused-parameter -std=gnu99
 
