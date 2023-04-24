@@ -1,0 +1,3 @@
+/home/mac/Code/BMP-Encrypt/CMakeFiles/untitled.dir
+/home/mac/Code/BMP-Encrypt/CMakeFiles/edit_cache.dir
+/home/mac/Code/BMP-Encrypt/CMakeFiles/rebuild_cache.dir
