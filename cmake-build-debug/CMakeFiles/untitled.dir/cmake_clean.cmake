@@ -1,9 +1,15 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/untitled.dir/main.c.obj"
-  "CMakeFiles/untitled.dir/main.c.obj.d"
-  "untitled.exe"
-  "untitled.exe.manifest"
-  "untitled.lib"
+  "CMakeFiles/untitled.dir/src/bmp.c.o"
+  "CMakeFiles/untitled.dir/src/bmp.c.o.d"
+  "CMakeFiles/untitled.dir/src/encryption.c.o"
+  "CMakeFiles/untitled.dir/src/encryption.c.o.d"
+  "CMakeFiles/untitled.dir/src/input.c.o"
+  "CMakeFiles/untitled.dir/src/input.c.o.d"
+  "CMakeFiles/untitled.dir/src/main.c.o"
+  "CMakeFiles/untitled.dir/src/main.c.o.d"
+  "CMakeFiles/untitled.dir/src/rle.c.o"
+  "CMakeFiles/untitled.dir/src/rle.c.o.d"
+  "untitled"
   "untitled.pdb"
 )
 

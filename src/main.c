@@ -11,6 +11,7 @@
 
 #include "datatypes/bool.h"
 #include "datatypes/result.h"
+#include "datatypes/option.h"
 
 #include "bmp.h"
 #include "encryption.h"

@@ -8,7 +8,11 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "D:/Code/UTS/BMP-Encrypt/main.c" "CMakeFiles/untitled.dir/main.c.obj" "msvc" "CMakeFiles/untitled.dir/main.c.obj.d"
+  "/home/mac/Code/BMP-Encrypt/src/bmp.c" "CMakeFiles/untitled.dir/src/bmp.c.o" "gcc" "CMakeFiles/untitled.dir/src/bmp.c.o.d"
+  "/home/mac/Code/BMP-Encrypt/src/encryption.c" "CMakeFiles/untitled.dir/src/encryption.c.o" "gcc" "CMakeFiles/untitled.dir/src/encryption.c.o.d"
+  "/home/mac/Code/BMP-Encrypt/src/input.c" "CMakeFiles/untitled.dir/src/input.c.o" "gcc" "CMakeFiles/untitled.dir/src/input.c.o.d"
+  "/home/mac/Code/BMP-Encrypt/src/main.c" "CMakeFiles/untitled.dir/src/main.c.o" "gcc" "CMakeFiles/untitled.dir/src/main.c.o.d"
+  "/home/mac/Code/BMP-Encrypt/src/rle.c" "CMakeFiles/untitled.dir/src/rle.c.o" "gcc" "CMakeFiles/untitled.dir/src/rle.c.o.d"
   )
 
 # Targets to which this target links.
