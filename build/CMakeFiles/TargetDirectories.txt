@@ -1,0 +1,3 @@
+C:/Users/Jms_r/OneDrive/Desktop/UTS/AUT 23'/Fundamentals of programming C/Assessment 3/BMP-Encrypt/build/CMakeFiles/untitled.dir
+C:/Users/Jms_r/OneDrive/Desktop/UTS/AUT 23'/Fundamentals of programming C/Assessment 3/BMP-Encrypt/build/CMakeFiles/edit_cache.dir
+C:/Users/Jms_r/OneDrive/Desktop/UTS/AUT 23'/Fundamentals of programming C/Assessment 3/BMP-Encrypt/build/CMakeFiles/rebuild_cache.dir
