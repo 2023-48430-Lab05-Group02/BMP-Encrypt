@@ -1,7 +1,7 @@
 // 48430 Introduction to C Programming
 // Lab: 5, Group: 2
 // Created by Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad
-// Person Responsible For File:
+// Person Responsible For File: Benjamin Hudson
 
 #ifndef RLE_H
 #define RLE_H

@@ -18,7 +18,7 @@
 #include "input.h"
 #include "rle.h"
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
     // Initialize program
     bool interactive_mode = false;
     bool batch_mode = false;
