@@ -18,12 +18,18 @@
 #include "input.h"
 #include "rle.h"
 
+#define RUNTIME_DEBUG
+
 int main(int argc, char* argv[]) {
     // Initialize program
     bool interactive_mode = false;
     bool batch_mode = false;
     bool encrypt_mode = false;
     bool decrypt_mode = false;
+    bool input_file_present = false;
+    bool runtime_debug = false;
+
+    char input_file_name[256];
 
     unsigned int* encryption_key = malloc(sizeof(unsigned int));
 
@@ -49,10 +55,20 @@ int main(int argc, char* argv[]) {
         if(strcmp(argv[i], "--password") == 0 || strcmp(argv[i], "-P") == 0) {
             *encryption_key = fnv1a_hash(argv[i + 1]);
         }
+        if(strcmp(argv[i], "--input") == 0 || strcmp(argv[i], "-I") == 0) {
+            strcpy(input_file_name, argv[i + 1]);
+            input_file_present = true;
+            i++;
+        }
     }
 
-    if(!interactive_mode || !batch_mode || !encrypt_mode || !decrypt_mode) {
+    if(!interactive_mode && !batch_mode && !encrypt_mode && !decrypt_mode) {
         print_menu_help();
+    }
+
+    if(!interactive_mode && !batch_mode && !input_file_present) {
+        printf("Please provide a input file using --input (-I) when in command line mode.\n");
+        return 0;
     }
 
     // If in interactive mode, Enter the event loop
@@ -70,8 +86,46 @@ int main(int argc, char* argv[]) {
     }
 
     // Handle batch case.
+    if (batch_mode) {
+
+    }
 
     // Handle single file case.
+    else {
+        // Handle encryption
+        if (encrypt_mode) {
+            FILE* input_file;
+
+            #ifdef RUNTIME_DEBUG
+            printf("Attempting file read from %s.\n", input_file_name);
+            #endif
+
+            // Use file_read() eventually... but for now.
+            input_file = fopen(input_file_name, "r");
+            if (input_file == NULL) {
+                printf("An error has occurred reading the file from disk.\n");
+                return 0;
+            }
+            // Convert to BMP.
+            result_t bmp_result = bmp_from_file(input_file);
+            BMP_t* bmp;
+
+            if (bmp_result.ok) {
+                 bmp = bmp_result.data;
+            } else {
+                printf("An error has occurred in reading the BMP Data from the file. The error provided is %s.\n", (char*) bmp_result.data);
+                return 0;
+            }
+            #ifdef RUNTIME_DEBUG
+            printf("Successfully read bmp with width: %u, height: %u.\n",
+                   bmp->imageHeader.biWidth, bmp->imageHeader.biHeight);
+            #endif
+        }
+        // Handle Decryption
+        else if (decrypt_mode) {
+
+        }
+    }
 
     // Shutdown the program.
     return 0;

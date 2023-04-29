@@ -31,8 +31,8 @@ result_t input_number(int min, int max, char error_message[]);
 // Returns result_t data of nullptr. Pass in the char* buffer.
 result_t input_string(char* str[], int max_length);
 // Returns result_t data of FILE*.
-result_t file_read(char name[], int length);
+result_t file_read(char name[]);
 // Returns result_t data of FILE*.
-result_t file_write(char name[], int length);
+result_t file_write(char name[]);
 
 #endif //INPUT_H

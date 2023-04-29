@@ -28,7 +28,7 @@ result_t input_string(char* str[], int max_length) {
 
     return result;
 }
-result_t file_read(char name[], int length) {
+result_t file_read(char name[]) {
     result_t result;
 
     result.ok = false;
@@ -36,7 +36,7 @@ result_t file_read(char name[], int length) {
 
     return result;
 }
-result_t file_write(char name[], int length) {
+result_t file_write(char name[]) {
     result_t result;
 
     result.ok = false;
