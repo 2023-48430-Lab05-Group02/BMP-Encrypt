@@ -10,3 +10,5 @@ set(CMAKE_C_STANDARD 99)
 
 include_directories(./src)
 add_executable(untitled src/main.c src/bmp.c src/encryption.c src/input.c src/rle.c)
+
+target_link_libraries(untitled PRIVATE m)

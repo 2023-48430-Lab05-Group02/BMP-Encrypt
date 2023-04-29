@@ -103,7 +103,7 @@ result_t bmp_from_file(FILE* input_file) {
     double bytes = (double) bits / 8;
     unsigned int bytes_nearest = (unsigned int) ceil(bytes);
     bmp->pixelData = malloc(bytes_nearest);
-    fread(&bmp->pixelData, sizeof(char), bytes_nearest, input_file);
+    fread(bmp->pixelData, sizeof(char), bytes_nearest, input_file);
 
     #ifdef RUNTIME_DEBUG
     printf("First 32 bytes: \n");
