@@ -80,7 +80,7 @@ result_t bmp_from_file(FILE* input_file) {
 
         bmp->bitMaskTable.data = malloc(sizeof(BMPMaskTableHeader_t));
         bmp->bitMaskTable.present = true;
-        fread(&bmp->bitMaskTable.data, sizeof(BMPMaskTableHeader_t), 1, input_file);
+        fread(bmp->bitMaskTable.data, sizeof(BMPMaskTableHeader_t), 1, input_file);
 
         #ifdef RUNTIME_DEBUG
         printf("Read Mask Table | R: %u, G: %u, B: %u.\n",
