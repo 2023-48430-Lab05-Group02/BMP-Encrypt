@@ -18,4 +18,6 @@ typedef struct option_struct {
     void* data;
 } option_t;
 
+option_t None = {false, NULL};
+
 #endif //OPTION_H
