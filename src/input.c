@@ -12,6 +12,11 @@ void print_menu_interactive() {
     printf("Interactive Test");
 }
 
+void print_unsigned_int_binary(unsigned int num) {
+    for (int i = sizeof(unsigned int) * 8 - 1; i >= 0; i--)
+        printf("%d", (num >> i) & 1);
+}
+
 result_t input_number(int min, int max, char error_message[]) {
     result_t result;
 

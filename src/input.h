@@ -20,6 +20,11 @@ void print_menu_help();
 void print_menu_interactive();
 
 /*
+ * A special function for printing unsigned ints as a set of 0 and 1's e.g. binary output.
+ */
+void print_unsigned_int_binary(unsigned int num);
+
+/*
  * These functions attempt to get user input of the specified type.
  * They contain logic to handle user input errors.
  * Returns:
