@@ -84,9 +84,9 @@ result_t bmp_from_file(FILE* input_file) {
 
         #ifdef RUNTIME_DEBUG
         printf("Read Mask Table | R: %u, G: %u, B: %u.\n",
-               ((BMPMaskTableHeader_t*)bmp->colorTable.data)->red_mask,
-               ((BMPMaskTableHeader_t*)bmp->colorTable.data)->green_mask,
-               ((BMPMaskTableHeader_t*)bmp->colorTable.data)->blue_mask);
+               ((BMPMaskTableHeader_t*)bmp->bitMaskTable.data)->red_mask,
+               ((BMPMaskTableHeader_t*)bmp->bitMaskTable.data)->green_mask,
+               ((BMPMaskTableHeader_t*)bmp->bitMaskTable.data)->blue_mask);
         #endif
     }
     else {
@@ -106,10 +106,11 @@ result_t bmp_from_file(FILE* input_file) {
     fread(bmp->pixelData, sizeof(char), bytes_nearest, input_file);
 
     #ifdef RUNTIME_DEBUG
-    printf("First 32 bytes: \n");
-    for (int i=0; i < 32; i++) {
+    printf("First 8 bytes: \n");
+    for (int i=0; i < 8; i++) {
         printf("%#010x ", bmp->pixelData[i]);
     }
+    printf("\n");
     #endif
 
     result.ok = true;
