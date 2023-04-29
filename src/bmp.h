@@ -23,12 +23,13 @@
  * bfReserved2 - Always zero.
  * bfOffBits - 4 byte number represent the offset of the pixel data.
  */
+#pragma pack(push, 1)
 typedef struct BMPFileHeader {
-    char bfType[2];
-    unsigned int bfSize;
-    unsigned short int bfReserved1;
-    unsigned short int bfReserved2;
-    unsigned int bfOffBits;
+    char type[2];
+    unsigned int size;
+    unsigned short int reserved1;
+    unsigned short int reserved2;
+    unsigned int pixelOffset;
 } BMPFileHeader_t;
 
 /*
@@ -103,6 +104,7 @@ typedef struct BMPMaskTableHeader {
     unsigned int blue_mask;
     unsigned int green_mask;
 } BMPMaskTableHeader_t;
+#pragma pack(pop)
 
 /*
  * Putting it all together, this is a complete BMP file.

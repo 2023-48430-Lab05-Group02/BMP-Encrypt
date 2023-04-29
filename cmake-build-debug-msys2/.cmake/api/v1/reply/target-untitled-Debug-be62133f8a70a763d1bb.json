@@ -29,7 +29,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 9,
+				"line" : 11,
 				"parent" : 0
 			},
 			{
@@ -41,7 +41,7 @@
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 8,
+				"line" : 10,
 				"parent" : 0
 			}
 		]
@@ -61,6 +61,50 @@
 				{
 					"backtrace" : 2,
 					"fragment" : "-Werror"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wextra"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wformat-security"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wduplicated-cond"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wfloat-equal"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wshadow"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wconversion"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wjump-misses-init"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wlogical-not-parentheses"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wnull-dereference"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wno-unused-variable"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wno-unused-parameter"
 				},
 				{
 					"fragment" : "-std=gnu99"
