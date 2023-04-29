@@ -103,7 +103,7 @@ int main(int argc, char* argv[]) {
             // Use file_read() eventually... but for now.
             input_file = fopen(input_file_name, "r");
             if (input_file == NULL) {
-                printf("An error has occurred reading the file from disk.\n");
+                printf("An error has occurred reading the file.\n");
                 return 0;
             }
             // Convert to BMP.
@@ -113,12 +113,13 @@ int main(int argc, char* argv[]) {
             if (bmp_result.ok) {
                  bmp = bmp_result.data;
             } else {
-                printf("An error has occurred in reading the BMP Data from the file. The error provided is %s.\n", (char*) bmp_result.data);
+                printf("An error has occurred reading the BMP Data. "
+                       "The error provided is %s.\n", (char*) bmp_result.data);
                 return 0;
             }
             #ifdef RUNTIME_DEBUG
             printf("Successfully read bmp with width: %u, height: %u.\n",
-                   bmp->imageHeader.biWidth, bmp->imageHeader.biHeight);
+                   bmp->imageHeader.width, bmp->imageHeader.height);
             #endif
         }
         // Handle Decryption
