@@ -27,7 +27,9 @@ CMakeFiles/untitled.dir/src/bmp.c.obj: ../src/bmp.c \
   ../src/bmp.h \
   ../src/datatypes/result.h \
   ../src/datatypes/bool.h \
-  ../src/datatypes/option.h
+  ../src/datatypes/option.h \
+  ../src/input.h \
+  ../src/rle.h
 
 CMakeFiles/untitled.dir/src/encryption.c.obj: ../src/encryption.c \
   ../src/encryption.h \
@@ -146,12 +148,12 @@ C:/msys64/mingw64/include/math.h:
 
 ../src/datatypes/bool.h:
 
-../src/encryption.c:
-
 ../src/input.h:
 
-../src/main.c:
-
 ../src/rle.h:
+
+../src/encryption.c:
+
+../src/main.c:
 
 ../src/rle.c:

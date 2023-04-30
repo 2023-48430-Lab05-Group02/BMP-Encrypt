@@ -29,6 +29,8 @@ CMakeFiles/untitled.dir/src/bmp.c.obj
  D:/Code/UTS/BMP-Encrypt/src/datatypes/result.h
  D:/Code/UTS/BMP-Encrypt/src/datatypes/bool.h
  D:/Code/UTS/BMP-Encrypt/src/datatypes/option.h
+ D:/Code/UTS/BMP-Encrypt/src/input.h
+ D:/Code/UTS/BMP-Encrypt/src/rle.h
 
 CMakeFiles/untitled.dir/src/encryption.c.obj
  D:/Code/UTS/BMP-Encrypt/src/encryption.c
