@@ -29,7 +29,8 @@ CMakeFiles/untitled.dir/src/bmp.c.obj: ../src/bmp.c \
   ../src/datatypes/bool.h \
   ../src/datatypes/option.h \
   ../src/input.h \
-  ../src/rle.h
+  ../src/rle.h \
+  ../src/encryption.h
 
 CMakeFiles/untitled.dir/src/encryption.c.obj: ../src/encryption.c \
   ../src/encryption.h \

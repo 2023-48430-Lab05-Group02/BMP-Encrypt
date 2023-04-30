@@ -114,7 +114,7 @@ typedef struct BMP {
     BMPImageHeader_t imageHeader;
     option_t colorTable;
     option_t bitMaskTable;
-    char* pixelData;
+    unsigned char* pixelData;
 } BMP_t;
 
 /*
@@ -124,7 +124,7 @@ typedef struct BMP {
  * result_t with ok = true if the BMP is valid and data: BMP_t ptr.
  * Otherwise, outputs ok = false, with data a char[] message error.
  */
-result_t bmp_from_file(FILE* input_file);
+result_t bmp_from_file(FILE* input_file, option_t key);
 /*
  * Takes a BMP ptr and writes the contents to a file.
  * Inputs: FILE ptr, BMP_t ptr.
@@ -132,6 +132,6 @@ result_t bmp_from_file(FILE* input_file);
  * result_t with ok = true if the BMP was successfully written and data nullptr.
  * Otherwise, outputs ok = false, with data a char[] message error.
  */
-result_t bmp_to_file(FILE* output_file, BMP_t* bmp);
+result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key);
 
 #endif //BMP_H

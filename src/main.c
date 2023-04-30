@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
     bool encrypt_mode = false;
     bool decrypt_mode = false;
     bool input_file_present = false;
+    bool encryption_key_present = false;
     bool runtime_debug = false;
 
     char input_file_name[256];
@@ -51,6 +52,7 @@ int main(int argc, char* argv[]) {
         }
         if(strcmp(argv[i], "--key") == 0 || strcmp(argv[i], "-K") == 0) {
             memcpy(encryption_key, argv[i + 1], 4);
+            encryption_key_present = true;
         }
         if(strcmp(argv[i], "--password") == 0 || strcmp(argv[i], "-P") == 0) {
             *encryption_key = fnv1a_hash(argv[i + 1]);
@@ -106,8 +108,18 @@ int main(int argc, char* argv[]) {
                 printf("An error has occurred reading the file.\n");
                 return 0;
             }
+
+            // TEMPORARY FOR TESTING
+            option_t key;
+            if (encryption_key_present) {
+                key.present = true;
+                key.data = encryption_key;
+            } else {
+                key.present = false;
+                key.data = NULL;
+            }
             // Convert to BMP.
-            result_t bmp_result = bmp_from_file(input_file);
+            result_t bmp_result = bmp_from_file(input_file, key);
             BMP_t* bmp;
 
             if (bmp_result.ok) {

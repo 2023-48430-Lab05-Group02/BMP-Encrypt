@@ -12,14 +12,17 @@
 
 #include "input.h"
 #include "rle.h"
+#include "encryption.h"
 
 #define RUNTIME_DEBUG
 
-result_t bmp_from_file(FILE* input_file) {
+result_t bmp_from_file(FILE* input_file, option_t key) {
     // Constants/Variables
     char bmp_text[] = {'B', 'M'};
     BMP_t* bmp = malloc(sizeof(BMP_t));
     unsigned int file_length;
+    char* bmp_data;
+    unsigned int bmp_data_position = 0;
 
     // Output variable - Assume result is false until proven true.
     result_t result;
@@ -45,7 +48,38 @@ result_t bmp_from_file(FILE* input_file) {
 
     // Check if the file is the correct length specified.
     if (file_length != bmp->fileHeader.size) {
-        result.data = "FILE INVALID SIZE HEADER";
+        result.data = "FILE INVALID SIZE HEADER OR FILE SIZE INVALID";
+        return result;
+    }
+
+    // Check if the file is encrypted.
+    if (bmp->fileHeader.reserved1 == 1) {
+        if(key.present == false) {
+            result.data ="NO ENCRYPTION KEY PROVIDED";
+            return result;
+        }
+
+        char* decrypt_buffer = malloc(file_length - 14);
+        fread(decrypt_buffer, sizeof(char), file_length - 14, input_file);
+
+        result_t xor_result = xor_decrypt(decrypt_buffer, (int) (file_length - 14), key.data);
+
+        if (xor_result.ok == false) {
+            char* error = malloc(256);
+            strcpy(error, "XOR DECRYPT FAILURE: ");
+            result.data = strcat(error, xor_result.data);
+            return result;
+        }
+
+        bmp_data = xor_result.data;
+    } else {
+        bmp_data = malloc(file_length - 14);
+        fread(bmp_data, sizeof(char), file_length - 14, input_file);
+    }
+
+    // Check if reserved values are out of spec.
+    if (bmp->fileHeader.reserved2 != 0 || bmp->fileHeader.reserved1 > 1) {
+        result.data = "RESERVED VALUES OUT OF SPEC";
         return result;
     }
 
@@ -56,7 +90,21 @@ result_t bmp_from_file(FILE* input_file) {
     #endif
 
     // Next read the BMP Image Header data.
-    fread(&bmp->imageHeader, sizeof(BMPImageHeader_t), 1, input_file);
+    memcpy(&bmp->imageHeader, bmp_data, sizeof(BMPImageHeader_t));
+    bmp_data_position += sizeof(BMPImageHeader_t);
+
+    #ifdef RUNTIME_DEBUG
+    printf("Image Header:\nHeight: %u, Width: %u, Compression: %u\n"
+           "X Pixels Per Meter: %u, Y Pixels Per Meter: %u\n"
+           "Bit Count: %u, Header Size: %u, Planes: %u\n"
+           "Colors used: %u, Colors Important: %u, Image Size: %u\n",
+           bmp->imageHeader.height, bmp->imageHeader.width,
+           bmp->imageHeader.compression, bmp->imageHeader.xPixelsPerMeter,
+           bmp->imageHeader.yPixelsPerMeter, bmp->imageHeader.bitDepth,
+           bmp->imageHeader.size, bmp->imageHeader.planes,
+           bmp->imageHeader.clrsUsed, bmp->imageHeader.clrsImportant,
+           bmp->imageHeader.imageSize);
+    #endif
 
     // Check that we are dealing with the expected Windows Version 3 Header.
     if (bmp->imageHeader.size != 40) {
@@ -83,7 +131,17 @@ result_t bmp_from_file(FILE* input_file) {
 
         bmp->colorTable.data = malloc(sizeof(BMPColorTableHeader_t));
         bmp->colorTable.present = true;
-        fread(&((BMPColorTableHeader_t*)bmp->colorTable.data)->colorData, sizeof(unsigned int), bmp->imageHeader.clrsUsed, input_file);
+
+        // Handle cases of color table (assumed) sizes.
+        if(bmp->imageHeader.clrsUsed == 0) {
+            bmp->imageHeader.clrsUsed = (unsigned int) pow(2.0, (double) bmp->imageHeader.bitDepth);
+            #ifdef RUNTIME_DEBUG
+            printf("Assumed color table due to 0 used colors in source file.");
+            #endif
+        }
+
+        memcpy(&((BMPColorTableHeader_t*)bmp->colorTable.data)->colorData, bmp_data + bmp_data_position, bmp->imageHeader.clrsUsed);
+        bmp_data_position += (unsigned int) bmp->imageHeader.clrsUsed * (unsigned int) sizeof(unsigned int);
 
         #ifdef RUNTIME_DEBUG
         printf("Read Color Table with %u colors.\n", bmp->imageHeader.clrsUsed);
@@ -95,7 +153,8 @@ result_t bmp_from_file(FILE* input_file) {
 
         bmp->bitMaskTable.data = malloc(sizeof(BMPMaskTableHeader_t));
         bmp->bitMaskTable.present = true;
-        fread(bmp->bitMaskTable.data, sizeof(BMPMaskTableHeader_t), 1, input_file);
+        memcpy(bmp->bitMaskTable.data, bmp_data + bmp_data_position, sizeof(BMPMaskTableHeader_t));
+        bmp_data_position += sizeof(BMPMaskTableHeader_t);
 
         #ifdef RUNTIME_DEBUG
         printf("Read Mask Table | R, G, B.\n");
@@ -116,9 +175,16 @@ result_t bmp_from_file(FILE* input_file) {
     }
 
     // Verify file pointer position sync.
-    if (bmp->fileHeader.pixelOffset != (unsigned int) ftell(input_file)) {
-        result.data = "PIXEL DATA OFFSET MISMATCH";
-        return result;
+    if (bmp->colorTable.present == false) {
+        if (bmp->fileHeader.pixelOffset - 14 != (unsigned int) bmp_data_position) {
+            result.data = "PIXEL DATA OFFSET MISMATCH";
+            return result;
+        }
+    } else {
+        if ((bmp->fileHeader.pixelOffset - 14 + bmp->imageHeader.clrsUsed * 4) != (unsigned int) bmp_data_position && (bmp->fileHeader.pixelOffset - 14) != (unsigned int) bmp_data_position) {
+            result.data = "PIXEL DATA OFFSET MISMATCH WITH COLOR TABLE";
+            return result;
+        }
     }
 
     // Determine the final number of bytes of data we should be receiving
@@ -129,14 +195,18 @@ result_t bmp_from_file(FILE* input_file) {
 
     // If the data is RLE8/RLE4 encoded, read and decode the data.
     if (bmp->imageHeader.compression == 1 || bmp->imageHeader.compression == 2) {
-        char *buffer = malloc(bmp->imageHeader.imageSize);
+        char *rle_buffer = malloc(bmp->imageHeader.imageSize);
+
+        memcpy(rle_buffer, bmp_data + bmp_data_position,bmp->imageHeader.imageSize);
+        bmp_data_position += bmp->imageHeader.imageSize;
+
         result_t rle_result;
         if (bmp->imageHeader.compression == 1) {
             // RLE8
-            rle_result = rl8_decode(&buffer, (int) bmp->imageHeader.imageSize);
+            rle_result = rl8_decode(&rle_buffer, (int) bmp->imageHeader.imageSize);
         } else if (bmp->imageHeader.compression == 2) {
             //RLE 4
-            rle_result = rl4_decode(&buffer, (int) bmp->imageHeader.imageSize);
+            rle_result = rl4_decode(&rle_buffer, (int) bmp->imageHeader.imageSize);
         }
         if (rle_result.ok == false) {
             char* error = malloc(256);
@@ -150,23 +220,49 @@ result_t bmp_from_file(FILE* input_file) {
     // Otherwise read the straight data from the file.
     else {
         bmp->pixelData = malloc(bytes_nearest);
-        fread(bmp->pixelData, sizeof(char), bytes_nearest, input_file);
+        memcpy(bmp->pixelData, bmp_data + bmp_data_position, bytes_nearest);
+        bmp_data_position += bytes_nearest;
     }
 
     #ifdef RUNTIME_DEBUG
-    printf("First 8 bytes: \n");
-    for (int i=0; i < 8; i++) {
+    printf("First 4 bytes: \n");
+    for (int i=0; i < 4; i++) {
         printf("%#010x ", bmp->pixelData[i]);
     }
     printf("\n");
     #endif
 
+    // Verify that at bit depth 2, we have the appropriate monochrome pallet.
+    if (bmp->imageHeader.bitDepth == 1 && bmp->imageHeader.clrsUsed != 2) {
+        result.data = "COLOR TABLE IS NOT MONOCHROME OR MISSING";
+        return result;
+    }
+
     // Verify the pixels are not outside the range of the palette.
     if (bmp->colorTable.present) {
-        for (unsigned int i = bmp->imageHeader.height * bmp->imageHeader.width; i > 0; i--) {
-            if (bmp->pixelData[i] > (char) bmp->imageHeader.clrsUsed) {
-                result.data = "PIXEL COLOR OUTSIDE COLOR TABLE";
-                return result;
+        #ifdef RUNTIME_DEBUG
+        printf("Verifying that no pixels are outside the color table. "
+               "MAX: %u\n", bmp->imageHeader.clrsUsed);
+        #endif
+        // Ignore 1 BPP as it is impossible for 1 bit to be out of range.
+         if (bmp->imageHeader.bitDepth == 4) {
+            for (unsigned int i = bmp->imageHeader.height * bmp->imageHeader.width; i > 0; i--) {
+                char upper = (char) (bmp->pixelData[i] >> 4);
+                char lower = (char) ((bmp->pixelData[i] << 4) >> 4);
+                if (upper > (char) bmp->imageHeader.clrsUsed || lower > (char) bmp->imageHeader.clrsUsed) {
+                    result.data = "PIXEL COLOR OUTSIDE COLOR TABLE";
+                    return result;
+                }
+            }
+        } else if (bmp->imageHeader.bitDepth == 8) {
+            for (unsigned int i = bmp->imageHeader.height * bmp->imageHeader.width; i > 0; i--) {
+                if ((unsigned int) bmp->pixelData[i] > bmp->imageHeader.clrsUsed) {
+                    result.data = "PIXEL COLOR OUTSIDE COLOR TABLE";
+                    #ifdef RUNTIME_DEBUG
+                    printf("Pixel data is: %u at position: %u\n", (unsigned int) bmp->pixelData[i], i);
+                    #endif
+                    return result;
+                }
             }
         }
     }
@@ -175,7 +271,7 @@ result_t bmp_from_file(FILE* input_file) {
     result.data = bmp;
     return result;
 }
-result_t bmp_to_file(FILE* output_file, BMP_t* bmp) {
+result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key) {
     result_t result;
 
     result.ok = false;
