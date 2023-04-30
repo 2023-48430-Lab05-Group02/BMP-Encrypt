@@ -133,7 +133,7 @@ result_t bmp_from_file(FILE* input_file, option_t key) {
         return result;
     }
 
-        // Check that we are dealing with the expected Windows Version 3 Header.
+    // Check that we are dealing with the expected Windows Version 3 Header.
     if (bmp->imageHeader.size != 40) {
         result.data = "HEADER NOT WIN NT3 FORMAT";
         return result;
@@ -145,9 +145,30 @@ result_t bmp_from_file(FILE* input_file, option_t key) {
         return result;
     }
 
-    // Double check color table is smaller than maximum allowed.
+    // Check color table is smaller than maximum allowed.
     if (bmp->imageHeader.clrsUsed > pow(2.0, bmp->imageHeader.bitDepth)) {
         result.data = "CLRS USED MORE THAN MAXIMUM POSSIBLE FOR BIT DEPTH";
+        return result;
+    }
+
+    // Check Pixels Per Meter smaller than image. SANITY CHECK.
+    if (bmp->imageHeader.xPixelsPerMeter > bmp->imageHeader.width * 1024) {
+        result.data = "X PIXELS PER METER LARGER THAN IMAGE WIDTH";
+        return result;
+    }
+    if (bmp->imageHeader.yPixelsPerMeter > (unsigned int) abs(bmp->imageHeader.height * 1024)) {
+        result.data = "Y PIXELS PER METER LARGER THAN IMAGE HEIGHT";
+        return result;
+    }
+    // Also check if Pixels Per meter is 0. SANITY CHECK.
+    if (bmp->imageHeader.yPixelsPerMeter == 0 || bmp->imageHeader.xPixelsPerMeter == 0) {
+        result.data = "PIXELS PER METER ZERO";
+        return result;
+    }
+
+    // Check if compression is supported.
+    if (bmp->imageHeader.compression > 3) {
+        result.data = "COMPRESSION UNSUPPORTED";
         return result;
     }
 
@@ -163,11 +184,11 @@ result_t bmp_from_file(FILE* input_file, option_t key) {
         if(bmp->imageHeader.clrsUsed == 0) {
             bmp->imageHeader.clrsUsed = (unsigned int) pow(2.0, (double) bmp->imageHeader.bitDepth);
             #ifdef RUNTIME_DEBUG
-            printf("Assumed color table due to 0 used colors in source file.");
+            printf("Assumed color table due to 0 used colors in source file.\n");
             #endif
         }
 
-        memcpy(&((BMPColorTableHeader_t*)bmp->colorTable.data)->colorData, bmp_data + bmp_data_position, bmp->imageHeader.clrsUsed);
+        memcpy(&((BMPColorTableHeader_t*)bmp->colorTable.data)->colorData, bmp_data + bmp_data_position, bmp->imageHeader.clrsUsed * (unsigned int) sizeof(unsigned int));
         bmp_data_position += (unsigned int) bmp->imageHeader.clrsUsed * (unsigned int) sizeof(unsigned int);
 
         #ifdef RUNTIME_DEBUG
@@ -192,6 +213,14 @@ result_t bmp_from_file(FILE* input_file, option_t key) {
         print_unsigned_int_binary(((BMPMaskTableHeader_t*)bmp->bitMaskTable.data)->blue_mask);
         printf("\n");
         #endif
+
+        // SANITY CHECK - All colors have data? right?
+        if (((BMPMaskTableHeader_t*)bmp->bitMaskTable.data)->red_mask == 0 ||
+            ((BMPMaskTableHeader_t*)bmp->bitMaskTable.data)->green_mask == 0 ||
+            ((BMPMaskTableHeader_t*)bmp->bitMaskTable.data)->blue_mask == 0) {
+            result.data = "COLOR CHANNEL HAS NO MASK";
+            return result;
+        }
     }
     else {
         bmp->colorTable.present = false;
@@ -201,24 +230,40 @@ result_t bmp_from_file(FILE* input_file, option_t key) {
         bmp->bitMaskTable.data = NULL;
     }
 
+    // Check the number of important colors is smaller than the color table.
+    if (bmp->imageHeader.clrsImportant > bmp->imageHeader.clrsUsed && bmp->colorTable.present) {
+        result.data = "CLRS IMPORTANT MORE THAN COLORS USED";
+        return result;
+    }
+
     // Verify file pointer position sync.
-    if (bmp->colorTable.present == false) {
-        if (bmp->fileHeader.pixelOffset - 14 != (unsigned int) bmp_data_position) {
-            result.data = "PIXEL DATA OFFSET MISMATCH";
-            return result;
-        }
-    } else {
-        if ((bmp->fileHeader.pixelOffset - 14 + bmp->imageHeader.clrsUsed * 4) != (unsigned int) bmp_data_position && (bmp->fileHeader.pixelOffset - 14) != (unsigned int) bmp_data_position) {
-            result.data = "PIXEL DATA OFFSET MISMATCH WITH COLOR TABLE";
-            return result;
-        }
+    if (bmp->fileHeader.pixelOffset - 14 != (unsigned int) bmp_data_position) {
+        result.data = "PIXEL DATA OFFSET MISMATCH";
+        return result;
     }
 
     // Determine the final number of bytes of data we should be receiving
-    unsigned int pixel_count = bmp->imageHeader.width * (unsigned int) abs(bmp->imageHeader.height);
-    unsigned int bits = pixel_count * bmp->imageHeader.bitDepth;
-    double bytes = (double) bits / 8;
+    unsigned int bits_per_row = bmp->imageHeader.width * bmp->imageHeader.bitDepth;
+    if (bmp->imageHeader.bitDepth != 32) {
+        if (bits_per_row % 32 != 0) {
+            unsigned int padding_needed = 32 - (bits_per_row % 32);
+            bits_per_row += padding_needed;
+        }
+    }
+
+    double bits_count = (double) bits_per_row * (double) abs(bmp->imageHeader.height);
+    double bytes = bits_count / 8;
+    if (bytes > 4294967295) {
+        result.data = "IMAGE TOO LARGE";
+        return result;
+    }
     unsigned int bytes_nearest = (unsigned int) ceil(bytes);
+
+    // Check for uncompressed bitmaps where size does not match expected
+    if (bmp->imageHeader.imageSize != 0 && bmp->imageHeader.imageSize != bytes_nearest && bmp->imageHeader.compression == 0) {
+        result.data = "PIXEL DATA SIZE DOES NOT MATCH EXPECTED";
+        return result;
+    }
 
     // If the data is RLE8/RLE4 encoded, read and decode the data.
     if (bmp->imageHeader.compression == 1 || bmp->imageHeader.compression == 2) {

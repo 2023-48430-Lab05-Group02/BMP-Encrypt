@@ -127,8 +127,8 @@ int main(int argc, char* argv[]) {
                 printf("Successfully read bmp with width: %u, height: %d.\n",
                        bmp->imageHeader.width, bmp->imageHeader.height);
             } else {
-                printf("An error has occurred reading the BMP Data. "
-                       "The error provided is %s.\n", (char*) bmp_result.data);
+                printf("An error has occurred reading the BMP Data:\n"
+                       "%s.\n", (char*) bmp_result.data);
                 return 0;
             }
         }
