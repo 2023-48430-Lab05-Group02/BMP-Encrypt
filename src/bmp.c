@@ -64,6 +64,9 @@ result_t bmp_from_file(FILE* input_file, option_t key) {
 
         result_t xor_result = xor_decrypt(decrypt_buffer, (int) (file_length - 14), key.data);
 
+        // Make sure to free the decrypt buffer.
+        free(decrypt_buffer);
+
         if (xor_result.ok == false) {
             char* error = malloc(256);
             strcpy(error, "XOR DECRYPT FAILURE: ");
@@ -246,26 +249,26 @@ result_t bmp_from_file(FILE* input_file, option_t key) {
         #endif
         // Ignore 1 BPP as it is impossible for 1 bit to be out of range.
          if (bmp->imageHeader.bitDepth == 4) {
-            for (unsigned int i = (unsigned int) abs(bmp->imageHeader.height) * bmp->imageHeader.width; i > 0; i--) {
-                unsigned char upper = bmp->pixelData[i] >> 4;
-                unsigned char lower = (unsigned char) ((bmp->pixelData[i] << 4) >> 4);
+            for (unsigned int i = bytes_nearest; i > 0; i--) {
+                unsigned char upper = bmp->pixelData[i - 1] >> 4;
+                unsigned char lower = ((unsigned char) (bmp->pixelData[i - 1] << 4) >> 4);
                 if (upper > (char) bmp->imageHeader.clrsUsed || lower > (char) bmp->imageHeader.clrsUsed) {
                     result.data = "PIXEL COLOR OUTSIDE COLOR TABLE";
 
                     #ifdef RUNTIME_DEBUG
-                    printf("Pixel data is: %u at position: %u\n", (unsigned int) bmp->pixelData[i], i);
+                    printf("Upper Pixel: %u, Lower Pixel: %u at position: %u\n", upper, lower, i);
                     #endif
 
                     return result;
                 }
             }
         } else if (bmp->imageHeader.bitDepth == 8) {
-            for (unsigned int i = (unsigned int) abs(bmp->imageHeader.height) * bmp->imageHeader.width; i > 0; i--) {
-                if ((unsigned int) bmp->pixelData[i] > bmp->imageHeader.clrsUsed) {
+            for (unsigned int i = bytes_nearest; i > 0; i--) {
+                if ((unsigned int) bmp->pixelData[i - 1] > bmp->imageHeader.clrsUsed) {
                     result.data = "PIXEL COLOR OUTSIDE COLOR TABLE";
 
                     #ifdef RUNTIME_DEBUG
-                    printf("Pixel data is: %u at position: %u\n", (unsigned int) bmp->pixelData[i], i);
+                    printf("Pixel data is: %u at position: %u\n", (unsigned int) bmp->pixelData[i - 1], i);
                     #endif
 
                     return result;
@@ -273,6 +276,9 @@ result_t bmp_from_file(FILE* input_file, option_t key) {
             }
         }
     }
+
+    // Make sure to free the buffers
+    free(bmp_data);
 
     result.ok = true;
     result.data = bmp;
