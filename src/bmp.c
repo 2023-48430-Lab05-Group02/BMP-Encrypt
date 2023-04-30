@@ -40,6 +40,15 @@ result_t bmp_from_file(FILE* input_file, option_t key) {
     printf("File header type is %c%c.\n", bmp->fileHeader.type[0], bmp->fileHeader.type[1]);
     #endif
 
+    // Check if any values in the file header are signed when they shouldn't be.
+    if (bmp->fileHeader.size >> 31 == 1 ||
+        bmp->fileHeader.reserved1 >> 15 == 1 ||
+        bmp->fileHeader.reserved2 >> 15 == 1 ||
+        bmp->fileHeader.pixelOffset >> 31 == 1 ) {
+        result.data = "INVALID NEGATIVE OR TOO BIG VALUE IN FILE HEADER";
+        return result;
+    }
+
     // Verify the file is the correct type.
     if(memcmp(bmp->fileHeader.type, bmp_text, 2) != 0) {
         result.data = "FILETYPE NOT BM";
@@ -109,15 +118,24 @@ result_t bmp_from_file(FILE* input_file, option_t key) {
            bmp->imageHeader.imageSize);
     #endif
 
-    // Check that we are dealing with the expected Windows Version 3 Header.
-    if (bmp->imageHeader.size != 40) {
-        result.data = "HEADER NOT WIN NT3 FORMAT";
+    // Check if any values in the image header are signed when they shouldn't be.
+    if (bmp->imageHeader.size >> 31 == 1 ||
+        bmp->imageHeader.width >> 31 == 1 ||
+        bmp->imageHeader.planes >> 15 == 1 ||
+        bmp->imageHeader.bitDepth >> 15 == 1 ||
+        bmp->imageHeader.compression >> 31 == 1 ||
+        bmp->imageHeader.imageSize >> 31 == 1 ||
+        bmp->imageHeader.xPixelsPerMeter >> 31 == 1 ||
+        bmp->imageHeader.yPixelsPerMeter >> 31 == 1 ||
+        bmp->imageHeader.clrsUsed >> 31 == 1 ||
+        bmp->imageHeader.clrsImportant >> 31 == 1) {
+        result.data = "INVALID NEGATIVE OR TOO BIG VALUE IN IMAGE HEADER";
         return result;
     }
 
-    // Verify the image parameters as valid.
-    if (bmp->imageHeader.width <= 0) {
-        result.data = "IMAGE SIZE IMPOSSIBLE";
+        // Check that we are dealing with the expected Windows Version 3 Header.
+    if (bmp->imageHeader.size != 40) {
+        result.data = "HEADER NOT WIN NT3 FORMAT";
         return result;
     }
 

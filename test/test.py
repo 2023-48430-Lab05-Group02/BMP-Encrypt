@@ -23,7 +23,7 @@ for file in valid_real_examples:
         input("-- PRESS ENTER FOR NEXT TEST --")
 
 
-print("-- TEST 3 - QUESTIONABLE BMPs --")
+print("---- TEST 3 - QUESTIONABLE BMPs ----")
 valid_real_examples = os.listdir("./questionable")
 for file in valid_real_examples:
     print(f"-- TEST FILE: {file} --")
@@ -34,7 +34,7 @@ for file in valid_real_examples:
         print(f"-- Test Failed --\n{out}")
         input("-- PRESS ENTER FOR NEXT TEST --")
 
-print("-- TEST 4 - CORRUPT BMPs --")
+print("---- TEST 4 - CORRUPT BMPs ----")
 valid_real_examples = os.listdir("./corrupt")
 for file in valid_real_examples:
     print(f"-- TEST FILE: {file} --")
