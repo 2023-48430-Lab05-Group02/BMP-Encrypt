@@ -123,16 +123,14 @@ int main(int argc, char* argv[]) {
             BMP_t* bmp;
 
             if (bmp_result.ok) {
-                 bmp = bmp_result.data;
+                bmp = bmp_result.data;
+                printf("Successfully read bmp with width: %u, height: %d.\n",
+                       bmp->imageHeader.width, bmp->imageHeader.height);
             } else {
                 printf("An error has occurred reading the BMP Data. "
                        "The error provided is %s.\n", (char*) bmp_result.data);
                 return 0;
             }
-            #ifdef RUNTIME_DEBUG
-            printf("Successfully read bmp with width: %u, height: %d.\n",
-                   bmp->imageHeader.width, bmp->imageHeader.height);
-            #endif
         }
         // Handle Decryption
         else if (decrypt_mode) {

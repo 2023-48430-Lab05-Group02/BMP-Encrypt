@@ -145,6 +145,12 @@ result_t bmp_from_file(FILE* input_file, option_t key) {
         return result;
     }
 
+    // Double check color table is smaller than maximum allowed.
+    if (bmp->imageHeader.clrsUsed > pow(2.0, bmp->imageHeader.bitDepth)) {
+        result.data = "CLRS USED MORE THAN MAXIMUM POSSIBLE FOR BIT DEPTH";
+        return result;
+    }
+
     // Determine if a color or mask table will be attached.
     if (bmp->imageHeader.bitDepth <= 8) {
         bmp->bitMaskTable.present = false;
