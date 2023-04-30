@@ -94,7 +94,7 @@ result_t bmp_from_file(FILE* input_file, option_t key) {
     bmp_data_position += sizeof(BMPImageHeader_t);
 
     #ifdef RUNTIME_DEBUG
-    printf("Image Header:\nHeight: %u, Width: %u, Compression: %u\n"
+    printf("Image Header:\nHeight: %d, Width: %u, Compression: %u\n"
            "X Pixels Per Meter: %u, Y Pixels Per Meter: %u\n"
            "Bit Count: %u, Header Size: %u, Planes: %u\n"
            "Colors used: %u, Colors Important: %u, Image Size: %u\n",
@@ -113,7 +113,7 @@ result_t bmp_from_file(FILE* input_file, option_t key) {
     }
 
     // Verify the image parameters as valid.
-    if (bmp->imageHeader.height <= 0 || bmp->imageHeader.width <= 0) {
+    if (bmp->imageHeader.width <= 0) {
         result.data = "IMAGE SIZE IMPOSSIBLE";
         return result;
     }
@@ -188,7 +188,7 @@ result_t bmp_from_file(FILE* input_file, option_t key) {
     }
 
     // Determine the final number of bytes of data we should be receiving
-    unsigned int pixel_count = bmp->imageHeader.width * bmp->imageHeader.height;
+    unsigned int pixel_count = bmp->imageHeader.width * (unsigned int) abs(bmp->imageHeader.height);
     unsigned int bits = pixel_count * bmp->imageHeader.bitDepth;
     double bytes = (double) bits / 8;
     unsigned int bytes_nearest = (unsigned int) ceil(bytes);
@@ -246,7 +246,7 @@ result_t bmp_from_file(FILE* input_file, option_t key) {
         #endif
         // Ignore 1 BPP as it is impossible for 1 bit to be out of range.
          if (bmp->imageHeader.bitDepth == 4) {
-            for (unsigned int i = bmp->imageHeader.height * bmp->imageHeader.width; i > 0; i--) {
+            for (unsigned int i = (unsigned int) abs(bmp->imageHeader.height) * bmp->imageHeader.width; i > 0; i--) {
                 char upper = (char) (bmp->pixelData[i] >> 4);
                 char lower = (char) ((bmp->pixelData[i] << 4) >> 4);
                 if (upper > (char) bmp->imageHeader.clrsUsed || lower > (char) bmp->imageHeader.clrsUsed) {
@@ -255,7 +255,7 @@ result_t bmp_from_file(FILE* input_file, option_t key) {
                 }
             }
         } else if (bmp->imageHeader.bitDepth == 8) {
-            for (unsigned int i = bmp->imageHeader.height * bmp->imageHeader.width; i > 0; i--) {
+            for (unsigned int i = (unsigned int) abs(bmp->imageHeader.height) * bmp->imageHeader.width; i > 0; i--) {
                 if ((unsigned int) bmp->pixelData[i] > bmp->imageHeader.clrsUsed) {
                     result.data = "PIXEL COLOR OUTSIDE COLOR TABLE";
                     #ifdef RUNTIME_DEBUG

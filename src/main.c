@@ -130,7 +130,7 @@ int main(int argc, char* argv[]) {
                 return 0;
             }
             #ifdef RUNTIME_DEBUG
-            printf("Successfully read bmp with width: %u, height: %u.\n",
+            printf("Successfully read bmp with width: %u, height: %d.\n",
                    bmp->imageHeader.width, bmp->imageHeader.height);
             #endif
         }

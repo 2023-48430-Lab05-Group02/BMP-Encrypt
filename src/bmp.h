@@ -66,7 +66,7 @@ typedef struct BMPFileHeader {
 typedef struct BMPImageHeader {
     unsigned int size;
     unsigned int width;
-    unsigned int height;
+    int height;
     unsigned short int planes;
     unsigned short int bitDepth;
     unsigned int compression;
