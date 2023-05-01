@@ -10,6 +10,7 @@
 
 #include "datatypes/result.h"
 #include "datatypes/option.h"
+#include "datatypes/short_sizes.h"
 
 /*
  * The file header of the BMP file format. This data is contained right at the
@@ -25,11 +26,11 @@
  */
 #pragma pack(push, 1)
 typedef struct BMPFileHeader {
-    char type[2];
-    unsigned int size;
-    unsigned short int reserved1;
-    unsigned short int reserved2;
-    unsigned int pixelOffset;
+    u8 type[2];
+    u32 size;
+    u16 reserved1;
+    u16 reserved2;
+    u32 pixelOffset;
 } BMPFileHeader_t;
 
 /*
@@ -64,18 +65,29 @@ typedef struct BMPFileHeader {
  * colors are considered important.
  */
 typedef struct BMPImageHeader {
-    unsigned int size;
-    unsigned int width;
-    int height;
-    unsigned short int planes;
-    unsigned short int bitDepth;
-    unsigned int compression;
-    unsigned int imageSize;
-    unsigned int xPixelsPerMeter;
-    unsigned int yPixelsPerMeter;
-    unsigned int clrsUsed;
-    unsigned int clrsImportant;
+    u32 size;
+    u32 width;
+    i32 height;
+    u16 planes;
+    u16 bitDepth;
+    u32 compression;
+    u32 imageSize;
+    u32 xPixelsPerMeter;
+    u32 yPixelsPerMeter;
+    u32 clrsUsed;
+    u32 clrsImportant;
 } BMPImageHeader_t;
+
+/*
+ * Struct that contains 4 u8 values r, g, b, none (alpha) to make accessing
+ * the color table data easier.
+ */
+typedef struct ColorData {
+    u8 red;
+    u8 green;
+    u8 blue;
+    u8 alpha;
+} ColorData_t;
 
 /*
  * In an 8 or less bit image, the color table is a palette of colors to render
@@ -88,7 +100,7 @@ typedef struct BMPImageHeader {
  * or screen from here.
  */
 typedef struct BMPColorTableHeader {
-    unsigned int colorData[256];
+    ColorData_t colorData[256];
 } BMPColorTableHeader_t;
 
 /*
@@ -100,9 +112,9 @@ typedef struct BMPColorTableHeader {
  * If any masks overlap, that is an error state.
  */
 typedef struct BMPMaskTableHeader {
-    unsigned int green_mask;
-    unsigned int red_mask;
-    unsigned int blue_mask;
+    u32 green_mask;
+    u32 red_mask;
+    u32 blue_mask;
 } BMPMaskTableHeader_t;
 #pragma pack(pop)
 
@@ -114,7 +126,7 @@ typedef struct BMP {
     BMPImageHeader_t imageHeader;
     option_t colorTable;
     option_t bitMaskTable;
-    unsigned char* pixelData;
+    u8* pixelData;
 } BMP_t;
 
 /*
