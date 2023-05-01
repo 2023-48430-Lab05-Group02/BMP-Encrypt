@@ -13,7 +13,7 @@ if sys.argv[2] == "true":
 else:
     ignore_nonfatal = False
 
-errors = {"ERROR_QUESTIONABLE_AS_GOOD": [0, []],
+errors = {"ERROR_QUESTIONABLE": [0, []],
           "ERROR_CORRUPT_AS_GOOD": [0, []]}
 
 print("---- TEST 1 - REAL EXAMPLES BMPs ----")
@@ -21,6 +21,7 @@ valid_real_examples = os.listdir("./valid-examples")
 for file in valid_real_examples:
     print(f"-- TEST FILE: {file} --")
     out = os.popen(f"..\\cmake-build-debug-msys2\\untitled.exe --encrypt --input \"../test/valid-examples/{file}\" {'--ignore-nonfatal' if ignore_nonfatal else ''}").read()
+    print(f"..\\cmake-build-debug-msys2\\untitled.exe --encrypt --input \"../test/valid-examples/{file}\" {'--ignore-nonfatal' if ignore_nonfatal else ''}")
     if out.find("Successfully read bmp") != -1 and out.find("An error has occurred reading the BMP Data") == -1:
         print("-- PASSED TEST --")
     else:
@@ -60,13 +61,22 @@ for file in valid_real_examples:
     error_occurred = out.find("An error has occurred") != -1 and out.find("Successfully read bmp") == -1
     if error_occurred and not ignore_nonfatal:
         print("-- PASSED TEST --")
-    else:
+    elif error_occurred and ignore_nonfatal:
         print(f"{out}\n-- Test Failed --\n")
         if interactive:
             input("-- PRESS ENTER FOR NEXT TEST --")
         else:
-            errors["ERROR_QUESTIONABLE_AS_GOOD"][0] += 1
-            errors["ERROR_QUESTIONABLE_AS_GOOD"][1].append("questionable/" + file)
+            errors["ERROR_QUESTIONABLE"][0] += 1
+            errors["ERROR_QUESTIONABLE"][1].append("questionable/" + file)
+    elif not error_occurred and ignore_nonfatal:
+        print("-- PASSED TEST --")
+    elif not error_occurred and not ignore_nonfatal:
+        print(f"{out}\n-- Test Failed --\n")
+        if interactive:
+            input("-- PRESS ENTER FOR NEXT TEST --")
+        else:
+            errors["ERROR_QUESTIONABLE"][0] += 1
+            errors["ERROR_QUESTIONABLE"][1].append("questionable/" + file)
 
 print("---- TEST 4 - CORRUPT BMPs ----")
 valid_real_examples = os.listdir("./corrupt")

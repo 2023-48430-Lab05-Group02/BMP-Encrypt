@@ -56,7 +56,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     }
 
     // Check if the file is the correct length specified.
-    if (file_length != bmp->fileHeader.size) {
+    if ((file_length != bmp->fileHeader.size) && strict_verify) {
         result.data = "FILE INVALID SIZE HEADER OR FILE SIZE INVALID";
         return result;
     }
@@ -102,6 +102,10 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     #endif
 
     // Next read the BMP Image Header data.
+    if (bmp_data_position + sizeof(BMPImageHeader_t) > file_length) {
+        result.data = "FILE TOO SMALL FOR BMP IMAGE HEADER";
+        return result;
+    }
     memcpy(&bmp->imageHeader, bmp_data, sizeof(BMPImageHeader_t));
     bmp_data_position += sizeof(BMPImageHeader_t);
 
@@ -152,16 +156,16 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     }
 
     // Check Pixels Per Meter smaller than image. SANITY CHECK.
-    if (bmp->imageHeader.xPixelsPerMeter > bmp->imageHeader.width * 1024) {
+    if (bmp->imageHeader.xPixelsPerMeter > bmp->imageHeader.width * 1024 + 1024) {
         result.data = "X PIXELS PER METER LARGER THAN IMAGE WIDTH";
         return result;
     }
-    if (bmp->imageHeader.yPixelsPerMeter > (unsigned int) abs(bmp->imageHeader.height * 1024)) {
+    if (bmp->imageHeader.yPixelsPerMeter > (unsigned int) abs(bmp->imageHeader.height * 1024 + 1024)) {
         result.data = "Y PIXELS PER METER LARGER THAN IMAGE HEIGHT";
         return result;
     }
     // Also check if Pixels Per meter is 0. SANITY CHECK.
-    if (bmp->imageHeader.yPixelsPerMeter == 0 || bmp->imageHeader.xPixelsPerMeter == 0) {
+    if ((bmp->imageHeader.yPixelsPerMeter == 0 || bmp->imageHeader.xPixelsPerMeter == 0) && strict_verify) {
         result.data = "PIXELS PER METER ZERO";
         return result;
     }
@@ -188,6 +192,10 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
             #endif
         }
 
+        if ((bmp_data_position + bmp->imageHeader.clrsUsed * (unsigned int) sizeof(unsigned int)) > file_length) {
+            result.data = "FILE TOO SMALL FOR BMP COLOR TABLE";
+            return result;
+        }
         memcpy(&((BMPColorTableHeader_t*)bmp->colorTable.data)->colorData, bmp_data + bmp_data_position, bmp->imageHeader.clrsUsed * (unsigned int) sizeof(unsigned int));
         bmp_data_position += (unsigned int) bmp->imageHeader.clrsUsed * (unsigned int) sizeof(unsigned int);
 
@@ -201,6 +209,11 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
 
         bmp->bitMaskTable.data = malloc(sizeof(BMPMaskTableHeader_t));
         bmp->bitMaskTable.present = true;
+
+        if (bmp_data_position + sizeof(BMPMaskTableHeader_t) > file_length) {
+            result.data = "FILE TOO SMALL FOR BMP MASK TABLE";
+            return result;
+        }
         memcpy(bmp->bitMaskTable.data, bmp_data + bmp_data_position, sizeof(BMPMaskTableHeader_t));
         bmp_data_position += sizeof(BMPMaskTableHeader_t);
 
@@ -215,9 +228,10 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
         #endif
 
         // SANITY CHECK - All colors have data? right?
-        if (((BMPMaskTableHeader_t*)bmp->bitMaskTable.data)->red_mask == 0 ||
+        if ((((BMPMaskTableHeader_t*)bmp->bitMaskTable.data)->red_mask == 0 ||
             ((BMPMaskTableHeader_t*)bmp->bitMaskTable.data)->green_mask == 0 ||
-            ((BMPMaskTableHeader_t*)bmp->bitMaskTable.data)->blue_mask == 0) {
+            ((BMPMaskTableHeader_t*)bmp->bitMaskTable.data)->blue_mask == 0) &&
+            strict_verify) {
             result.data = "COLOR CHANNEL HAS NO MASK";
             return result;
         }
@@ -269,6 +283,10 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     if (bmp->imageHeader.compression == 1 || bmp->imageHeader.compression == 2) {
         char *rle_buffer = malloc(bmp->imageHeader.imageSize);
 
+        if (bmp_data_position + bmp->imageHeader.imageSize > file_length) {
+            result.data = "FILE TOO SMALL FOR BMP PIXEL DATA COMPRESSED";
+            return result;
+        }
         memcpy(rle_buffer, bmp_data + bmp_data_position,bmp->imageHeader.imageSize);
         bmp_data_position += bmp->imageHeader.imageSize;
 
@@ -292,6 +310,11 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     // Otherwise read the straight data from the file.
     else {
         bmp->pixelData = malloc(bytes_nearest);
+
+        if (bmp_data_position + bytes_nearest > file_length) {
+            result.data = "FILE TOO SMALL FOR BMP PIXEL DATA";
+            return result;
+        }
         memcpy(bmp->pixelData, bmp_data + bmp_data_position, bytes_nearest);
         bmp_data_position += bytes_nearest;
     }
