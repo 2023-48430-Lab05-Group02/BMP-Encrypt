@@ -24,26 +24,26 @@ unsigned int fnv1a_hash(const char* str);
 /*
  * Encrypts data with a xor key.
  * Inputs:
- * - char data[] - The data that is to be encrypted.
+ * - char* data - The data that is to be encrypted.
  * - int length - The length of the data that is to be encrypted.
  * - unsigned int* key - A pointer to they key that should be used for encryption.
  * The length of char* key[] must be XOR_KEY_SIZE.
  * Outputs:
- * result_t with ok = true, and data = char* data[] with the returned data.
+ * result_t with ok = true, and data = nullptr.
  * Otherwise, result_T with ok = false, and a char[] error message.
  */
-result_t xor_encrypt(char data[], int length, unsigned int* key);
+result_t xor_encrypt(char* data, int length, unsigned int* key);
 /*
  * Decrypts data with a xor key.
  * Inputs:
- * - char data[] - The data that is to be decrypted.
+ * - char* data - The data that is to be decrypted.
  * - int length - The length of the data that is to be decrypted.
  * - unsigned int* key - A pointer to they key that should be used for decryption.
  * The length of char* key[] must be XOR_KEY_SIZE.
  * Outputs:
- * result_t with ok = true, and data = char* data[] with the returned data.
+ * result_t with ok = true, and data = nullptr.
  * Otherwise, result_T with ok = false, and a char[] error message.
  */
-result_t xor_decrypt(char data[], int length, unsigned int* key);
+result_t xor_decrypt(char* data, int length, unsigned int* key);
 
 #endif //ENCRYPTION_H

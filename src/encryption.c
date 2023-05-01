@@ -10,7 +10,7 @@ unsigned int fnv1a_hash(const char* str) {
 }
 
 // Key size can be received from XOR_KEY_SIZE
-result_t xor_encrypt(char data[], int length, unsigned int* key) {
+result_t xor_encrypt(char* data, int length, unsigned int* key) {
     result_t result;
 
     result.ok = false;
@@ -18,7 +18,7 @@ result_t xor_encrypt(char data[], int length, unsigned int* key) {
 
     return result;
 }
-result_t xor_decrypt(char data[], int length, unsigned int* key) {
+result_t xor_decrypt(char* data, int length, unsigned int* key) {
     result_t result;
 
     result.ok = false;
