@@ -54,3 +54,12 @@ dkms.conf
 # Cmake cache.
 cmake_install.cmake
 CMakeCache.txt
+
+# build cache
+build/
+cmake-build-debug-msys2/
+cmake-build-debug/
+CMakeFiles/
+
+# python venv
+venv/
