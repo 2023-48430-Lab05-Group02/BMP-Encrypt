@@ -139,6 +139,16 @@ int main(int argc, char* argv[]) {
                        "%s.\n", (char*) bmp_result.data);
                 return 0;
             }
+
+            // After all is done, make sure to free BMP.
+            if(bmp->colorTable.present) {
+                free(bmp->colorTable.data);
+            }
+            if(bmp->bitMaskTable.present) {
+                free(bmp->bitMaskTable.data);
+            }
+            free(bmp->pixelData);
+            free(bmp);
         }
         // Handle Decryption
         else if (decrypt_mode) {
@@ -147,5 +157,6 @@ int main(int argc, char* argv[]) {
     }
 
     // Shutdown the program.
+    free(encryption_key);
     return 0;
 }

@@ -8,6 +8,15 @@ add_compile_options(-Wall -Werror -Wextra -Wformat-security -Wduplicated-cond
 
 set(CMAKE_C_STANDARD 99)
 
+# Sanitizers
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -g")
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=leak -g")
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=thread -g")
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=undefined -g")
+
+# Debug Mode
+#set(CMAKE_BUILD_TYPE Debug)
+
 include_directories(./src)
 add_executable(untitled src/main.c src/bmp.c src/encryption.c src/input.c src/rle.c)
 

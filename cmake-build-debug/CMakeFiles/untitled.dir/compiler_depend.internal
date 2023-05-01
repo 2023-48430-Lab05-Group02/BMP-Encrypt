@@ -72,6 +72,9 @@ CMakeFiles/untitled.dir/src/bmp.c.o
  /home/mac/Code/BMP-Encrypt/src/datatypes/result.h
  /home/mac/Code/BMP-Encrypt/src/datatypes/bool.h
  /home/mac/Code/BMP-Encrypt/src/datatypes/option.h
+ /home/mac/Code/BMP-Encrypt/src/input.h
+ /home/mac/Code/BMP-Encrypt/src/rle.h
+ /home/mac/Code/BMP-Encrypt/src/encryption.h
 
 CMakeFiles/untitled.dir/src/encryption.c.o
  /home/mac/Code/BMP-Encrypt/src/encryption.c

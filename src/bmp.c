@@ -340,11 +340,16 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
                "MAX: %u\n", bmp->imageHeader.clrsUsed);
         #endif
         // Ignore 1 BPP as it is impossible for 1 bit to be out of range.
+
+        // Cache this for higher performance.
+        unsigned int clrs_used_cache = bmp->imageHeader.clrsUsed;
+
          if (bmp->imageHeader.bitDepth == 4) {
             for (unsigned int i = bytes_nearest; i > 0; i--) {
-                unsigned char upper = bmp->pixelData[i - 1] >> 4;
-                unsigned char lower = ((unsigned char) (bmp->pixelData[i - 1] << 4) >> 4);
-                if (upper > (char) bmp->imageHeader.clrsUsed || lower > (char) bmp->imageHeader.clrsUsed) {
+                unsigned char prev_pixel = bmp->pixelData[i - 1];
+                unsigned char upper = prev_pixel >> 4;
+                unsigned char lower = prev_pixel & 0x0F;
+                if (upper > clrs_used_cache || lower > clrs_used_cache) {
                     result.data = "PIXEL COLOR OUTSIDE COLOR TABLE";
 
                     #ifdef RUNTIME_DEBUG
@@ -356,7 +361,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
             }
         } else if (bmp->imageHeader.bitDepth == 8) {
             for (unsigned int i = bytes_nearest; i > 0; i--) {
-                if ((unsigned int) bmp->pixelData[i - 1] > bmp->imageHeader.clrsUsed) {
+                if ((unsigned int) bmp->pixelData[i - 1] > clrs_used_cache) {
                     result.data = "PIXEL COLOR OUTSIDE COLOR TABLE";
 
                     #ifdef RUNTIME_DEBUG
