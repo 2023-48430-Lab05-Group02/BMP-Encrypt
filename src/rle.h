@@ -7,6 +7,7 @@
 #define RLE_H
 
 #include "datatypes/result.h"
+#include "datatypes/short_sizes.h"
 
 /*
  * These functions perform rl8 decode or encode tasks.
@@ -14,11 +15,11 @@
  * - char* data[], the raw data to encode or decode.
  * - int length - the length of the raw data.
  * Outputs:
- * result_t with ok = true, data = char* data[] heap pointer with the new data.
+ * result_t with ok = true, data = u32 new length.
  * Or result_t with ok = false and data char[] error message.
  */
-result_t rl8_encode(char* data[], int length);
-result_t rl8_decode(char* data[], int length);
+result_t rl8_encode(char** data, u32 length);
+result_t rl8_decode(char** data, u32 length);
 
 /*
  * These functions perform rl4 decode or encode tasks.
@@ -29,7 +30,7 @@ result_t rl8_decode(char* data[], int length);
  * result_t with ok = true, data = char* data[] heap pointer with the new data.
  * Or result_t with ok = false and data char[] error message.
  */
-result_t rl4_encode(char* data[], int length);
-result_t rl4_decode(char* data[], int length);
+result_t rl4_encode(char** data, u32 length);
+result_t rl4_decode(char** data, u32 length);
 
 #endif //RLE_H
