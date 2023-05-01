@@ -32,7 +32,7 @@ unsigned int fnv1a_hash(const char* str);
  * result_t with ok = true, and data = nullptr.
  * Otherwise, result_T with ok = false, and a char[] error message.
  */
-result_t xor_encrypt(char* data, int length, unsigned int* key);
+result_t xor_encrypt(char* data, unsigned int length, unsigned int* key);
 /*
  * Decrypts data with a xor key.
  * Inputs:
@@ -44,6 +44,6 @@ result_t xor_encrypt(char* data, int length, unsigned int* key);
  * result_t with ok = true, and data = nullptr.
  * Otherwise, result_T with ok = false, and a char[] error message.
  */
-result_t xor_decrypt(char* data, int length, unsigned int* key);
+result_t xor_decrypt(char* data, unsigned int length, unsigned int* key);
 
 #endif //ENCRYPTION_H
