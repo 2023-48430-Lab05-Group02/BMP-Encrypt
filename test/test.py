@@ -3,7 +3,7 @@ import sys
 import re
 import yaml
 
-build_dir = "../cmake-build-debug/untitled"
+build_dir = "..\\cmake-build-debug-msys2\\untitled.exe"
 
 if sys.argv[1] == "true":
     interactive = True

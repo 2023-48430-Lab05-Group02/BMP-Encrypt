@@ -302,7 +302,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
         bmp->bitMaskTable.present = true;
 
         // Next read the BMP Bitmask Table.
-        read_result = heap_read(&bmp->bitMaskTable.data, &bmp_raw,
+        read_result = heap_read(((BMPMaskTableHeader_t*)bmp->bitMaskTable.data), &bmp_raw,
                                 sizeof(BMPMaskTableHeader_t), 1);
 
         // Return error if heap read fails.
