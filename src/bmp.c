@@ -3,42 +3,60 @@
 // Created by Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad
 // Person Responsible For File:
 
+// C Header Includes
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
 
+// Public API Includes
 #include "bmp.h"
 
+// Other API Includes
 #include "input.h"
 #include "rle.h"
 #include "encryption.h"
 
+// Print verbose debug statements for this module
 #define RUNTIME_DEBUG
 
+// Static Defines
+#define bmp_file_signature_1 'B'
+#define bmp_file_signature_2 'M'
+
+// Private Function Declarations
+
+
+// Public API Function Definitions
 result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
-    // Constants/Variables
-    char bmp_text[] = {'B', 'M'};
+    // Function Wide Variables
     BMP_t* bmp = malloc(sizeof(BMP_t));
-    unsigned int file_length;
+    unsigned int input_file_length;
+    // Local bmp_data cache for use in encryption or decryption and safe
+    // handling of file contents.
     char* bmp_data;
     unsigned int bmp_data_position = 0;
 
-    // Output variable - Assume result is false until proven true.
+    // Function Output Variables
     result_t result;
+    // Assume the result is not ok until proven to be okay.
     result.ok = false;
 
-    // Get the file length.
+    // Get the file's length
     fseek(input_file, 0L, SEEK_END);
-    file_length = (unsigned int) ftell(input_file);
+    input_file_length = (unsigned int) ftell(input_file);
     rewind(input_file);
 
-    // Read the file header
-    fread(&bmp->fileHeader, sizeof(BMPFileHeader_t), 1, input_file);
+    // Read the BMP file header
+    fread(&bmp->fileHeader, sizeof(BMPFileHeader_t), 1,
+          input_file);
 
+    // DEBUG: Print file magic bytes to stdio.
     #ifdef RUNTIME_DEBUG
-    printf("File header type is %c%c.\n", bmp->fileHeader.type[0], bmp->fileHeader.type[1]);
+    printf("File header type is %c%c.\n", bmp->fileHeader.type[0],
+           bmp->fileHeader.type[1]);
     #endif
+    // END DEBUG
 
     // Check if any values in the file header are signed when they shouldn't be.
     if (bmp->fileHeader.size >> 31 == 1 ||
@@ -49,33 +67,45 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
         return result;
     }
 
-    // Verify the file is the correct type.
-    if(memcmp(bmp->fileHeader.type, bmp_text, 2) != 0) {
+    // Verify the file is the correct type using the file signature.
+    if(bmp->fileHeader.type[0] != bmp_file_signature_1 ||
+       bmp->fileHeader.type[1] != bmp_file_signature_2) {
         result.data = "FILETYPE NOT BM";
         return result;
     }
 
-    // Check if the file is the correct length specified.
-    if ((file_length != bmp->fileHeader.size) && strict_verify) {
+    // If strictly verifying the file, ensure that the size specified in the
+    // file is equal to the actual size of the file. This can make sure that
+    // (for example), if the file was copied it wasn't cancelled mid-copy.
+    if ((input_file_length != bmp->fileHeader.size) && strict_verify) {
         result.data = "FILE INVALID SIZE HEADER OR FILE SIZE INVALID";
         return result;
     }
 
-    // Check if the file is encrypted.
+    // Handle an encrypted file using our custom encryption standard where
+    // the first reserved value of the file header is 1 to indicate encryption.
     if (bmp->fileHeader.reserved1 == 1) {
+        // Make sure that a key is provided if the file is encrypted.
         if(key.present == false) {
             result.data ="NO ENCRYPTION KEY PROVIDED";
             return result;
         }
 
-        char* decrypt_buffer = malloc(file_length - 14);
-        fread(decrypt_buffer, sizeof(char), file_length - 14, input_file);
+        // Allocate a temporary buffer to hold the data to decrypt. Read the
+        // rest of the file into it.
+        char* decrypt_buffer = malloc(input_file_length - 14);
+        fread(decrypt_buffer, sizeof(char), input_file_length - 14,
+              input_file);
 
-        result_t xor_result = xor_decrypt(decrypt_buffer, (int) (file_length - 14), key.data);
+        result_t xor_result = xor_decrypt(decrypt_buffer,
+                                          (int) (input_file_length - 14),
+                                          key.data);
 
         // Make sure to free the decrypt buffer.
         free(decrypt_buffer);
 
+        // Verify that the XOR decrypt has not returned any errors.
+        // Later checks will ensure the decryption has actually succeeded.
         if (xor_result.ok == false) {
             char* error = malloc(256);
             strcpy(error, "XOR DECRYPT FAILURE: ");
@@ -85,8 +115,11 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
 
         bmp_data = xor_result.data;
     } else {
-        bmp_data = malloc(file_length - 14);
-        fread(bmp_data, sizeof(char), file_length - 14, input_file);
+        // Otherwise if the file is not encrypted, just read it straight into
+        // the bmp_data buffer.
+        bmp_data = malloc(input_file_length - 14);
+        fread(bmp_data, sizeof(char), input_file_length - 14,
+              input_file);
     }
 
     // Check if reserved values are out of spec.
@@ -102,7 +135,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     #endif
 
     // Next read the BMP Image Header data.
-    if (bmp_data_position + sizeof(BMPImageHeader_t) > file_length) {
+    if (bmp_data_position + sizeof(BMPImageHeader_t) > input_file_length) {
         result.data = "FILE TOO SMALL FOR BMP IMAGE HEADER";
         return result;
     }
@@ -122,7 +155,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
            bmp->imageHeader.imageSize);
     #endif
 
-    // Check if any values in the image header are signed when they shouldn't be.
+    // Check if any values in the image header are signed.
     if (bmp->imageHeader.size >> 31 == 1 ||
         bmp->imageHeader.width >> 31 == 1 ||
         bmp->imageHeader.planes >> 15 == 1 ||
@@ -192,7 +225,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
             #endif
         }
 
-        if ((bmp_data_position + bmp->imageHeader.clrsUsed * (unsigned int) sizeof(unsigned int)) > file_length) {
+        if ((bmp_data_position + bmp->imageHeader.clrsUsed * (unsigned int) sizeof(unsigned int)) > input_file_length) {
             result.data = "FILE TOO SMALL FOR BMP COLOR TABLE";
             return result;
         }
@@ -210,7 +243,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
         bmp->bitMaskTable.data = malloc(sizeof(BMPMaskTableHeader_t));
         bmp->bitMaskTable.present = true;
 
-        if (bmp_data_position + sizeof(BMPMaskTableHeader_t) > file_length) {
+        if (bmp_data_position + sizeof(BMPMaskTableHeader_t) > input_file_length) {
             result.data = "FILE TOO SMALL FOR BMP MASK TABLE";
             return result;
         }
@@ -283,7 +316,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     if (bmp->imageHeader.compression == 1 || bmp->imageHeader.compression == 2) {
         char *rle_buffer = malloc(bmp->imageHeader.imageSize);
 
-        if (bmp_data_position + bmp->imageHeader.imageSize > file_length) {
+        if (bmp_data_position + bmp->imageHeader.imageSize > input_file_length) {
             result.data = "FILE TOO SMALL FOR BMP PIXEL DATA COMPRESSED";
             return result;
         }
@@ -311,7 +344,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     else {
         bmp->pixelData = malloc(bytes_nearest);
 
-        if (bmp_data_position + bytes_nearest > file_length) {
+        if (bmp_data_position + bytes_nearest > input_file_length) {
             result.data = "FILE TOO SMALL FOR BMP PIXEL DATA";
             return result;
         }
