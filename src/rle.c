@@ -5,7 +5,7 @@
 
 #include "rle.h"
 
-result_t rl8_encode(char** data, u32 length) {
+result_t rl8_encode(u8** data, u32 length) {
     result_t result;
 
     result.ok = false;
@@ -13,7 +13,7 @@ result_t rl8_encode(char** data, u32 length) {
 
     return result;
 }
-result_t rl8_decode(char** data, u32 length) {
+result_t rl8_decode(u8** data, u32 length) {
     result_t result;
 
     result.ok = false;
@@ -22,7 +22,7 @@ result_t rl8_decode(char** data, u32 length) {
     return result;
 }
 
-result_t rl4_encode(char** data, u32 length) {
+result_t rl4_encode(u8** data, u32 length) {
     result_t result;
 
     result.ok = false;
@@ -30,7 +30,7 @@ result_t rl4_encode(char** data, u32 length) {
 
     return result;
 }
-result_t rl4_decode(char** data, u32 length) {
+result_t rl4_decode(u8** data, u32 length) {
     result_t result;
 
     result.ok = false;
