@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
     bool decrypt_mode = false;
     bool input_file_present = false;
     bool encryption_key_present = false;
-    bool runtime_debug = false;
+    bool ignore_nonfatal = false;
 
     char input_file_name[256];
 
@@ -40,27 +40,30 @@ int main(int argc, char* argv[]) {
            strcmp(argv[i], "-I") == 0) {
             interactive_mode = true;
         }
-        if(strcmp(argv[i], "--batch") == 0 || strcmp(argv[i], "-B") == 0) {
+        else if(strcmp(argv[i], "--batch") == 0 || strcmp(argv[i], "-B") == 0) {
             batch_mode = true;
         }
-        if(strcmp(argv[i], "--encrypt") == 0 || strcmp(argv[i], "-E") == 0) {
+        else if(strcmp(argv[i], "--encrypt") == 0 || strcmp(argv[i], "-E") == 0) {
             encrypt_mode = true;
             i++;
         }
-        if(strcmp(argv[i], "--decrypt") == 0 || strcmp(argv[i], "-D") == 0) {
+        else if(strcmp(argv[i], "--decrypt") == 0 || strcmp(argv[i], "-D") == 0) {
             decrypt_mode = true;
         }
-        if(strcmp(argv[i], "--key") == 0 || strcmp(argv[i], "-K") == 0) {
+        else if(strcmp(argv[i], "--key") == 0 || strcmp(argv[i], "-K") == 0) {
             memcpy(encryption_key, argv[i + 1], 4);
             encryption_key_present = true;
         }
-        if(strcmp(argv[i], "--password") == 0 || strcmp(argv[i], "-P") == 0) {
+        else if(strcmp(argv[i], "--password") == 0 || strcmp(argv[i], "-P") == 0) {
             *encryption_key = fnv1a_hash(argv[i + 1]);
         }
-        if(strcmp(argv[i], "--input") == 0 || strcmp(argv[i], "-I") == 0) {
+        else if(strcmp(argv[i], "--input") == 0 || strcmp(argv[i], "-I") == 0) {
             strcpy(input_file_name, argv[i + 1]);
             input_file_present = true;
             i++;
+        }
+        else if(strcmp(argv[i], "--ignore-nonfatal") == 0) {
+            ignore_nonfatal = true;
         }
     }
 
@@ -119,7 +122,7 @@ int main(int argc, char* argv[]) {
                 key.data = NULL;
             }
             // Convert to BMP.
-            result_t bmp_result = bmp_from_file(input_file, key);
+            result_t bmp_result = bmp_from_file(input_file, key, !ignore_nonfatal);
             BMP_t* bmp;
 
             if (bmp_result.ok) {

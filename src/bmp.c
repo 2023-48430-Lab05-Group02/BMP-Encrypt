@@ -16,7 +16,7 @@
 
 #define RUNTIME_DEBUG
 
-result_t bmp_from_file(FILE* input_file, option_t key) {
+result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     // Constants/Variables
     char bmp_text[] = {'B', 'M'};
     BMP_t* bmp = malloc(sizeof(BMP_t));

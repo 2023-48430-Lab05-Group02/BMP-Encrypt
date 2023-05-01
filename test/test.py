@@ -8,17 +8,19 @@ if sys.argv[1] == "true":
 else:
     interactive = False
 print(f"Running in interactive mode: {interactive}")
+if sys.argv[2] == "true":
+    ignore_nonfatal = True
+else:
+    ignore_nonfatal = False
 
-errors = {}
-
-errors["ERROR_QUESTIONABLE_AS_GOOD"] = [0, []]
-errors["ERROR_CORRUPT_AS_GOOD"] = [0, []]
+errors = {"ERROR_QUESTIONABLE_AS_GOOD": [0, []],
+          "ERROR_CORRUPT_AS_GOOD": [0, []]}
 
 print("---- TEST 1 - REAL EXAMPLES BMPs ----")
 valid_real_examples = os.listdir("./valid-examples")
 for file in valid_real_examples:
     print(f"-- TEST FILE: {file} --")
-    out = os.popen(f"..\\cmake-build-debug-msys2\\untitled.exe --encrypt --input \"../test/valid-examples/{file}\"").read()
+    out = os.popen(f"..\\cmake-build-debug-msys2\\untitled.exe --encrypt --input \"../test/valid-examples/{file}\" {'--ignore-nonfatal' if ignore_nonfatal else ''}").read()
     if out.find("Successfully read bmp") != -1 and out.find("An error has occurred reading the BMP Data") == -1:
         print("-- PASSED TEST --")
     else:
@@ -36,7 +38,7 @@ print("---- TEST 2 - TEST CASE BMPs ----")
 valid_real_examples = os.listdir("./valid")
 for file in valid_real_examples:
     print(f"-- TEST FILE: {file} --")
-    out = os.popen(f"..\\cmake-build-debug-msys2\\untitled.exe --encrypt --input \"../test/valid/{file}\"").read()
+    out = os.popen(f"..\\cmake-build-debug-msys2\\untitled.exe --encrypt --input \"../test/valid/{file}\" {'--ignore-nonfatal' if ignore_nonfatal else ''}").read()
     if out.find("Successfully read bmp") != -1 and out.find("An error has occurred reading the BMP Data") == -1:
         print("-- PASSED TEST --")
     else:
@@ -54,8 +56,9 @@ print("---- TEST 3 - QUESTIONABLE BMPs ----")
 valid_real_examples = os.listdir("./questionable")
 for file in valid_real_examples:
     print(f"-- TEST FILE: {file} --")
-    out = os.popen(f"..\\cmake-build-debug-msys2\\untitled.exe --encrypt --input \"../test/questionable/{file}\"").read()
-    if out.find("An error has occurred") != -1 and out.find("Successfully read bmp") == -1:
+    out = os.popen(f"..\\cmake-build-debug-msys2\\untitled.exe --encrypt --input \"../test/questionable/{file}\" {'--ignore-nonfatal' if ignore_nonfatal else ''}").read()
+    error_occurred = out.find("An error has occurred") != -1 and out.find("Successfully read bmp") == -1
+    if error_occurred and not ignore_nonfatal:
         print("-- PASSED TEST --")
     else:
         print(f"{out}\n-- Test Failed --\n")
@@ -69,7 +72,7 @@ print("---- TEST 4 - CORRUPT BMPs ----")
 valid_real_examples = os.listdir("./corrupt")
 for file in valid_real_examples:
     print(f"-- TEST FILE: {file} --")
-    out = os.popen(f"..\\cmake-build-debug-msys2\\untitled.exe --encrypt --input \"../test/corrupt/{file}\"").read()
+    out = os.popen(f"..\\cmake-build-debug-msys2\\untitled.exe --encrypt --input \"../test/corrupt/{file}\" {'--ignore-nonfatal' if ignore_nonfatal else ''}").read()
     if out.find("An error has occurred") != -1 and out.find("Successfully read bmp") == -1:
         print("-- PASSED TEST --")
     else:

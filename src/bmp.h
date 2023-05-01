@@ -119,12 +119,12 @@ typedef struct BMP {
 
 /*
  * Reads a file and outputs a BMP if the file is a valid BMP file.
- * Inputs: FILE ptr.
+ * Inputs: FILE ptr, XOR key for decryption, whether to strictly verify files.
  * Outputs:
  * result_t with ok = true if the BMP is valid and data: BMP_t ptr.
  * Otherwise, outputs ok = false, with data a char[] message error.
  */
-result_t bmp_from_file(FILE* input_file, option_t key);
+result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify);
 /*
  * Takes a BMP ptr and writes the contents to a file.
  * Inputs: FILE ptr, BMP_t ptr.
