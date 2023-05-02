@@ -63,3 +63,6 @@ CMakeFiles/
 
 # python venv
 venv/
+
+# test .path file
+test/.exepath

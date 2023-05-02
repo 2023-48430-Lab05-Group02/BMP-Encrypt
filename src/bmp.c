@@ -3,6 +3,7 @@
 // Created by Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad
 // Person Responsible For File:
 
+//------------------------------------------------------------------------------
 // C Header Includes
 #include <stdlib.h>
 #include <string.h>
@@ -17,21 +18,25 @@
 #include "rle.h"
 #include "encryption.h"
 
-// Print verbose debug statements for this module
-#define RUNTIME_DEBUG
-
+//------------------------------------------------------------------------------
 // Static Defines
+//------------------------------------------------------------------------------
 #define bmp_file_signature_1 'B'
 #define bmp_file_signature_2 'M'
+#define RUNTIME_DEBUG
 
+//------------------------------------------------------------------------------
 // Private Structs
+//------------------------------------------------------------------------------
 typedef struct heapBlock {
     u32 position;
     u32 length;
     void* data;
 } heapBlock_t;
 
+//------------------------------------------------------------------------------
 // Private Function Declarations
+//------------------------------------------------------------------------------
 /*
  * Reads memory from src.data of quantity size * length to dst.
  * Verifies that src has enough memory remaining and begins reading from
@@ -39,7 +44,9 @@ typedef struct heapBlock {
  */
 result_t heap_read(void* dst, heapBlock_t* src, u64 size, u32 length);
 
+//------------------------------------------------------------------------------
 // Public API Function Definitions
+//------------------------------------------------------------------------------
 result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     //-- Function Wide Variables
     BMP_t* bmp = malloc(sizeof(BMP_t));
@@ -137,7 +144,8 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     }
 
     // Check if reserved values are out of spec.
-    if (bmp->fileHeader.reserved2 != 0 || bmp->fileHeader.reserved1 > 1)
+    if ((bmp->fileHeader.reserved2 != 0 || bmp->fileHeader.reserved1 > 1)
+        && strict_verify)
     {
         result.data = "RESERVED VALUES OUT OF SPEC";
         return result;
@@ -183,14 +191,15 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     // Check if any values in the image header are signed.
     if (bmp->imageHeader.size >> 31 == 1
         || bmp->imageHeader.width >> 31 == 1
-        || bmp->imageHeader.planes >> 15 == 1
+        || bmp->imageHeader.height >> 31 == 1
+        || (bmp->imageHeader.planes >> 15 == 1 && strict_verify)
         || bmp->imageHeader.bitDepth >> 15 == 1
         || bmp->imageHeader.compression >> 31 == 1
         || bmp->imageHeader.imageSize >> 31 == 1
-        || bmp->imageHeader.xPixelsPerMeter >> 31 == 1
-        || bmp->imageHeader.yPixelsPerMeter >> 31 == 1
+        || (bmp->imageHeader.xPixelsPerMeter >> 31 == 1 && strict_verify)
+        || (bmp->imageHeader.yPixelsPerMeter >> 31 == 1 && strict_verify)
         || bmp->imageHeader.clrsUsed >> 31 == 1
-        || bmp->imageHeader.clrsImportant >> 31 == 1)
+        || (bmp->imageHeader.clrsImportant >> 31 == 1 && strict_verify))
     {
         result.data = "INVALID NEGATIVE OR TOO BIG VALUE IN IMAGE HEADER";
         return result;
@@ -203,11 +212,16 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
         return result;
     }
 
-    // Check if we are dealing with an unsupported multi-plane BMP.
+    // Check if the BMP contains multiple "planes". These were never implemented
+    // and so should never be anything other than 1. If it is not 1, we can just
+    // make an assumption that the number of planes is one.
     if (bmp->imageHeader.planes != 1)
     {
-        result.data = "UNSUPPORTED MULTI-PLANE BMP";
-        return result;
+        if (strict_verify) {
+            result.data = "UNSUPPORTED MULTI-PLANE BMP";
+            return result;
+        }
+        bmp->imageHeader.planes = 1;
     }
 
     // Check color table is smaller than maximum allowed.
@@ -218,13 +232,13 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     }
 
     // Check If pixels per meter is way too impossibly large.
-    if (bmp->imageHeader.xPixelsPerMeter >
+    if (strict_verify && bmp->imageHeader.xPixelsPerMeter >
         bmp->imageHeader.width * 1024 + 1024)
     {
         result.data = "X PIXELS PER METER LARGER THAN IMAGE WIDTH";
         return result;
     }
-    if (bmp->imageHeader.yPixelsPerMeter >
+    if (strict_verify && bmp->imageHeader.yPixelsPerMeter >
         (u32) abs(bmp->imageHeader.height * 1024 + 1024))
     {
         result.data = "Y PIXELS PER METER LARGER THAN IMAGE HEIGHT";
@@ -474,7 +488,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     // END DEBUG
 
     // Verify that at bit depth 2, we have the appropriate monochrome pallet.
-    if (bmp->imageHeader.bitDepth == 1 && bmp->imageHeader.clrsUsed != 2)
+    if (bmp->imageHeader.bitDepth == 1 && bmp->imageHeader.clrsUsed > 2)
     {
         result.data = "COLOR TABLE IS NOT MONOCHROME OR MISSING";
         return result;
@@ -488,6 +502,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
         // Cache this for higher performance.
         u32 clrs_used_cache = bmp->imageHeader.clrsUsed;
 
+        // Handle 4 BPP
          if (bmp->imageHeader.bitDepth == 4)
          {
             for (u32 i = pixel_bytes; i > 0; i--)
@@ -498,19 +513,11 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
                 if (upper > clrs_used_cache || lower > clrs_used_cache)
                 {
                     result.data = "PIXEL COLOR OUTSIDE COLOR TABLE";
-
-                    // DEBUG: Print out raw pixel data and position to help
-                    // debugging issues with the split logic.
-                    #ifdef RUNTIME_DEBUG
-                    printf("Upper Pixel: %u, Lower Pixel: %u at "
-                           "position: %u\n", upper, lower, i);
-                    #endif
-                    // END DEBUG
-
                     return result;
                 }
             }
          }
+         // Handle 8 BPP
          else if (bmp->imageHeader.bitDepth == 8)
          {
             for (u32 i = pixel_bytes; i > 0; i--)
@@ -518,15 +525,6 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
                 if ((u32) bmp->pixelData[i - 1] > clrs_used_cache)
                 {
                     result.data = "PIXEL COLOR OUTSIDE COLOR TABLE";
-
-                    // DEBUG: Print out raw pixel data to help debugging,
-                    // mostly to identify issues in int casting or reading.
-                    #ifdef RUNTIME_DEBUG
-                    printf("Pixel data is: %u at position: %u\n",
-                           (u32) bmp->pixelData[i - 1], i);
-                    #endif
-                    // END DEBUG
-
                     return result;
                 }
             }
@@ -549,7 +547,9 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key) {
     return result;
 }
 
+//------------------------------------------------------------------------------
 // Private Function Definitions
+//------------------------------------------------------------------------------
 result_t heap_read(void* dst, heapBlock_t* src, u64 size, u32 length) {
     result_t result;
     u32 read_length = (u32) size * length;
