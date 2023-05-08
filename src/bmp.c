@@ -371,6 +371,12 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
         return result;
     }
 
+    // Check if Bitmap is compressed and top down. This is invalid.
+    if (bmp->imageHeader.height < 0 && bmp->imageHeader.compression != 0) {
+        result.data = "TOP DOWN BITMAPS CANNOT BE COMPRESSED";
+        return result;
+    }
+
     //-- Processing File: Read In Pixel Data
     // Verify file pointer position sync.
     if (bmp->fileHeader.pixelOffset - 14 != bmp_raw.position)
