@@ -6,6 +6,8 @@
 #ifndef RLE_H
 #define RLE_H
 
+#include "bmp.h"
+
 #include "datatypes/result.h"
 #include "datatypes/short_sizes.h"
 
@@ -18,7 +20,7 @@
  * result_t with ok = true, data = u32 new length.
  * Or result_t with ok = false and data char[] error message.
  */
-result_t rl8_encode(u8** data, u32 length);
+result_t rl8_encode(u8** data, u32 length, BMPImageHeader_t* image_header);
 result_t rl8_decode(u8** data, u32 length);
 
 /*
@@ -30,7 +32,7 @@ result_t rl8_decode(u8** data, u32 length);
  * result_t with ok = true, data = char* data[] heap pointer with the new data.
  * Or result_t with ok = false and data char[] error message.
  */
-result_t rl4_encode(u8** data, u32 length);
+result_t rl4_encode(u8** data, u32 length, BMPImageHeader_t* image_header);
 result_t rl4_decode(u8** data, u32 length);
 
 #endif //RLE_H
