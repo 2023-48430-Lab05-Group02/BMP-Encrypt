@@ -141,14 +141,7 @@ int main(int argc, char* argv[]) {
             }
 
             // After all is done, make sure to free BMP.
-            if(bmp->colorTable.present) {
-                free(bmp->colorTable.data);
-            }
-            if(bmp->bitMaskTable.present) {
-                free(bmp->bitMaskTable.data);
-            }
-            free(bmp->pixelData);
-            free(bmp);
+            bmp_destructor(bmp);
         }
         // Handle Decryption
         else if (decrypt_mode) {
