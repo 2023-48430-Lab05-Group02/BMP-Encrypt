@@ -614,7 +614,7 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key) {
     // Finally handle encryption.
     if (key.present) {
         result_t xor_result = xor_encrypt(heap.data, heap.length, key.data);
-
+        
         // Handle Errors
         if (!xor_result.ok) {
             result.ok = false;

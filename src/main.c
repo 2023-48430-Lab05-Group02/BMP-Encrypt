@@ -69,6 +69,7 @@ int main(int argc, char* argv[]) {
 
     if(!interactive_mode && !batch_mode && !encrypt_mode && !decrypt_mode) {
         print_menu_help();
+        return 0;
     }
 
     if(!interactive_mode && !batch_mode && !input_file_present) {
@@ -82,6 +83,8 @@ int main(int argc, char* argv[]) {
         print_menu_interactive();
 
         // Gather user input
+        i8* selected_option = malloc(sizeof(u8) * 2);
+        input_string(&selected_option, 1);
 
         // Execute on user command
         printf("Hello, World!\n");
