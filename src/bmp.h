@@ -26,11 +26,11 @@
  */
 #pragma pack(push, 1)
 typedef struct BMPFileHeader {
-    u8 type[2];
-    u32 size;
-    u16 reserved1;
-    u16 reserved2;
-    u32 pixelOffset;
+    u8_t type[2];
+    u32_t size;
+    u16_t reserved1;
+    u16_t reserved2;
+    u32_t pixelOffset;
 } BMPFileHeader_t;
 
 /*
@@ -65,17 +65,17 @@ typedef struct BMPFileHeader {
  * colors are considered important.
  */
 typedef struct BMPImageHeader {
-    u32 size;
-    u32 width;
-    i32 height;
-    u16 planes;
-    u16 bitDepth;
-    u32 compression;
-    u32 imageSize;
-    u32 xPixelsPerMeter;
-    u32 yPixelsPerMeter;
-    u32 clrsUsed;
-    u32 clrsImportant;
+    u32_t size;
+    u32_t width;
+    i32_t height;
+    u16_t planes;
+    u16_t bitDepth;
+    u32_t compression;
+    u32_t imageSize;
+    u32_t xPixelsPerMeter;
+    u32_t yPixelsPerMeter;
+    u32_t clrsUsed;
+    u32_t clrsImportant;
 } BMPImageHeader_t;
 
 /*
@@ -83,10 +83,10 @@ typedef struct BMPImageHeader {
  * the color table data easier.
  */
 typedef struct ColorData {
-    u8 red;
-    u8 green;
-    u8 blue;
-    u8 alpha;
+    u8_t red;
+    u8_t green;
+    u8_t blue;
+    u8_t alpha;
 } ColorData_t;
 
 /*
@@ -112,9 +112,9 @@ typedef struct BMPColorTableHeader {
  * If any masks overlap, that is an error state.
  */
 typedef struct BMPMaskTableHeader {
-    u32 green_mask;
-    u32 red_mask;
-    u32 blue_mask;
+    u32_t green_mask;
+    u32_t red_mask;
+    u32_t blue_mask;
 } BMPMaskTableHeader_t;
 #pragma pack(pop)
 
@@ -126,7 +126,7 @@ typedef struct BMP {
     BMPImageHeader_t imageHeader;
     option_t colorTable;
     option_t bitMaskTable;
-    u8* pixelData;
+    u8_t* pixelData;
 } BMP_t;
 
 /*
@@ -144,6 +144,6 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify);
  * result_t with ok = true if the BMP was successfully written and data nullptr.
  * Otherwise, outputs ok = false, with data a char[] message error.
  */
-result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key);
+result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key, bool use_compression);
 
 #endif //BMP_H

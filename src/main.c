@@ -23,9 +23,10 @@
 int main(int argc, char* argv[]) {
     // Initialize program
     bool interactive_mode = false;
-    bool batch_mode = false;
     bool encrypt_mode = false;
     bool decrypt_mode = false;
+    bool compress_mode = false;
+    bool decompress_mode = false;
     bool input_file_present = false;
     bool encryption_key_present = false;
     bool ignore_nonfatal = false;
@@ -39,9 +40,6 @@ int main(int argc, char* argv[]) {
         if(strcmp(argv[i], "--interactive") == 0 ||
            strcmp(argv[i], "-I") == 0) {
             interactive_mode = true;
-        }
-        if(strcmp(argv[i], "--batch") == 0 || strcmp(argv[i], "-B") == 0) {
-            batch_mode = true;
         }
         if(strcmp(argv[i], "--encrypt") == 0 || strcmp(argv[i], "-E") == 0) {
             encrypt_mode = true;
@@ -65,14 +63,26 @@ int main(int argc, char* argv[]) {
         if(strcmp(argv[i], "--ignore-nonfatal") == 0) {
             ignore_nonfatal = true;
         }
+        if(strcmp(argv[i], "--compress") == 0) {
+            compress_mode = true;
+        }
+        if(strcmp(argv[i], "-decompress") == 0) {
+            decompress_mode = true;
+        }
     }
 
-    if(!interactive_mode && !batch_mode && !encrypt_mode && !decrypt_mode) {
+    if (compress_mode && decompress_mode) {
+        printf("The same file can not be both compressed and compressed at the same time.\n");
+        return 0;
+    }
+
+    if(!interactive_mode && !encrypt_mode && !decrypt_mode) {
         print_menu_help();
+        return 0;
     }
 
-    if(!interactive_mode && !batch_mode && !input_file_present) {
-        printf("Please provide a input file using --input (-I) when in command line mode.\n");
+    if(!interactive_mode && !input_file_present) {
+        printf("Please provide a input file using --input (-I) when in command line.\n");
         return 0;
     }
 
@@ -83,6 +93,7 @@ int main(int argc, char* argv[]) {
 
         // Gather user input
 
+
         // Execute on user command
         printf("Hello, World!\n");
 
@@ -90,13 +101,8 @@ int main(int argc, char* argv[]) {
         interactive_mode = false;
     }
 
-    // Handle batch case.
-    if (batch_mode) {
-
-    }
-
     // Handle single file case.
-    else {
+    if (encrypt_mode || decrypt_mode) {
         // Handle encryption
         if (encrypt_mode) {
             FILE* input_file;

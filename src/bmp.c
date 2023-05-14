@@ -29,8 +29,8 @@
 // Private Structs
 //------------------------------------------------------------------------------
 typedef struct heapBlock {
-    u32 position;
-    u32 length;
+    u32_t position;
+    u32_t length;
     void* data;
 } heapBlock_t;
 
@@ -42,7 +42,7 @@ typedef struct heapBlock {
  * Verifies that src has enough memory remaining and begins reading from
  * the current position in the heap block.
  */
-result_t heap_read(void* dst, heapBlock_t* src, u64 size, u32 length);
+result_t heap_read(void* dst, heapBlock_t* src, u64_t size, u32_t length);
 
 //------------------------------------------------------------------------------
 // Public API Function Definitions
@@ -50,9 +50,9 @@ result_t heap_read(void* dst, heapBlock_t* src, u64 size, u32 length);
 result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     //-- Function Wide Variables
     BMP_t* bmp = malloc(sizeof(BMP_t));
-    u32 input_file_length;
+    u32_t input_file_length;
     result_t read_result;
-    u32 pixel_bytes;
+    u32_t pixel_bytes;
 
     // Local bmp_data cache for use in encryption or decryption and safe
     // handling of file contents.
@@ -66,7 +66,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     //-- Processing File: File Header
     // Get the file's length
     fseek(input_file, 0L, SEEK_END);
-    input_file_length = (u32) ftell(input_file);
+    input_file_length = (u32_t) ftell(input_file);
     rewind(input_file);
 
     // Read the BMP file header
@@ -239,7 +239,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
         return result;
     }
     if (strict_verify && bmp->imageHeader.yPixelsPerMeter >
-        (u32) abs(bmp->imageHeader.height * 1024 + 1024))
+        (u32_t) abs(bmp->imageHeader.height * 1024 + 1024))
     {
         result.data = "Y PIXELS PER METER LARGER THAN IMAGE HEIGHT";
         return result;
@@ -275,7 +275,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
         // Handle cases of color table (assumed) sizes.
         if(bmp->imageHeader.clrsUsed == 0)
         {
-            bmp->imageHeader.clrsUsed = (u32) pow(2.0,(f64)
+            bmp->imageHeader.clrsUsed = (u32_t) pow(2.0, (f64_t)
                                         bmp->imageHeader.bitDepth);
 
             // DEBUG: Note when assumed color tables are in use.
@@ -286,8 +286,8 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
         }
 
         // Read BMP color table from heap.
-        heap_read(bmp->colorTable.data,&bmp_raw,
-                  sizeof(u32), bmp->imageHeader.clrsUsed);
+        heap_read(bmp->colorTable.data, &bmp_raw,
+                  sizeof(u32_t), bmp->imageHeader.clrsUsed);
 
         // Return error if heap read fails.
         if (read_result.ok == false)
@@ -424,24 +424,24 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
         }
 
         // Set pixel bytes and image size to uncompressed quantity.
-        bmp->imageHeader.imageSize = *(u32*) rle_result.data;
-        pixel_bytes = *(u32*) rle_result.data;
+        bmp->imageHeader.imageSize = *(u32_t*) rle_result.data;
+        pixel_bytes = *(u32_t*) rle_result.data;
     }
     //-- Processing File: Uncompressed data branch of pixel read
     else
     {
         // Determine the final number of bytes of data we should be receiving
-        u32 bits_per_row = bmp->imageHeader.width * bmp->imageHeader.bitDepth;
+        u32_t bits_per_row = bmp->imageHeader.width * bmp->imageHeader.bitDepth;
         if (bmp->imageHeader.bitDepth != 32)
         {
             if (bits_per_row % 32 != 0)
             {
-                u32 padding_needed = 32 - (bits_per_row % 32);
+                u32_t padding_needed = 32 - (bits_per_row % 32);
                 bits_per_row += padding_needed;
             }
         }
-        f64 bits_count = (f64)bits_per_row * (f64) abs(bmp->imageHeader.height);
-        f64 bytes = bits_count / 8.0;
+        f64_t bits_count = (f64_t)bits_per_row * (f64_t) abs(bmp->imageHeader.height);
+        f64_t bytes = bits_count / 8.0;
 
         // Check if the number of bytes in the image is larger than a 4 byte int
         // This should never be possible as the BMP file format was not designed
@@ -451,7 +451,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
             result.data = "IMAGE TOO LARGE";
             return result;
         }
-        pixel_bytes = (u32) ceil(bytes);
+        pixel_bytes = (u32_t) ceil(bytes);
 
         // Check for uncompressed bitmaps where size does not match expected
         if (bmp->imageHeader.imageSize != 0
@@ -481,7 +481,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     // DEBUG: Print first 4 bytes of pixel data for manual inspection.
     #ifdef RUNTIME_DEBUG
     printf("First 4 bytes: \n");
-    for (u32 i=0; i < 4; i++)
+    for (u32_t i=0; i < 4; i++)
         printf("%#010x ", bmp->pixelData[i]);
     printf("\n");
     #endif
@@ -500,16 +500,16 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
         // Ignore 1 BPP as it is impossible for 1 bit to be out of range.
 
         // Cache this for higher performance.
-        u32 clrs_used_cache = bmp->imageHeader.clrsUsed;
+        u32_t clrs_used_cache = bmp->imageHeader.clrsUsed;
 
         // Handle 4 BPP
          if (bmp->imageHeader.bitDepth == 4)
          {
-            for (u32 i = pixel_bytes; i > 0; i--)
+            for (u32_t i = pixel_bytes; i > 0; i--)
             {
-                u8 prev_pixel = bmp->pixelData[i - 1];
-                u8 upper = prev_pixel >> 4;
-                u8 lower = prev_pixel & 0x0F;
+                u8_t prev_pixel = bmp->pixelData[i - 1];
+                u8_t upper = prev_pixel >> 4;
+                u8_t lower = prev_pixel & 0x0F;
                 if (upper > clrs_used_cache || lower > clrs_used_cache)
                 {
                     result.data = "PIXEL COLOR OUTSIDE COLOR TABLE";
@@ -520,9 +520,9 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
          // Handle 8 BPP
          else if (bmp->imageHeader.bitDepth == 8)
          {
-            for (u32 i = pixel_bytes; i > 0; i--)
+            for (u32_t i = pixel_bytes; i > 0; i--)
             {
-                if ((u32) bmp->pixelData[i - 1] > clrs_used_cache)
+                if ((u32_t) bmp->pixelData[i - 1] > clrs_used_cache)
                 {
                     result.data = "PIXEL COLOR OUTSIDE COLOR TABLE";
                     return result;
@@ -538,7 +538,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     result.data = bmp;
     return result;
 }
-result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key) {
+result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key, bool use_compression) {
     result_t result;
 
     result.ok = false;
@@ -550,9 +550,9 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key) {
 //------------------------------------------------------------------------------
 // Private Function Definitions
 //------------------------------------------------------------------------------
-result_t heap_read(void* dst, heapBlock_t* src, u64 size, u32 length) {
+result_t heap_read(void* dst, heapBlock_t* src, u64_t size, u32_t length) {
     result_t result;
-    u32 read_length = (u32) size * length;
+    u32_t read_length = (u32_t) size * length;
 
     if ((read_length + src->position) > src->length)
     {
@@ -563,7 +563,7 @@ result_t heap_read(void* dst, heapBlock_t* src, u64 size, u32 length) {
 
     memcpy(dst, src->data + src->position, length * size);
 
-    src->position += (u32) size * length;
+    src->position += (u32_t) size * length;
 
     result.ok = true;
     result.data = NULL;

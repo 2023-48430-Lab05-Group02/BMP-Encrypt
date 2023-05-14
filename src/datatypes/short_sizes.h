@@ -22,14 +22,14 @@
  */
 
 // Unsigned integers
-typedef unsigned char u8;
-typedef unsigned short int u16;
+typedef unsigned char u8_t;
+typedef unsigned short int u16_t;
 #ifdef _WIN64
-typedef unsigned int u32;
-typedef unsigned long long u64;
+typedef unsigned int u32_t;
+typedef unsigned long long u64_t;
 #elif __linux__
-typedef unsigned int u32;
-typedef unsigned long u64;
+typedef unsigned int u32_t;
+typedef unsigned long u64_t;
 #endif
 
 // Unsigned integers min values (inclusive):
@@ -45,14 +45,14 @@ typedef unsigned long u64;
 #define MAX_u64 18446744073709551615
 
 // Signed integers
-typedef char i8;
-typedef short int i16;
+typedef char i8_t;
+typedef short int i16_t;
 #ifdef _WIN64
-typedef int i32;
-typedef long long i64;
+typedef int i32_t;
+typedef long long i64_t;
 #elif __linux__
-typedef int i32;
-typedef long i64;
+typedef int i32_t;
+typedef long i64_t;
 #endif
 
 // Unsigned integers min values (inclusive):
@@ -68,8 +68,8 @@ typedef long i64;
 #define MAX_i64 9223372036854775807
 
 // Floating point
-typedef float f32;
-typedef double f64;
+typedef float f32_t;
+typedef double f64_t;
 
 // Floating point min values (inclusive):
 #define MIN_f32 1.2E-38
