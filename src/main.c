@@ -33,75 +33,91 @@ int main(int argc, char* argv[]) {
 
     char input_file_name[256];
 
-    unsigned int* encryption_key = malloc(sizeof(unsigned int));
+    unsigned int *encryption_key = malloc(sizeof(unsigned int));
 
     // Process arguments
-    for(int i = 0; i < argc; i++) {
-        if(strcmp(argv[i], "--interactive") == 0 ||
-           strcmp(argv[i], "-I") == 0)
-        {
+    for (int i = 0; i < argc; i++)
+    {
+        if (strcmp(argv[i], "--interactive") == 0
+            || strcmp(argv[i], "-I") == 0) {
             interactive_mode = true;
         }
-        if(strcmp(argv[i], "--encrypt") == 0 || strcmp(argv[i], "-E") == 0)
+        if (strcmp(argv[i], "--encrypt") == 0 || strcmp(argv[i], "-E") == 0)
         {
             encrypt_mode = true;
             i++;
         }
-        if(strcmp(argv[i], "--decrypt") == 0 || strcmp(argv[i], "-D") == 0)
+        if (strcmp(argv[i], "--decrypt") == 0 || strcmp(argv[i], "-D") == 0)
         {
             decrypt_mode = true;
         }
-        if(strcmp(argv[i], "--key") == 0 || strcmp(argv[i], "-K") == 0)
+        if (strcmp(argv[i], "--key") == 0 || strcmp(argv[i], "-K") == 0)
         {
             memcpy(encryption_key, argv[i + 1], 4);
             encryption_key_present = true;
         }
-        if(strcmp(argv[i], "--password") == 0 || strcmp(argv[i], "-P") == 0)
+        if (strcmp(argv[i], "--password") == 0 || strcmp(argv[i], "-P") == 0)
         {
             *encryption_key = fnv1a_hash(argv[i + 1]);
         }
-        if(strcmp(argv[i], "--input") == 0 || strcmp(argv[i], "-I") == 0)
+        if (strcmp(argv[i], "--input") == 0 || strcmp(argv[i], "-I") == 0)
         {
             strcpy(input_file_name, argv[i + 1]);
             input_file_present = true;
             i++;
         }
-        if(strcmp(argv[i], "--ignore-nonfatal") == 0 || strcmp(argv[i], "-C") == 0)
+        if (strcmp(argv[i], "--ignore-nonfatal") == 0)
         {
             ignore_nonfatal = true;
         }
-        if(strcmp(argv[i], "--force-compress") == 0)
+        if (strcmp(argv[i], "--force-compress") == 0
+            || strcmp(argv[i], "-C") == 0)
         {
             compress_mode = true;
         }
-        if(strcmp(argv[i], "--force-decompress") == 0)
+        if (strcmp(argv[i], "--force-decompress") == 0
+            || strcmp(argv[i], "-B") == 0)
         {
             decompress_mode = true;
         }
     }
 
-    if (compress_mode && decompress_mode) {
-        printf("The same file can not be both compressed and compressed at the same time.\n");
+    if (compress_mode && decompress_mode)
+    {
+        printf("The same file can not be both compressed and compressed"
+               " at the same time.\n");
         return 0;
     }
 
-    if(!interactive_mode && !encrypt_mode && !decrypt_mode) {
+    if (!interactive_mode && !encrypt_mode && !decrypt_mode)
+    {
         print_menu_help();
         return 0;
     }
 
-    if(!interactive_mode && !input_file_present) {
-        printf("Please provide a input file using --input (-I) when in command line.\n");
+    if (!interactive_mode && !input_file_present)
+    {
+        printf("Please provide a input file using --input (-I) when in"
+               " command line.\n");
+        return 0;
+    }
+
+    if (interactive_mode && (encrypt_mode || decompress_mode || compress_mode
+                             || decompress_mode))
+    {
+        printf("The program can not run in both interactive and command"
+               " line mode.");
         return 0;
     }
 
     // If in interactive mode, Enter the event loop
-    while (interactive_mode) {
+    while (interactive_mode)
+    {
         // Print menu
         print_menu_interactive();
 
         // Gather user input
-        i8_t* selected_option = malloc(sizeof(u8_t) * 2);
+        i8_t *selected_option = malloc(sizeof(u8_t) * 2);
         input_string(&selected_option, 1);
 
         // Execute on user command
@@ -125,66 +141,83 @@ int main(int argc, char* argv[]) {
         {
 
         }
-        else if (strcmp(selected_option, "q\n") == 0) {
-          // If command is quit, then set run to false.
-          interactive_mode = false;
-
+        else if (strcmp(selected_option, "q\n") == 0)
+        {
+            // If command is quit, then set run to false.
+            interactive_mode = false;
         }
     }
 
-    // Handle command line case.
-    if (encrypt_mode || decrypt_mode) {
-        // Handle encryption
-        if (encrypt_mode) {
-            FILE* input_file;
+    //---- Handle command line case.
+    // Note if ignore nonfatal is being used.
+    if (ignore_nonfatal)
+    {
+        printf("Ignoring non-fatal BMP file format errors.\n");
+    }
 
-            #ifdef RUNTIME_DEBUG
-            printf("Attempting file read from %s.\n", input_file_name);
-            #endif
+    // Handle encryption
+    if (encrypt_mode)
+    {
+        FILE *input_file;
 
-            // Use file_read() eventually... but for now.
-            input_file = fopen(input_file_name, "r");
-            if (input_file == NULL) {
-                printf("An error has occurred reading the file.\n");
-                return 0;
-            }
+        #ifdef RUNTIME_DEBUG
+        printf("Attempting file read from %s.\n", input_file_name);
+        #endif
 
-            // TEMPORARY FOR TESTING
-            option_t key;
-            if (encryption_key_present) {
-                key.present = true;
-                key.data = encryption_key;
-            } else {
-                key.present = false;
-                key.data = NULL;
-            }
-
-            // Note if ignore nonfatal is being used.
-            if (ignore_nonfatal) {
-                printf("Ignoring non-fatal BMP file format errors.\n");
-            }
-
-            // Convert to BMP.
-            result_t bmp_result = bmp_from_file(input_file, key, !ignore_nonfatal);
-            BMP_t* bmp;
-
-            if (bmp_result.ok) {
-                bmp = bmp_result.data;
-                printf("Successfully read bmp with width: %u, height: %d.\n",
-                       bmp->imageHeader.width, bmp->imageHeader.height);
-            } else {
-                printf("An error has occurred reading the BMP Data:\n"
-                       "%s.\n", (char*) bmp_result.data);
-                return 0;
-            }
-
-            // After all is done, make sure to free BMP.
-            bmp_destructor(bmp);
+        // Use file_read() eventually... but for now.
+        input_file = fopen(input_file_name, "r");
+        if (input_file == NULL)
+        {
+            printf("An error has occurred reading the file.\n");
+            return 0;
         }
-        // Handle Decryption
-        else if (decrypt_mode) {
 
+        // TEMPORARY FOR TESTING
+        option_t key;
+        if (encryption_key_present)
+        {
+            key.present = true;
+            key.data = encryption_key;
         }
+        else
+        {
+            key.present = false;
+            key.data = NULL;
+        }
+
+        // Convert to BMP.
+        result_t bmp_result = bmp_from_file(input_file, key, !ignore_nonfatal);
+        BMP_t *bmp;
+
+        if (bmp_result.ok)
+        {
+            bmp = bmp_result.data;
+            printf("Successfully read bmp with width: %u, height: %d.\n",
+                   bmp->imageHeader.width, bmp->imageHeader.height);
+        } else
+        {
+            printf("An error has occurred reading the BMP Data:\n"
+                   "%s.\n", (char *) bmp_result.data);
+            return 0;
+        }
+
+        // After all is done, make sure to free BMP.
+        bmp_destructor(bmp);
+    }
+    // Handle Decryption
+    else if (decrypt_mode)
+    {
+
+    }
+    // Handle compression
+    else if (compress_mode)
+    {
+
+    }
+    // Handle decompression
+    else if (decompress_mode)
+    {
+
     }
 
     // Shutdown the program.
