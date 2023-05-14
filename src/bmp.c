@@ -43,6 +43,11 @@ typedef struct heapBlock {
  * the current position in the heap block.
  */
 result_t heap_read(void* dst, heapBlock_t* src, u64_t size, u32_t length);
+/*
+ * Writes memory from src to the heap block in a safe and checked way. Verifies
+ * that dst has enough blocks remaining and writes from the current position.
+ */
+result_t heap_write(heapBlock_t* dst, void* src, u64_t size, u32_t length);
 
 //------------------------------------------------------------------------------
 // Public API Function Definitions
@@ -371,6 +376,12 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
         return result;
     }
 
+    // Check if Bitmap is compressed and top down. This is invalid.
+    if (bmp->imageHeader.height < 0 && bmp->imageHeader.compression != 0) {
+        result.data = "TOP DOWN BITMAPS CANNOT BE COMPRESSED";
+        return result;
+    }
+
     //-- Processing File: Read In Pixel Data
     // Verify file pointer position sync.
     if (bmp->fileHeader.pixelOffset - 14 != bmp_raw.position)
@@ -541,12 +552,109 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
 result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key, bool use_compression) {
     result_t result;
 
-    result.ok = false;
-    result.data = "CODE INCOMPLETE";
+    // Write the file header.
+    fwrite(&bmp->fileHeader, sizeof(BMPFileHeader_t), 1, output_file);
 
+    // Allocate a heap block to use as temporary buffer for encryption/decryption.
+    heapBlock_t heap;
+    heap.position = 0;
+    heap.length = bmp->fileHeader.size - 12;
+    heap.data = malloc(bmp->fileHeader.size - 12);
+
+    // Write the Image Data Header
+    heap_write(&heap, &bmp->imageHeader, sizeof(BMPImageHeader_t), 1);
+
+    // Write color table or mask table if present.
+    if (bmp->bitMaskTable.present)
+    {
+        heap_write(&heap, &bmp->bitMaskTable.data, sizeof(BMPImageHeader_t), 1);
+    }
+    if (bmp->colorTable.present)
+    {
+        heap_write(&heap, &bmp->colorTable.data, sizeof(BMPImageHeader_t), 1);
+    }
+
+    // Deal with compression encodings.
+    u8_t** pixelp = &bmp->pixelData;
+    u32_t size = bmp->imageHeader.imageSize;
+    if (bmp->imageHeader.compression == 1 && bmp->imageHeader.bitDepth != 8 && use_compression)
+    {
+        result.ok = false;
+        result.data = "Attempting to compress non 8-bit file with RLE8.";
+        return result;
+    }
+    else if (bmp->imageHeader.compression == 1 && bmp->imageHeader.bitDepth == 8 && use_compression)
+    {
+        result_t rle_result = rl8_encode(pixelp, bmp->imageHeader.imageSize, &bmp->imageHeader);
+
+        // Handle Errors
+        if (!rle_result.ok)
+        {
+            result.ok = false;
+            result.data = malloc(256);
+            strcpy(result.data, "RLE8 Encode Error: ");
+            strcat(result.data, rle_result.data);
+        }
+        size = *(u32_t*) rle_result.data;
+    }
+    else if (bmp->imageHeader.compression == 2 && bmp->imageHeader.bitDepth != 4 && use_compression)
+    {
+        result.ok = false;
+        result.data = "Attempting to compress non 4-bit file with RLE4.";
+        return result;
+    }
+    else if (bmp->imageHeader.compression == 2 && bmp->imageHeader.bitDepth == 4 && use_compression)
+    {
+        result_t rle_result = rl4_encode(pixelp, bmp->imageHeader.imageSize, &bmp->imageHeader);
+
+        // Handle Errors
+        if (!rle_result.ok)
+        {
+            result.ok = false;
+            result.data = malloc(256);
+            strcpy(result.data, "RLE8 Encode Error: ");
+            strcat(result.data, rle_result.data);
+        }
+        size = *(u32_t*) rle_result.data;
+    }
+    // No need to do any special processing for compression 3 bitfields or no
+    // compression at all.
+
+    heap_write(&heap, *pixelp, size, 1);
+
+    // Finally handle encryption.
+    if (key.present)
+    {
+        result_t xor_result = xor_encrypt(heap.data, heap.length, key.data);
+
+        // Handle Errors
+        if (!xor_result.ok)
+        {
+            result.ok = false;
+            result.data = malloc(256);
+            strcpy(result.data, "XOR Encryption Error: ");
+            strcat(result.data, xor_result.data);
+        }
+    }
+
+    // And write the heap buffer to the file.
+    fwrite(heap.data, heap.position, 1, output_file);
+
+    result.ok = true;
     return result;
 }
-
+void bmp_destructor(BMP_t* bmp) {
+    if(bmp->colorTable.present)
+    {
+        free(bmp->colorTable.data);
+    }
+    if(bmp->bitMaskTable.present)
+    {
+        free(bmp->bitMaskTable.data);
+    }
+    free(bmp->pixelData);
+    free(bmp);
+}
 //------------------------------------------------------------------------------
 // Private Function Definitions
 //------------------------------------------------------------------------------
@@ -561,9 +669,28 @@ result_t heap_read(void* dst, heapBlock_t* src, u64_t size, u32_t length) {
         return result;
     }
 
-    memcpy(dst, src->data + src->position, length * size);
+    memcpy(dst, src->data + src->position, read_length);
 
-    src->position += (u32_t) size * length;
+    src->position += read_length;
+
+    result.ok = true;
+    result.data = NULL;
+    return result;
+}
+result_t heap_write(heapBlock_t* dst, void* src, u64_t size, u32_t length) {
+    result_t result;
+    u32_t write_length = (u32_t) size * length;
+
+    if ((dst->length - dst->position) < write_length)
+    {
+        result.ok = false;
+        result.data = "NOT ENOUGH BYTES REMAINING IN HEAP BUFFER TO PREVENT OVERFLOW WHEN WRITING";
+        return result;
+    }
+
+    memcpy(dst->data + dst->position, src, write_length);
+
+    dst->position += write_length;
 
     result.ok = true;
     result.data = NULL;

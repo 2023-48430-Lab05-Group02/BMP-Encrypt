@@ -1,1 +1,1 @@
-valgrind --tool=callgrind --dump-instr=yes --collect-jumps=yes "../cmake-build-debug/untitled" --encrypt --input "../test/valid/4bpp-320x240.bmp"
+valgrind --tool=callgrind --dump-instr=yes --collect-jumps=yes "../cmake-build-debug/untitled" --encrypt --input "../test/valid/32bpp-topdown-320x240.bmp"

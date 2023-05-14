@@ -56,10 +56,10 @@ typedef long i64_t;
 #endif
 
 // Unsigned integers min values (inclusive):
-#define MIN_i8 -128
-#define MIN_i16 -32768
-#define MIN_i32 -2147483648
-#define MIN_i64 -9223372036854775808
+#define MIN_i8 (-128)
+#define MIN_i16 (-32768)
+#define MIN_i32 (-2147483648)
+#define MIN_i64 (-9223372036854775808)
 
 // Unsigned integers max values (inclusive):
 #define MAX_i8 127

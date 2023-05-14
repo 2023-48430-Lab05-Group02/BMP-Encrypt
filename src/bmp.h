@@ -145,5 +145,11 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify);
  * Otherwise, outputs ok = false, with data a char[] message error.
  */
 result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key, bool use_compression);
+/*
+ * A function that properly frees all loose memory in a BMP. Basically a
+ * destructor function. After calling this function, all past acquired pointers
+ * are now dangling.
+ */
+void bmp_destructor(BMP_t* bmp);
 
 #endif //BMP_H

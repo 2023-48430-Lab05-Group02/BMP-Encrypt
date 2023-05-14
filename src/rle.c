@@ -5,7 +5,7 @@
 
 #include "rle.h"
 
-result_t rl8_encode(u8_t** data, u32_t length) {
+result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
     result_t result;
 
     result.ok = false;
@@ -22,7 +22,7 @@ result_t rl8_decode(u8_t** data, u32_t length) {
     return result;
 }
 
-result_t rl4_encode(u8_t** data, u32_t length) {
+result_t rl4_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
     result_t result;
 
     result.ok = false;

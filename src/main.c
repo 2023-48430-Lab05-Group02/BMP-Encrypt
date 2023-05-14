@@ -38,35 +38,44 @@ int main(int argc, char* argv[]) {
     // Process arguments
     for(int i = 0; i < argc; i++) {
         if(strcmp(argv[i], "--interactive") == 0 ||
-           strcmp(argv[i], "-I") == 0) {
+           strcmp(argv[i], "-I") == 0)
+        {
             interactive_mode = true;
         }
-        if(strcmp(argv[i], "--encrypt") == 0 || strcmp(argv[i], "-E") == 0) {
+        if(strcmp(argv[i], "--encrypt") == 0 || strcmp(argv[i], "-E") == 0)
+        {
             encrypt_mode = true;
             i++;
         }
-        if(strcmp(argv[i], "--decrypt") == 0 || strcmp(argv[i], "-D") == 0) {
+        if(strcmp(argv[i], "--decrypt") == 0 || strcmp(argv[i], "-D") == 0)
+        {
             decrypt_mode = true;
         }
-        if(strcmp(argv[i], "--key") == 0 || strcmp(argv[i], "-K") == 0) {
+        if(strcmp(argv[i], "--key") == 0 || strcmp(argv[i], "-K") == 0)
+        {
             memcpy(encryption_key, argv[i + 1], 4);
             encryption_key_present = true;
         }
-        if(strcmp(argv[i], "--password") == 0 || strcmp(argv[i], "-P") == 0) {
+        if(strcmp(argv[i], "--password") == 0 || strcmp(argv[i], "-P") == 0)
+        {
             *encryption_key = fnv1a_hash(argv[i + 1]);
         }
-        if(strcmp(argv[i], "--input") == 0 || strcmp(argv[i], "-I") == 0) {
+        if(strcmp(argv[i], "--input") == 0 || strcmp(argv[i], "-I") == 0)
+        {
             strcpy(input_file_name, argv[i + 1]);
             input_file_present = true;
             i++;
         }
-        if(strcmp(argv[i], "--ignore-nonfatal") == 0) {
+        if(strcmp(argv[i], "--ignore-nonfatal") == 0 || strcmp(argv[i], "-C") == 0)
+        {
             ignore_nonfatal = true;
         }
-        if(strcmp(argv[i], "--compress") == 0) {
+        if(strcmp(argv[i], "--force-compress") == 0)
+        {
             compress_mode = true;
         }
-        if(strcmp(argv[i], "-decompress") == 0) {
+        if(strcmp(argv[i], "--force-decompress") == 0)
+        {
             decompress_mode = true;
         }
     }
@@ -92,16 +101,38 @@ int main(int argc, char* argv[]) {
         print_menu_interactive();
 
         // Gather user input
-
+        i8_t* selected_option = malloc(sizeof(u8_t) * 2);
+        input_string(&selected_option, 1);
 
         // Execute on user command
-        printf("Hello, World!\n");
+        if (strcmp(selected_option, "e\n") == 0)
+        {
 
-        // If command is quit, then set run to false.
-        interactive_mode = false;
+        }
+        else if (strcmp(selected_option, "d\n") == 0)
+        {
+
+        }
+        else if (strcmp(selected_option, "c\n") == 0)
+        {
+
+        }
+        else if (strcmp(selected_option, "b\n") == 0)
+        {
+
+        }
+        else if (strcmp(selected_option, "i\n") == 0)
+        {
+
+        }
+        else if (strcmp(selected_option, "q\n") == 0) {
+          // If command is quit, then set run to false.
+          interactive_mode = false;
+
+        }
     }
 
-    // Handle single file case.
+    // Handle command line case.
     if (encrypt_mode || decrypt_mode) {
         // Handle encryption
         if (encrypt_mode) {
@@ -127,6 +158,7 @@ int main(int argc, char* argv[]) {
                 key.present = false;
                 key.data = NULL;
             }
+
             // Note if ignore nonfatal is being used.
             if (ignore_nonfatal) {
                 printf("Ignoring non-fatal BMP file format errors.\n");
@@ -147,14 +179,7 @@ int main(int argc, char* argv[]) {
             }
 
             // After all is done, make sure to free BMP.
-            if(bmp->colorTable.present) {
-                free(bmp->colorTable.data);
-            }
-            if(bmp->bitMaskTable.present) {
-                free(bmp->bitMaskTable.data);
-            }
-            free(bmp->pixelData);
-            free(bmp);
+            bmp_destructor(bmp);
         }
         // Handle Decryption
         else if (decrypt_mode) {
