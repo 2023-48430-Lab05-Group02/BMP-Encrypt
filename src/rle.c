@@ -11,6 +11,44 @@ result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
     result.ok = false;
     result.data = "CODE INCOMPLETE";
 
+    int hight_count, width_count, count;
+    unsigned char *output, current_byte;
+    output = (unsigned char*)malloc(sizeof(data) * 2);
+    u32* location_counter = malloc((sizeof(u32)));
+
+    location_counter = 0;
+
+    for (hight_count = 0; hight_count < (int)image_header->height; hight_count++) {
+        width_count = 0;
+
+        while (width_count < (int)image_header->width) {
+            *current_byte = data[hight_count * (int)image_header->width + width_count];
+            count = 1;
+
+            while (count < 255 && width_count + count < (int)image_header->width && data[hight_count * (int)image_header->width + width_count + count] == data[hight_count * (int)image_header->width + width_count]) {
+                count++;
+            }
+
+            if (count == 1) {
+                output[*location_counter++] = current_byte;
+            } else {
+                output[*location_counter++] = (unsigned char) count;
+                output[*location_counter++] = current_byte;
+            }
+
+            width_count += count;
+        }
+
+        output[*location_counter++] = 0;
+        output[*location_counter++] = 0;
+    }
+    output[*location_counter++] = 0;
+    output[*location_counter++] = 1;
+
+
+    /* create test to make sure result.test is true */
+    result.data = location_counter;
+    
     return result;
 }
 result_t rl8_decode(u8_t** data, u32_t length) {
