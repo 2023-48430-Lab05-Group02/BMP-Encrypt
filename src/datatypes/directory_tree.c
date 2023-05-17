@@ -54,18 +54,23 @@ directory_t* directory_tree_new_directory(char* name, directory_t* parent) {
     parent->subdirectories[parent->s_length] =
             directory_tree_new(name);
     parent->s_length++;
+    return &parent->subdirectories[parent->s_length + 1];
 }
 file_t* directory_tree_new_file(char* name, directory_t* parent) {
-
+    file_t* file = malloc(sizeof(file_t));
+    return file;
 }
 void directory_tree_get_file_path(file_t* file, char* name, u32_t max_size) {
 
 }
-file_list_t directory_tree_get_files(directory_t* parent) {
+file_list_t* directory_tree_get_files(directory_t* parent) {
+    file_list_t* file = malloc(sizeof(file_list_t));
+    return file;
 
 }
-directory_list_t directory_tree_get_subdirectories(directory_t* parent) {
-
+directory_list_t* directory_tree_get_subdirectories(directory_t* parent) {
+    directory_list_t* file = malloc(sizeof(directory_list_t));
+    return file;
 }
 // Internal use functions
 #ifdef _WIN64
@@ -89,7 +94,7 @@ void dir_to_dir_tree_recursive(directory_t* tree_dir) {
     {
         // Get the full path of the file.
         char fullpath[PATH_MAX];
-        snprintf(fullpath, PATH_MAX, "%s/%s", path, object->d_name);
+        snprintf(fullpath, PATH_MAX, "%s/%s", tree_dir->name, object->d_name);
 
         // Skip .. and . directories
         if (strcmp(object->d_name, ".") == 0
@@ -109,7 +114,7 @@ void dir_to_dir_tree_recursive(directory_t* tree_dir) {
         if (S_ISDIR(object_info.st_mode))
         {
             // Directory Ahoy.
-            dir_to_dir_tree_recursive(fullpath, directory_tree_new_directory(object->d_name, tree_dir));
+            dir_to_dir_tree_recursive(directory_tree_new_directory(object->d_name, tree_dir));
         }
         else
         {

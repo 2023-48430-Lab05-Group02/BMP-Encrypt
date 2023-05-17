@@ -43,6 +43,6 @@ directory_t directory_tree_new_from_dir_path(char* dir_path);
 directory_t* directory_tree_new_directory(char* name, directory_t* parent);
 file_t* directory_tree_new_file(char* name, directory_t* parent);
 void directory_tree_get_file_path(file_t* file, char* name, u32_t max_size);
-file_list_t directory_tree_get_files(directory_t* parent);
-directory_list_t directory_tree_get_subdirectories(directory_t* parent);
+file_list_t* directory_tree_get_files(directory_t* parent);
+directory_list_t* directory_tree_get_subdirectories(directory_t* parent);
 #endif //DIRECTORY_TREE_H
