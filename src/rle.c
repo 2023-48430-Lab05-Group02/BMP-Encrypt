@@ -5,18 +5,17 @@
 
 #include "rle.h"
 #include <stdlib.h>
-
-void* safe_realloc(void* pointer, int size);
+#include <string.h>
+#include "./util/realloc.h"
 
 result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
     result_t result;
 
 
-    int hight_count, width_count, count, length;
+    int hight_count, width_count, count;
     unsigned char *output, current_byte;
     output = malloc(sizeof(data) * 2);
     /* add test to see if output true*/
-    length = 0;
     int location_counter = 0;
 
     for (hight_count = 0; hight_count < (int)image_header->height; hight_count++) {
@@ -74,7 +73,7 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
                     step++;
                     int section_size = 0;
                     section_size = *data[step]+((int)image_header->width * *data[step + 1]);
-                    output = safe_realloc(output, location_counter + section_size + 1);
+                    output = safe_realloc(output, (u32_t)(location_counter + section_size + 1));
                     step++;
 
                     while(section_size > 0){
@@ -88,7 +87,7 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
             else{
                 step++;
                 int subcount = *data[step];
-                output = safe_realloc(output, location_counter + subcount);
+                output = safe_realloc(output, (u32_t)(location_counter + subcount));
                 step++;
                 while (subcount > 0){
                     output[location_counter++] = *data[step];
@@ -103,7 +102,7 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
         else{
             int subcount = current_byte;
             while (subcount > 0){
-                output = safe_realloc(output, location_counter + 1);
+                output = safe_realloc(output, (u32_t)(location_counter + 1));
                 output[location_counter++] = *data[step + 1];
             }
             step ++;
@@ -117,15 +116,4 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
     result.ok = true;
 
     return result;
-}
-
-void* safe_realloc(void* pointer, int size){
-    void* output;
-    output = realloc(pointer, size);
-
-    if (output == NULL){
-        output = malloc(size);
-        memcpy(output, pointer, sizeof(*pointer));
-    }
-    return output;
 }
