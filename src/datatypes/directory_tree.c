@@ -23,7 +23,7 @@
  */
 // Linux only includes
 #ifdef __linux__
-#include <dirent.h> // DIR, opendir, closedir
+#include <dirent.h> // DIR, opendir, closedir, PATH_MAXs
 #include <sys/stat.h> // S_ISDIR, stat
 
 // Windows only includes
@@ -52,16 +52,19 @@ void dir_to_dir_tree_recursive(directory_t* tree_dir);
 // Public Function Definitions
 //------------------------------------------------------------------------------
 directory_t directory_tree_new(char* raw_file_path) {
-    directory_t directory = {
-        raw_file_path,
-        NULL,
-        malloc(sizeof(directory_t) * 3),
-        0,
-        3,
-        malloc(sizeof(file_t) * 16),
-        0,
-        16
-    };
+    directory_t directory;
+
+    strcpy(directory.name, raw_file_path);
+    directory.parent = NULL;
+
+    directory.subdirectories = malloc(sizeof(directory_t) * 3);
+    directory.s_length = 0;
+    directory.s_capacity = 3;
+
+    directory.files = malloc(sizeof(file_t) * 16);
+    directory.f_length = 0;
+    directory.f_capacity = 16;
+
     return directory;
 }
 directory_t directory_tree_new_from_dir_path(char* dir_path) {
@@ -75,20 +78,22 @@ directory_t* directory_tree_new_directory(char* name, directory_t* parent) {
         safe_realloc(parent->subdirectories,
                      parent->s_capacity * 2 * sizeof(directory_t));
     }
-    directory_t dir = {
-            name,
-            parent,
-            malloc(sizeof(directory_t) * 3),
-            0,
-            3,
-            malloc(sizeof(file_t) * 16),
-            0,
-            16
-    };
-    parent->subdirectories[parent->s_length] = dir;
+
+    directory_t* dir = &parent->subdirectories[parent->s_length];
+
+    strcpy(dir->name, name);
+    dir->parent = parent;
+
+    dir->subdirectories = malloc(sizeof(directory_t) * 3);
+    dir->s_length = 0;
+    dir->s_capacity = 3;
+
+    dir->files = malloc(sizeof(file_t) * 16);
+    dir->f_length = 0;
+    dir->f_capacity = 16;
 
     parent->s_length++;
-    return &parent->subdirectories[parent->s_length + 1];
+    return &parent->subdirectories[parent->s_length - 1];
 }
 file_t* directory_tree_new_file(char* name, directory_t* parent) {
     if (parent->f_capacity == parent->f_length)
@@ -96,10 +101,10 @@ file_t* directory_tree_new_file(char* name, directory_t* parent) {
         safe_realloc(parent->files,
                      parent->f_capacity * 2 * sizeof(file_t));
     }
-    file_t file = {
-            name,
-            parent
-    };
+    file_t file;
+    strcpy(file.name, name);
+    file.parent = parent;
+
     parent->files[parent->f_length] = file;
 
     parent->f_length++;
@@ -116,7 +121,11 @@ void directory_tree_get_file_path(file_t* file, char* name) {
         if (parent->parent != NULL)
         {
             strcpy(left, parent->name);
+            #ifdef _WIN64
+            strcat(left, "\\");
+            #elif __linux__ // _WIN64
             strcat(left, "/");
+            #endif // _WIN64,__linux__
             strcat(left, right);
             strcpy(right, left);
             parent = parent->parent;
@@ -136,10 +145,14 @@ void directory_tree_get_directory_path(directory_t* directory, char* name) {
     strcpy(right, directory->name);
 
     while (!reached_root) {
-        if (parent->parent != NULL)
+        if (parent != NULL)
         {
             strcpy(left, parent->name);
+            #ifdef _WIN64
+            strcat(left, "\\");
+            #elif __linux__ // _WIN64
             strcat(left, "/");
+            #endif // _WIN64,__linux__
             strcat(left, right);
             strcpy(right, left);
             parent = parent->parent;
@@ -181,11 +194,13 @@ void directory_tree_deconstructor(directory_t* directory) {
 #ifdef _WIN64
 void dir_to_dir_tree_recursive(directory_t* tree_dir) {
     char find_path[PATH_MAX];
+    char dir_path[PATH_MAX];
     WIN32_FIND_DATA find_info;
     HANDLE find;
 
     // Add \\ to the path.
-    snprintf(find_path, PATH_MAX, "%s\\*", tree_dir->name);
+    directory_tree_get_directory_path(tree_dir, dir_path);
+    snprintf(find_path, PATH_MAX, "%s\\*", dir_path);
 
     // Begin the find file.
     find = FindFirstFileA(find_path, &find_info);
@@ -225,10 +240,14 @@ void dir_to_dir_tree_recursive(directory_t* tree_dir) {
 #elif __linux__ // _WIN64
 void dir_to_dir_tree_recursive(directory_t* tree_dir) {
     DIR* directory;
+    char dir_path[PATH_MAX-256];
     struct dirent* object;
     struct stat object_info;
 
-    directory = opendir(tree_dir->name);
+    // Get the full directory path
+    directory_tree_get_directory_path(tree_dir, dir_path);
+
+    directory = opendir(dir_path);
     // This should never occur as the directory should be checked by input code.
     if (directory == NULL) {
         printf("Unrecoverable error in directory tree.\n");
@@ -240,7 +259,7 @@ void dir_to_dir_tree_recursive(directory_t* tree_dir) {
     {
         // Get the full path of the file.
         char full_path[PATH_MAX];
-        snprintf(fullpath, PATH_MAX, "%s/%s", tree_dir->name, object->d_name);
+        snprintf(full_path, PATH_MAX, "%s/%s", dir_path, object->d_name);
 
         // Skip .. and . directories
         if (strcmp(object->d_name, ".") == 0
