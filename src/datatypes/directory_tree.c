@@ -5,8 +5,10 @@
 // Standard Library Includes
 #include <stdlib.h> // exit
 #include <stdio.h> // printf
+#include <string.h> // strcmp
 #ifdef __linux__
 #include <dirent.h> // DIR, opendir
+#include <sys/stat.h> // S_ISDIR
 #elif _WIN64
 #include <windows.h>
 #endif
@@ -50,12 +52,13 @@ directory_list_t directory_tree_get_subdirectories(directory_t* parent) {
 }
 // Internal use functions
 #ifdef _WIN64
-void dir_to_dir_tree_recursive(char* path) {
+void dir_to_dir_tree_recursive(char* path, directory_tree_t* tree) {
 }
 #elif __linux__
 void dir_to_dir_tree_recursive(char* path, directory_tree_t* tree) {
     DIR* directory;
-    struct dirent* object_info;
+    struct dirent* object;
+    struct stat object_info;
 
     directory = opendir(path);
     // This should never occur as the directory should be checked by input code.
@@ -65,8 +68,25 @@ void dir_to_dir_tree_recursive(char* path, directory_tree_t* tree) {
     }
 
     // Iterate the directory.
-    while ((object_info = readdir(directory)) != NULL) {
+    while ((object = readdir(directory)) != NULL) {
+        // Skip .. and . directories
+        if (strcmp(object->d_name, ".") == 0
+            || strcmp(object->d_name, "..") == 0)
+        {
+            continue;
+        }
 
+        // Get information about the object.
+        if (stat(fullpath, &object_info) < 0) {
+            printf("Could not get file status: %s\n", fullpath);
+            continue;
+        }
+
+        // Handle recursion.
+        if (S_ISDIR(object_info.st_mode)) {
+            // Directory
+            dir_to_dir_tree_recursive(fullpath, )
+        }
     }
 }
 #endif
