@@ -3,6 +3,7 @@
 
 # Ignore IDE Settings
 .idea/
+.vscode/
 
 # Object files
 *.o
