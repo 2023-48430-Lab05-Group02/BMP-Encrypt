@@ -235,6 +235,7 @@
 
 // Test Main
 #include "datatypes/directory_tree.h"
+#include <dirent.h>
 
 int main() {
     char* text = malloc(PATH_MAX);

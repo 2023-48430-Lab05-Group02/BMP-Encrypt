@@ -225,8 +225,12 @@ void dir_to_dir_tree_recursive(directory_t* tree_dir) {
 #elif __linux__ // _WIN64
 void dir_to_dir_tree_recursive(directory_t* tree_dir) {
     DIR* directory;
+    char dir_path[PATH_MAX];
     struct dirent* object;
     struct stat object_info;
+
+    // Get the full directory path
+    directory_tree_get_directory_path(tree_dir, dir_path);
 
     directory = opendir(tree_dir->name);
     // This should never occur as the directory should be checked by input code.
@@ -240,7 +244,7 @@ void dir_to_dir_tree_recursive(directory_t* tree_dir) {
     {
         // Get the full path of the file.
         char full_path[PATH_MAX];
-        snprintf(fullpath, PATH_MAX, "%s/%s", tree_dir->name, object->d_name);
+        snprintf(full_path, PATH_MAX, "%s/%s", dir_path, object->d_name);
 
         // Skip .. and . directories
         if (strcmp(object->d_name, ".") == 0
