@@ -8,9 +8,6 @@
 result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
     result_t result;
 
-    result.ok = false;
-    result.data = "CODE INCOMPLETE";
-
     int hight_count, width_count, count;
     unsigned char *output, current_byte;
     output = (unsigned char*)malloc(sizeof(data) * 2);
@@ -32,7 +29,7 @@ result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
                 count++;
             }
             /* it would be better to compress unique pixels in absolute mode, as just using encoded mode can increase
-             * the total file size if there is alot of unique pixels, might add later */
+             * the total file size if there is a lot of unique pixels, might add later */
 
             output[*location_counter++] = (unsigned char) count;
             output[*location_counter++] = current_byte;
@@ -49,12 +46,13 @@ result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
 
     /* create test to make sure result.test is true */
     result.data = output;
-    
+    result.ok = true;
+
     free(data);
-    
+
     return result;
 }
-result_t rl8_decode(u8_t** data, u32_t length) {
+result_t rl8_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
     result_t result;
     unsigned char *output, current_byte;
     output = (unsigned char*)malloc(1);
@@ -110,15 +108,12 @@ result_t rl8_decode(u8_t** data, u32_t length) {
 
     result.data = output;
     result.ok = true;
-    
+
     return result;
 }
 
 result_t rl4_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
     result_t result;
-
-    result.ok = false;
-    result.data = "CODE INCOMPLETE";
 
     int hight_count, width_count, count, shift;
     unsigned char *output, current_byte;
@@ -145,7 +140,7 @@ result_t rl4_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
             }
 
             /* it would be better to compress unique pixels in absolute mode, as just using encoded mode can increase
-             * the total file size if there is alot of unique pixels, might add later */
+             * the total file size if there is a lot of unique pixels, might add later*/
 
             output[*location_counter++] = (unsigned char) count;
             output[*location_counter++] = current_byte;
@@ -160,14 +155,15 @@ result_t rl4_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
     output[*location_counter++] = 1;
 
 
+    free(data);
+
     /* create test to make sure result.test is true */
     result.data = output;
-    
-    free(data);
-    
+    result.ok = true;
+
     return result;
 }
-result_t rl4_decode(u8_t** data, u32_t length) {
+result_t rl4_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
     result_t result;
 
     result.ok = false;
