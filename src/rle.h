@@ -21,7 +21,7 @@
  * Or result_t with ok = false and data char[] error message.
  */
 result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header);
-result_t rl8_decode(u8_t** data, u32_t length);
+result_t rl8_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header);
 
 /*
  * These functions perform rl4 decode or encode tasks.
@@ -33,6 +33,6 @@ result_t rl8_decode(u8_t** data, u32_t length);
  * Or result_t with ok = false and data char[] error message.
  */
 result_t rl4_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header);
-result_t rl4_decode(u8_t** data, u32_t length);
+result_t rl4_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header);
 
 #endif //RLE_H
