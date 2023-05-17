@@ -1,10 +1,11 @@
+// ---------------------------------BMP-Encrypt---------------------------------
 // 48430 Introduction to C Programming
 // Lab: 5, Group: 2
-// Created by Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad
-// Person Responsible For File:
+// Copyright © 2023 Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad.
+// Primary File Contributor: Macauley Lim
+// -----------------------------------bmp.c-------------------------------------
 
-//------------------------------------------------------------------------------
-// C Header Includes
+// Standard Library Includes
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -13,7 +14,7 @@
 // Public API Includes
 #include "bmp.h"
 
-// Other API Includes
+// Other Includes
 #include "input.h"
 #include "rle.h"
 #include "encryption.h"
@@ -50,7 +51,7 @@ result_t heap_read(void* dst, heapBlock_t* src, u64_t size, u32_t length);
 result_t heap_write(heapBlock_t* dst, void* src, u64_t size, u32_t length);
 
 //------------------------------------------------------------------------------
-// Public API Function Definitions
+// Public Function Definitions
 //------------------------------------------------------------------------------
 result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     //-- Function Wide Variables
