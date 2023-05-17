@@ -1,42 +1,64 @@
-//
-// Created by Macauley Lim on 17/05/23.
-//
+// ---------------------------------BMP-Encrypt---------------------------------
+// 48430 Introduction to C Programming
+// Lab: 5, Group: 2
+// Copyright © 2023 Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad.
+// Primary File Contributor: Macauley Lim
+// ---------------------------directory_tree.c----------------------------------
 
 // Standard Library Includes
 #include <stdlib.h> // exit
 #include <stdio.h> // printf
 #include <string.h> // strcmp
+/*
+ * This library include requires some more explanation. The primary purpose of
+ * it is to allow the code to access the subdirectories of a directory to bulk
+ * process all the files in the structure for the purposes of encryption or
+ * decryption.
+ * For Linux, the following libraries are in use beyond the stdlib:
+ * dirent.h - For directory handling using the DIR type.
+ * sys/stat.h - To get information about the content of objects inside a DIR.
+ * For Windows, the situation is significantly different due to the monolithic
+ * status of the windows "windows.h" library. The specific functions used are
+ * noted in the comment after the function include.
+ */
+// Linux only includes
 #ifdef __linux__
-#include <dirent.h> // DIR, opendir
-#include <sys/stat.h> // S_ISDIR
-#elif _WIN64
-#include <windows.h>
-#endif
+#include <dirent.h> // DIR, opendir, closedir
+#include <sys/stat.h> // S_ISDIR, stat
+
+// Windows only includes
+#elif _WIN64 // __linux__
+#include <windows.h> // FindFirstFileA, FindNextFile, WIN32_FIND_DATA, FindClose
+
+#endif // __linux__,_WIN64
 
 // Public API Includes
 #include "directory_tree.h"
 
 // Other Includes
 #include "../util/realloc.h"
+#include "bool.h"
 
-// Internal use structs
-typedef struct file_directory_list {
-    file_list_t files;
-    directory_list_t directories;
-} file_directory_list_t;
-
-// Internal use function declarations
+//------------------------------------------------------------------------------
+// Private Function Declarations
+//------------------------------------------------------------------------------
+/*
+ * Takes an empty directory_t root directory (parent = NULL) and populate it
+ * with the files and directories physically at that location in the system.
+ */
 void dir_to_dir_tree_recursive(directory_t* tree_dir);
 
-// Function Definitions
+//------------------------------------------------------------------------------
+// Public Function Definitions
+//------------------------------------------------------------------------------
 directory_t directory_tree_new(char* raw_file_path) {
     directory_t directory = {
         raw_file_path,
         NULL,
-        malloc(sizeof(directory_t*) * 3),
+        malloc(sizeof(directory_t) * 3),
         0,
         3,
-        malloc(sizeof(file_t*) * 16),
+        malloc(sizeof(file_t) * 16),
         0,
         16
     };
@@ -48,35 +70,159 @@ directory_t directory_tree_new_from_dir_path(char* dir_path) {
     return empty_dir;
 }
 directory_t* directory_tree_new_directory(char* name, directory_t* parent) {
-    if (parent->s_capacity == parent->s_length) {
-        safe_realloc(parent->subdirectories, parent->s_capacity * 2);
+    if (parent->s_capacity == parent->s_length)
+    {
+        safe_realloc(parent->subdirectories,
+                     parent->s_capacity * 2 * sizeof(directory_t));
     }
-    parent->subdirectories[parent->s_length] =
-            directory_tree_new(name);
+    directory_t dir = {
+            name,
+            parent,
+            malloc(sizeof(directory_t) * 3),
+            0,
+            3,
+            malloc(sizeof(file_t) * 16),
+            0,
+            16
+    };
+    parent->subdirectories[parent->s_length] = dir;
+
     parent->s_length++;
     return &parent->subdirectories[parent->s_length + 1];
 }
 file_t* directory_tree_new_file(char* name, directory_t* parent) {
-    file_t* file = malloc(sizeof(file_t));
-    return file;
+    if (parent->f_capacity == parent->f_length)
+    {
+        safe_realloc(parent->files,
+                     parent->f_capacity * 2 * sizeof(file_t));
+    }
+    file_t file = {
+            name,
+            parent
+    };
+    parent->files[parent->f_length] = file;
+
+    parent->f_length++;
+    return &parent->files[parent->f_length-1];
 }
-void directory_tree_get_file_path(file_t* file, char* name, u32_t max_size) {
+void directory_tree_get_file_path(file_t* file, char* name) {
+    bool reached_root = false;
+    directory_t* parent = file->parent;
+    char left[PATH_MAX], right[PATH_MAX];
+
+    strcpy(right, file->name);
+
+    while (!reached_root) {
+        if (parent->parent != NULL)
+        {
+            strcpy(left, parent->name);
+            strcat(left, "/");
+            strcat(left, right);
+            strcpy(right, left);
+            parent = parent->parent;
+        }
+        else
+        {
+            reached_root = true;
+        }
+    }
+    strcpy(name, right);
+}
+void directory_tree_get_directory_path(directory_t* directory, char* name) {
+    bool reached_root = false;
+    directory_t* parent = directory->parent;
+    char left[PATH_MAX], right[PATH_MAX];
+
+    strcpy(right, directory->name);
+
+    while (!reached_root) {
+        if (parent->parent != NULL)
+        {
+            strcpy(left, parent->name);
+            strcat(left, "/");
+            strcat(left, right);
+            strcpy(right, left);
+            parent = parent->parent;
+        }
+        else
+        {
+            reached_root = true;
+        }
+    }
+    strcpy(name, right);
+}
+file_iter_t directory_tree_get_files(directory_t* parent) {
+    file_iter_t file_list = {
+        parent->files,
+        parent->f_length
+    };
+    return file_list;
 
 }
-file_list_t* directory_tree_get_files(directory_t* parent) {
-    file_list_t* file = malloc(sizeof(file_list_t));
-    return file;
-
+directory_iter_t directory_tree_get_subdirectories(directory_t* parent) {
+    directory_iter_t directory_list = {
+        parent->subdirectories,
+        parent->s_length
+    };
+    return directory_list;
 }
-directory_list_t* directory_tree_get_subdirectories(directory_t* parent) {
-    directory_list_t* file = malloc(sizeof(directory_list_t));
-    return file;
+void directory_tree_deconstructor(directory_t* directory) {
+    free(directory->files);
+    for(u32_t i = 0; i < directory->s_length; i++)
+    {
+        directory_tree_deconstructor(&directory->subdirectories[i]);
+    }
+    free(directory->subdirectories);
+    free(directory);
 }
-// Internal use functions
+//------------------------------------------------------------------------------
+// Private Function Definitions
+//------------------------------------------------------------------------------
 #ifdef _WIN64
 void dir_to_dir_tree_recursive(directory_t* tree_dir) {
+    char find_path[PATH_MAX];
+    WIN32_FIND_DATA find_info;
+    HANDLE find;
+
+    // Add \\ to the path.
+    snprintf(find_path, PATH_MAX, "%s\\*", tree_dir->name);
+
+    // Begin the find file.
+    find = FindFirstFileA(find_path, &find_info);
+    // This should never occur as the directory should be checked by input code.
+    if (find == INVALID_HANDLE_VALUE)
+    {
+        u32_t error = GetLastError();
+        printf("Unrecoverable error in directory tree: error %u.\n", error);
+        exit(EXIT_FAILURE);
+    }
+
+    // Handle the rest of the files...
+    do
+    {
+        // Skip .. and . directories
+        if (strcmp(find_info.cFileName, ".") == 0
+            || strcmp(find_info.cFileName, "..") == 0)
+        {
+            continue;
+        }
+
+        // Handle File or Directory.
+        if (find_info.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+        {
+            dir_to_dir_tree_recursive(directory_tree_new_directory(
+                    find_info.cFileName, tree_dir));
+        }
+        else
+        {
+            directory_tree_new_file(find_info.cFileName, tree_dir);
+        }
+    }
+    while (FindNextFile(find, &find_info));
+
+    FindClose(find);
 }
-#elif __linux__
+#elif __linux__ // _WIN64
 void dir_to_dir_tree_recursive(directory_t* tree_dir) {
     DIR* directory;
     struct dirent* object;
@@ -93,7 +239,7 @@ void dir_to_dir_tree_recursive(directory_t* tree_dir) {
     while ((object = readdir(directory)) != NULL)
     {
         // Get the full path of the file.
-        char fullpath[PATH_MAX];
+        char full_path[PATH_MAX];
         snprintf(fullpath, PATH_MAX, "%s/%s", tree_dir->name, object->d_name);
 
         // Skip .. and . directories
@@ -104,17 +250,18 @@ void dir_to_dir_tree_recursive(directory_t* tree_dir) {
         }
 
         // Get information about the object.
-        if (stat(fullpath, &object_info) < 0)
+        if (stat(full_path, &object_info) < 0)
         {
-            printf("File at %s could not be read. Skipping.\n", fullpath);
+            printf("File at %s could not be read. Skipping.\n", full_path);
             continue;
         }
 
-        // Handle recursion.
+        // Handle File or Directory.
         if (S_ISDIR(object_info.st_mode))
         {
-            // Directory Ahoy.
-            dir_to_dir_tree_recursive(directory_tree_new_directory(object->d_name, tree_dir));
+            // Directory Recurse Ahoy.
+            dir_to_dir_tree_recursive(directory_tree_new_directory(
+                    object->d_name, tree_dir));
         }
         else
         {
@@ -124,4 +271,4 @@ void dir_to_dir_tree_recursive(directory_t* tree_dir) {
     }
     closedir(directory);
 }
-#endif
+#endif // _WIN64,__linux__
