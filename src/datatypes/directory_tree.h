@@ -16,19 +16,15 @@ typedef struct file {
 typedef struct directory {
     char* name;
     struct directory* parent;
-    struct directory_tree* tree;
 
     struct directory* subdirectories;
-    u32_t subdirectories_length;
+    u32_t s_length;
+    u32_t s_capacity;
 
     struct file* files;
-    u32_t files_length;
+    u32_t f_length;
+    u32_t f_capacity;
 } directory_t;
-
-typedef struct directory_tree {
-    char* file_path;
-    struct directory root_directory;
-} directory_tree_t;
 
 // Return structs
 typedef struct file_list {
@@ -42,12 +38,11 @@ typedef struct directory_list {
 } directory_list_t;
 
 // Function Declarations
-directory_tree_t directory_tree_new(char* raw_file_path);
-directory_tree_t directory_tree_new_from_dir_path(char* dir_path);
-void directory_tree_new_directory(directory_t* parent);
-void directory_tree_new_file(directory_t* parent);
-void directory_tree_get_file_path(file_t* file);
+directory_t directory_tree_new(char* raw_file_path);
+directory_t directory_tree_new_from_dir_path(char* dir_path);
+directory_t* directory_tree_new_directory(char* name, directory_t* parent);
+file_t* directory_tree_new_file(char* name, directory_t* parent);
+void directory_tree_get_file_path(file_t* file, char* name, u32_t max_size);
 file_list_t directory_tree_get_files(directory_t* parent);
 directory_list_t directory_tree_get_subdirectories(directory_t* parent);
-
 #endif //DIRECTORY_TREE_H

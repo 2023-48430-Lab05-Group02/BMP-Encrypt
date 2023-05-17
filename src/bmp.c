@@ -415,8 +415,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
         if (bmp->imageHeader.compression == 1)
         {
             // RLE8
-            rle_result = rl8_decode(&bmp->pixelData,
-                                    bmp->imageHeader.imageSize);
+            rle_result = rl8_decode(&bmp->pixelData,&bmp->imageHeader);
         }
         else if (bmp->imageHeader.compression == 2)
         {
@@ -586,7 +585,7 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key, bool use_compr
     }
     else if (bmp->imageHeader.compression == 1 && bmp->imageHeader.bitDepth == 8 && use_compression)
     {
-        result_t rle_result = rl8_encode(pixelp, bmp->imageHeader.imageSize, &bmp->imageHeader);
+        result_t rle_result = rl8_encode(pixelp, &bmp->imageHeader);
 
         // Handle Errors
         if (!rle_result.ok)
