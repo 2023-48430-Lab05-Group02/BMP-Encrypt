@@ -1,10 +1,17 @@
-//
-// Created by Macauley Lim on 02/05/2023.
-//
+// ---------------------------------BMP-Encrypt---------------------------------
+// 48430 Introduction to C Programming
+// Lab: 5, Group: 2
+// Copyright © 2023 Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad.
+// Primary File Contributor: Macauley Lim
+// -----------------------------short_sizes.h-----------------------------------
 
+// Include Guard
 #ifndef SHORT_SIZES_H
 #define SHORT_SIZES_H
 
+//------------------------------------------------------------------------------
+// Custom Type Definitions
+//------------------------------------------------------------------------------
 /*
  * -- Explanation Of Type Names --
  * These type names follow rust terminology.
@@ -21,7 +28,9 @@
  * sizeof() - u64
  */
 
-// Unsigned integers
+//------------------------------------------------------------------------------
+// Unsigned Integers
+//------------------------------------------------------------------------------
 typedef unsigned char u8_t;
 typedef unsigned short int u16_t;
 #ifdef _WIN64
@@ -44,7 +53,9 @@ typedef unsigned long u64_t;
 #define MAX_u32 2147483647
 #define MAX_u64 18446744073709551615
 
-// Signed integers
+//------------------------------------------------------------------------------
+// Signed Integers
+//------------------------------------------------------------------------------
 typedef char i8_t;
 typedef short int i16_t;
 #ifdef _WIN64
@@ -67,7 +78,9 @@ typedef long i64_t;
 #define MAX_i32 2147483647
 #define MAX_i64 9223372036854775807
 
-// Floating point
+//------------------------------------------------------------------------------
+// Floating Point
+//------------------------------------------------------------------------------
 typedef float f32_t;
 typedef double f64_t;
 

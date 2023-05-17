@@ -1,17 +1,25 @@
+// ---------------------------------BMP-Encrypt---------------------------------
 // 48430 Introduction to C Programming
 // Lab: 5, Group: 2
-// Created by Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad
-// Person Responsible For File: Macauley Lim
+// Copyright © 2023 Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad.
+// Primary File Contributor: Macauley Lim
+// -------------------------------------bmp.h-----------------------------------
 
+// Include Guards
 #ifndef BMP_H
 #define BMP_H
 
+// Standard Library Includes
 #include <stdio.h>
 
+// Other Includes
 #include "datatypes/result.h"
 #include "datatypes/option.h"
 #include "datatypes/short_sizes.h"
 
+//------------------------------------------------------------------------------
+// Structs
+//------------------------------------------------------------------------------
 /*
  * The file header of the BMP file format. This data is contained right at the
  * start of the file and tells us that the file is indeed a BMP file, its size
@@ -129,6 +137,9 @@ typedef struct BMP {
     u8_t* pixelData;
 } BMP_t;
 
+//------------------------------------------------------------------------------
+// Function Declarations
+//------------------------------------------------------------------------------
 /*
  * Reads a file and outputs a BMP if the file is a valid BMP file.
  * Inputs: FILE ptr, XOR key for decryption, whether to strictly verify files.

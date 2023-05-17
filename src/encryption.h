@@ -1,17 +1,24 @@
+// ---------------------------------BMP-Encrypt---------------------------------
 // 48430 Introduction to C Programming
 // Lab: 5, Group: 2
-// Created by Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad
-// Person Responsible For File: Osmaan Ahmad
+// Copyright © 2023 Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad.
+// Primary File Contributor: Osmaan Ahmad
+// ---------------------------encryption.h--------------------------------------
 
-#include "datatypes/result.h"
-
+//Include Guards
 #ifndef ENCRYPTION_H
 #define ENCRYPTION_H
+
+// Other Includes
+#include "datatypes/result.h"
 
 // Static Defines
 #define FNV_PRIME 16777619u
 #define FNV_OFFSET_BIAS 2166136261u
 
+//------------------------------------------------------------------------------
+// Function Declarations
+//------------------------------------------------------------------------------
 /*
  * This function preforms the Fowler-Noll-Vo hash function type 1A. It is a
  * simple to implement way to produce a fixed length key from a password.

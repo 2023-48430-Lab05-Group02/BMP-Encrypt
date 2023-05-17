@@ -5,6 +5,10 @@
 // Primary File Contributor: Macauley Lim
 // ---------------------------directory_tree.h----------------------------------
 
+// Include Guard
+#ifndef DIRECTORY_TREE_H
+#define DIRECTORY_TREE_H
+
 // Standard Library Includes
 #ifdef __linux__
 #include <dirent.h> // PATH_MAX
@@ -12,10 +16,6 @@
 
 // Other Includes
 #include "datatypes/short_sizes.h"
-
-// Include Guard
-#ifndef DIRECTORY_TREE_H
-#define DIRECTORY_TREE_H
 
 //------------------------------------------------------------------------------
 // Structs

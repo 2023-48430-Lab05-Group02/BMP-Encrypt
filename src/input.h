@@ -1,15 +1,23 @@
+// ---------------------------------BMP-Encrypt---------------------------------
 // 48430 Introduction to C Programming
 // Lab: 5, Group: 2
-// Created by Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad
-// Person Responsible For File: Joseph Rico
+// Copyright © 2023 Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad.
+// Primary File Contributor: Joseph Rico
+// ----------------------------------input.h------------------------------------
 
-#include <stdio.h>
-
-#include "datatypes/result.h"
-
+// Include Guard
 #ifndef INPUT_H
 #define INPUT_H
 
+// Standard Library Includes
+#include <stdio.h>
+
+// Other Includes
+#include "datatypes/result.h"
+
+//------------------------------------------------------------------------------
+// Function Declarations
+//------------------------------------------------------------------------------
 /*
  * Prints the help menu to the stdio.
  */

@@ -1,12 +1,20 @@
-//
-// Created by Macauley Lim on 21/04/2023.
-//
+// ---------------------------------BMP-Encrypt---------------------------------
+// 48430 Introduction to C Programming
+// Lab: 5, Group: 2
+// Copyright © 2023 Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad.
+// Primary File Contributor: Macauley Lim
+// ---------------------------------result.h------------------------------------
 
+// Include Guard
 #ifndef RESULT_H
 #define RESULT_H
 
+// Other Includes
 #include "bool.h"
 
+//------------------------------------------------------------------------------
+// Structs
+//------------------------------------------------------------------------------
 /*
  * A way of representing whether a function has returned a valid result or not.
  * If ok is false, data must contain a char[] with an error message.

@@ -1,12 +1,20 @@
-//
-// Created by Macauley Lim on 24/04/23.
-//
+// ---------------------------------BMP-Encrypt---------------------------------
+// 48430 Introduction to C Programming
+// Lab: 5, Group: 2
+// Copyright © 2023 Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad.
+// Primary File Contributor: Macauley Lim
+// ----------------------------------option.h-----------------------------------
 
+// Include guard
 #ifndef OPTION_H
 #define OPTION_H
 
+// Other Includes
 #include "bool.h"
 
+//------------------------------------------------------------------------------
+// Structs
+//------------------------------------------------------------------------------
 /*
  * A way of representing an optional. Either the value is present or not.
  * This helps to ensure the safety of the code by ensuring allowing code to

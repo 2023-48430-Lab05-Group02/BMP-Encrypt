@@ -1,14 +1,18 @@
+// ---------------------------------BMP-Encrypt---------------------------------
 // 48430 Introduction to C Programming
 // Lab: 5, Group: 2
-// Created by Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad
-// <Compilation Instructions Here, Other Notes>
+// Copyright © 2023 Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad.
+// Primary File Contributor: Macauley Lim
+// ----------------------------Compile Instructions-----------------------------
+//
+// -----------------------------------main.c------------------------------------
 
-// The 4 libraries we are allowed.
+// Standard Library Includes
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 
+// Other Includes
 #include "datatypes/bool.h"
 #include "datatypes/result.h"
 #include "datatypes/option.h"
@@ -17,12 +21,20 @@
 #include "bmp.h"
 #include "encryption.h"
 #include "input.h"
-#include "rle.h"
 
+// Static Defines
 #define RUNTIME_DEBUG
 
+//------------------------------------------------------------------------------
+// Private Function Declarations
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// Begin Main
+//------------------------------------------------------------------------------
 int main(int argc, char* argv[]) {
-    // Initialize program
+    // Program Operation State
     bool interactive_mode = false;
     bool encrypt_mode = false;
     bool decrypt_mode = false;
@@ -32,11 +44,15 @@ int main(int argc, char* argv[]) {
     bool encryption_key_present = false;
     bool ignore_nonfatal = false;
 
+    // Single file mode operation state
     char input_file_name[256];
 
+    // Encryption mode operation state
     unsigned int *encryption_key = malloc(sizeof(unsigned int));
 
-    // Process arguments
+    //--------------------------------------------------------------------------
+    // Process command line arguments
+    //--------------------------------------------------------------------------
     for (int i = 0; i < argc; i++)
     {
         if (strcmp(argv[i], "--interactive") == 0
@@ -83,6 +99,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    // Check for errors in the command line arguments
     if (compress_mode && decompress_mode)
     {
         printf("The same file can not be both compressed and compressed"
@@ -111,7 +128,9 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-    // If in interactive mode, Enter the event loop
+    //--------------------------------------------------------------------------
+    // Interactive Mode
+    //--------------------------------------------------------------------------
     while (interactive_mode)
     {
         // Print menu
@@ -156,7 +175,9 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    //---- Handle command line case.
+    //--------------------------------------------------------------------------
+    // Command Line Mode
+    //--------------------------------------------------------------------------
     // Note if ignore nonfatal is being used.
     if (ignore_nonfatal)
     {
@@ -228,7 +249,13 @@ int main(int argc, char* argv[]) {
 
     }
 
-    // Shutdown the program.
+    //--------------------------------------------------------------------------
+    // Program Shutdown
+    //--------------------------------------------------------------------------
     free(encryption_key);
     return 0;
 }
+
+//------------------------------------------------------------------------------
+// Private Function Definitions
+//------------------------------------------------------------------------------

@@ -1,16 +1,24 @@
+// ---------------------------------BMP-Encrypt---------------------------------
 // 48430 Introduction to C Programming
 // Lab: 5, Group: 2
-// Created by Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad
-// Person Responsible For File: Benjamin Hudson
+// Copyright © 2023 Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad.
+// Primary File Contributor: Benjamin Hudson
+// ----------------------------------rle.h--------------------------------------
 
+// Include Guard
 #ifndef RLE_H
 #define RLE_H
 
+// Public API Includes
 #include "bmp.h"
 
+// Other Includes
 #include "datatypes/result.h"
 #include "datatypes/short_sizes.h"
 
+//------------------------------------------------------------------------------
+// Function Declarations
+//------------------------------------------------------------------------------
 /*
  * These functions perform rl8 decode or encode tasks.
  * Inputs:
