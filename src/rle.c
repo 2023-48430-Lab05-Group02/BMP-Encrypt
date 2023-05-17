@@ -170,9 +170,113 @@ result_t rl4_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
 }
 result_t rl4_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
     result_t result;
+    unsigned char *output, current_byte;
+    output = (unsigned char*)malloc(1);
+    int step_byte = 1;
+    int step_nibble = 2;
+    u32* location_counter = malloc((sizeof(u32)));
+    u32* location_nibble = malloc((sizeof(u32))*2);
+    location_counter = 0; /*in bytes */
+    location_nibble = 2; /*in nibbles*/
 
-    result.ok = false;
-    result.data = "CODE INCOMPLETE";
+    while (data[step_byte] != 0 && data[step_byte + 1] != 1){
+        *current_byte = data[step_byte];
+
+        if (current_byte == 0) {
+
+            if (data[step_byte + 1] < 3) {
+                step_byte++;
+                step_nibble++;
+                step_nibble++;
+
+
+                if (data[step_byte] == 2){
+
+                    step_byte++;
+                    step_nibble++;
+                    step_nibble++;
+
+                    int section_size = 0;
+                    section_size = (int)data[step_byte]+((int)image_header->width * (int)data[step_byte + 1]);
+                    output = (unsigned char*)realloc(output, location_counter + section_size + 1);
+                    step_byte++;
+                    step_nibble++;
+                    step_nibble++;
+
+                    while(section_size > 0){
+                        if(location_nibble % 2 == 0 && section_size > 1){
+                            output[location_counter++] = 0;
+                            section_size--;
+                            location_nibble++;
+                            location_nibble++;
+                        }
+                        else if (location_nibble % 2 != 0 %% section_size > 1){
+                            output[location_counter] = output[location_counter] + 0;
+                            section_size--;
+                            location_nibble++;
+                        }
+                        else {
+                            output[location_counter++] = 0;
+                            section_size--;
+                            location_nibble++;
+                        }
+                    }
+                }
+            }
+
+            else{
+                step_byte++;
+                step_nibble++;
+                step_nibble++;
+
+                int subcount = (int)data[step_byte++];
+                if(subcount % 2 == 0) {
+                    output = (unsigned char *) realloc(output, location_counter + subcount / 2);
+                }
+                else{
+                    output = (unsigned char *) realloc(output, location_counter + (subcount + 1) / 2);
+                }
+
+                step_byte++;
+                step_nibble++;
+                step_nibble++;
+                
+                while (subcount > 0){
+                    if (location_nibble % 2 == 0 && step_byte > 1){
+                        output[location_counter++] = data[step];
+                        step_byte++;
+                        step_nibble++;
+                        step_nibble++;
+                        subcount--;    
+                        
+                    }
+                    else if (location_nibble % 2 != 0 && step_byte > 1){}
+                    /*up to hear */
+
+                }
+                if(subcount % 2 != 0){
+                    step++;
+                }
+            }
+        }
+        else{
+            int subcount = current_byte;
+            while (subcount > 0){
+                output = (unsigned char*)realloc(output, location_counter + 1)
+                output[location_counter++] = data[step + 1]
+            }
+            step ++;
+        }
+        step_byte++;
+        step_nibble++;
+        step_nibble++;
+
+    }
+
+
+    result.data = output;
+    result.ok = true;
+
 
     return result;
 }
