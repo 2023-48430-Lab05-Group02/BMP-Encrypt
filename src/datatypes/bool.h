@@ -1,10 +1,17 @@
-//
-// Created by Macauley Lim on 20/04/2023.
-//
+// ---------------------------------BMP-Encrypt---------------------------------
+// 48430 Introduction to C Programming
+// Lab: 5, Group: 2
+// Copyright © 2023 Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad.
+// Primary File Contributor: Macauley Lim
+// -----------------------------------bool.h------------------------------------
 
+// Include guard
 #ifndef BOOL_H
 #define BOOL_H
 
+//------------------------------------------------------------------------------
+// Enums
+//------------------------------------------------------------------------------
 /*
  * Is either true (1) or false (0). Just a nicer way to interact with these kind
  * of on or off values without being able to use the stdbool.h library.
