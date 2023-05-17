@@ -5,10 +5,10 @@
 
 #include "rle.h"
 #include <stdlib.h>
+#include <string.h>
+#include "./util/realloc.h"
 
-void* safe_realloc(void* pointer, int size);
-
-result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
+result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
     result_t result;
 
 
@@ -16,14 +16,13 @@ result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
     unsigned char *output, current_byte;
     output = malloc(sizeof(data) * 2);
     /* add test to see if output true*/
-
     int location_counter = 0;
 
     for (hight_count = 0; hight_count < (int)image_header->height; hight_count++) {
         width_count = 0;
 
         while (width_count < (int)image_header->width) {
-            *current_byte = data[hight_count * (int)image_header->width + width_count];
+            current_byte = *data[hight_count * (int)image_header->width + width_count];
             count = 1;
 
             while (count < 255 && width_count + count < (int)image_header->width && data[hight_count * (int)image_header
@@ -44,7 +43,7 @@ result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
     }
     output[location_counter++] = 0;
     output[location_counter++] = 1;
-
+    image_header->imageSize = (u32_t)location_counter;
 
     /* create test to make sure result.test is true */
     result.data = output;
@@ -54,7 +53,7 @@ result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
 
     return result;
 }
-result_t rl8_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
+result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
     result_t result;
     unsigned char *output, current_byte;
     output = malloc(1);
@@ -62,7 +61,7 @@ result_t rl8_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
     int location_counter = 0;
 
     while (data[step] != 0 && *data[step + 1] != 1){
-        *current_byte = data[step];
+        current_byte = *data[step];
 
         if (current_byte == 0) {
 
@@ -74,7 +73,7 @@ result_t rl8_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
                     step++;
                     int section_size = 0;
                     section_size = *data[step]+((int)image_header->width * *data[step + 1]);
-                    output = safe_realloc(output, location_counter + section_size + 1);
+                    output = safe_realloc(output, (u32_t)(location_counter + section_size + 1));
                     step++;
 
                     while(section_size > 0){
@@ -88,10 +87,10 @@ result_t rl8_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
             else{
                 step++;
                 int subcount = *data[step];
-                output = safe_realloc(output, location_counter + subcount);
+                output = safe_realloc(output, (u32_t)(location_counter + subcount));
                 step++;
                 while (subcount > 0){
-                    output[location_counter++] = data[step];
+                    output[location_counter++] = *data[step];
                     step++;
                     subcount--;
                 }
@@ -103,8 +102,8 @@ result_t rl8_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
         else{
             int subcount = current_byte;
             while (subcount > 0){
-                output = safe_realloc(output, location_counter + 1);
-                output[location_counter++] = data[step + 1];
+                output = safe_realloc(output, (u32_t)(location_counter + 1));
+                output[location_counter++] = *data[step + 1];
             }
             step ++;
         }
@@ -112,20 +111,9 @@ result_t rl8_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
 
     }
 
-
+    image_header->imageSize = (u32_t)location_counter;
     result.data = output;
     result.ok = true;
 
     return result;
-}
-
-void* safe_realloc(void* pointer, int size){
-    void* output;
-    output = realloc(pointer, size);
-
-    if (output == NULL){
-        output = malloc(size);
-        memcpy(output, pointer, sizeof(*pointer));
-    }
-    return output;
 }
