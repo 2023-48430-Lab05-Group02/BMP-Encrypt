@@ -56,10 +56,61 @@ result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
 }
 result_t rl8_decode(u8_t** data, u32_t length) {
     result_t result;
+    unsigned char *output, current_byte;
+    output = (unsigned char*)malloc(1);
+    int step = 1;
+    u32* location_counter = malloc((sizeof(u32)));
+    location_counter = 0;
 
-    result.ok = false;
-    result.data = "CODE INCOMPLETE";
+    while (data[step] != 0 && data[step + 1] != 1){
+        *current_byte = data[step];
 
+        if (current_byte == 0) {
+
+            if (data[step + 1] < 3) {
+                step++;
+
+                if (data[step] == 2){
+
+                    step++;
+                    int section_size = 0;
+                    section_size = (int)data[step]+((int)image_header->width * (int)data[step + 1]);
+                    output = (unsigned char*)realloc(output, location_counter + section_size + 1);
+                    step++
+
+                    while(section_size > 0){
+                        output[location_counter++] = 0;
+                        section_size--;
+                    }
+
+                }
+            }
+
+            else{
+            int subcount = 1;
+            while (data[step + subcount] != 0){
+                output = (unsigned char*)realloc(output, location_counter + 1)
+                output[location_counter++] = data[step + subcount];
+                subcount++;
+            }
+            step = step + subcount;
+        }}
+        else{
+            int subcount = current_byte;
+            while (subcount > 0){
+                output = (unsigned char*)realloc(output, location_counter + 1)
+                output[location_counter++] = data[step + 1]
+            }
+            step ++;
+        }
+        step ++;
+
+    }
+
+
+    result.data = output;
+    result.ok = true;
+    
     return result;
 }
 
