@@ -85,13 +85,18 @@ result_t rl8_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
             }
 
             else{
-            int subcount = 1;
-            while (data[step + subcount] != 0){
-                output = (unsigned char*)realloc(output, location_counter + 1)
-                output[location_counter++] = data[step + subcount];
-                subcount++;
+                step++;
+                int subcount = (int)data[step];
+                output = (unsigned char*)realloc(output, location_counter + subcount);
+                step++;
+                while (subcount > 0){
+                    output[location_counter++] = data[step];
+                    step++;
+                    subcount--;
             }
-            step = step + subcount;
+                if(subcount % 2 != 0){
+                    step++;
+                }
         }}
         else{
             int subcount = current_byte;
