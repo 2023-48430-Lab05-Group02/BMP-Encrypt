@@ -21,7 +21,7 @@
 
 #define RUNTIME_DEBUG
 
-int main(int argc, char* argv[]) {
+/*int main(int argc, char* argv[]) {
     // Initialize program
     bool interactive_mode = false;
     bool encrypt_mode = false;
@@ -231,4 +231,13 @@ int main(int argc, char* argv[]) {
     // Shutdown the program.
     free(encryption_key);
     return 0;
+}*/
+
+// Test Main
+#include "datatypes/directory_tree.h"
+
+int main() {
+    char* text = malloc(PATH_MAX);
+    strcpy(text, "../src");
+    directory_t root_dir = directory_tree_new_from_dir_path(text);
 }
