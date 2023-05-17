@@ -23,16 +23,4 @@
 result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header);
 result_t rl8_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header);
 
-/*
- * These functions perform rl4 decode or encode tasks.
- * Inputs:
- * - char* data[], the raw data to encode or decode.
- * - int length - the length of the raw data.
- * Outputs:
- * result_t with ok = true, data = char* data[] heap pointer with the new data.
- * Or result_t with ok = false and data char[] error message.
- */
-result_t rl4_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header);
-result_t rl4_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header);
-
 #endif //RLE_H
