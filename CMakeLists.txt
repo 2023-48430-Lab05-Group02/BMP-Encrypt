@@ -17,7 +17,7 @@ set(CMAKE_C_STANDARD 99)
 # Debug Mode
 #set(CMAKE_BUILD_TYPE Debug)
 
-include_directories(./src)
-add_executable(untitled src/main.c src/bmp.c src/encryption.c src/input.c src/rle.c)
+include_directories(./src ./src/datatypes)
+add_executable(untitled src/main.c src/bmp.c src/encryption.c src/input.c src/rle.c src/datatypes/directory_tree.c src/util/realloc.c)
 
 target_link_libraries(untitled PRIVATE m)

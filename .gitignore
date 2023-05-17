@@ -1,6 +1,9 @@
 # Prerequisites
 *.d
 
+# Ignore IDE Settings
+.idea/
+
 # Object files
 *.o
 *.ko
