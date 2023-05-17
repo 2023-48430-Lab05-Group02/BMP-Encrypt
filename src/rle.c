@@ -3,29 +3,27 @@
 // Created by Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad
 // Person Responsible For File:
 
-// Standard Library Includes
+#include "rle.h"
 #include <stdlib.h>
 
-// Public API Includes
-#include "rle.h"
+void* safe_realloc(void* pointer, int size);
 
 result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
     result_t result;
 
+
     int hight_count, width_count, count;
-    unsigned char *output, *current_byte;
-    output = (unsigned char*)malloc(sizeof(data) * 2);
+    unsigned char *output, current_byte;
+    output = malloc(sizeof(data) * 2);
     /* add test to see if output true*/
 
-    u32_t* location_counter = malloc((sizeof(u32_t)));
-
-    location_counter = 0;
+    int location_counter = 0;
 
     for (hight_count = 0; hight_count < (int)image_header->height; hight_count++) {
         width_count = 0;
 
         while (width_count < (int)image_header->width) {
-            *current_byte = *data[hight_count * (int)image_header->width + width_count];
+            *current_byte = data[hight_count * (int)image_header->width + width_count];
             count = 1;
 
             while (count < 255 && width_count + count < (int)image_header->width && data[hight_count * (int)image_header
@@ -35,17 +33,17 @@ result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
             /* it would be better to compress unique pixels in absolute mode, as just using encoded mode can increase
              * the total file size if there is a lot of unique pixels, might add later */
 
-            output[*location_counter++] = (unsigned char) count;
-            output[*location_counter++] = *current_byte;
+            output[location_counter++] = (unsigned char) count;
+            output[location_counter++] = current_byte;
 
             width_count += count;
         }
 
-        output[*location_counter++] = 0;
-        output[*location_counter++] = 0;
+        output[location_counter++] = 0;
+        output[location_counter++] = 0;
     }
-    output[*location_counter++] = 0;
-    output[*location_counter++] = 1;
+    output[location_counter++] = 0;
+    output[location_counter++] = 1;
 
 
     /* create test to make sure result.test is true */
@@ -59,26 +57,25 @@ result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
 result_t rl8_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
     result_t result;
     unsigned char *output, current_byte;
-    output = (unsigned char*)malloc(1);
+    output = malloc(1);
     int step = 1;
-    u32* location_counter = malloc((sizeof(u32)));
-    location_counter = 0;
+    int location_counter = 0;
 
-    while (data[step] != 0 && data[step + 1] != 1){
+    while (data[step] != 0 && *data[step + 1] != 1){
         *current_byte = data[step];
 
         if (current_byte == 0) {
 
-            if (data[step + 1] < 3) {
+            if (*data[step + 1] < 3) {
                 step++;
 
-                if (data[step] == 2){
+                if (*data[step] == 2){
 
                     step++;
                     int section_size = 0;
-                    section_size = (int)data[step]+((int)image_header->width * (int)data[step + 1]);
-                    output = (unsigned char*)realloc(output, location_counter + section_size + 1);
-                    step++
+                    section_size = *data[step]+((int)image_header->width * *data[step + 1]);
+                    output = safe_realloc(output, location_counter + section_size + 1);
+                    step++;
 
                     while(section_size > 0){
                         output[location_counter++] = 0;
@@ -90,8 +87,8 @@ result_t rl8_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
 
             else{
                 step++;
-                int subcount = (int)data[step];
-                output = (unsigned char*)realloc(output, location_counter + subcount);
+                int subcount = *data[step];
+                output = safe_realloc(output, location_counter + subcount);
                 step++;
                 while (subcount > 0){
                     output[location_counter++] = data[step];
@@ -106,8 +103,8 @@ result_t rl8_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
         else{
             int subcount = current_byte;
             while (subcount > 0){
-                output = (unsigned char*)realloc(output, location_counter + 1)
-                output[location_counter++] = data[step + 1]
+                output = safe_realloc(output, location_counter + 1);
+                output[location_counter++] = data[step + 1];
             }
             step ++;
         }
@@ -120,4 +117,15 @@ result_t rl8_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
     result.ok = true;
 
     return result;
+}
+
+void* safe_realloc(void* pointer, int size){
+    void* output;
+    output = realloc(pointer, size);
+
+    if (output == NULL){
+        output = malloc(size);
+        memcpy(output, pointer, sizeof(*pointer));
+    }
+    return output;
 }
