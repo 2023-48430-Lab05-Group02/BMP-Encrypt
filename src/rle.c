@@ -14,6 +14,8 @@ result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
     int hight_count, width_count, count;
     unsigned char *output, current_byte;
     output = (unsigned char*)malloc(sizeof(data) * 2);
+    /* add test to see if output true*/
+
     u32* location_counter = malloc((sizeof(u32)));
 
     location_counter = 0;
@@ -25,16 +27,15 @@ result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
             *current_byte = data[hight_count * (int)image_header->width + width_count];
             count = 1;
 
-            while (count < 255 && width_count + count < (int)image_header->width && data[hight_count * (int)image_header->width + width_count + count] == data[hight_count * (int)image_header->width + width_count]) {
+            while (count < 255 && width_count + count < (int)image_header->width && data[hight_count * (int)image_header
+                  ->width + width_count + count] == data[hight_count * (int)image_header->width + width_count]) {
                 count++;
             }
+            /* it would be better to compress unique pixels in absolute mode, as just using encoded mode can increase
+             * the total file size if there is alot of unique pixels, might add later */
 
-            if (count == 1) {
-                output[*location_counter++] = current_byte;
-            } else {
-                output[*location_counter++] = (unsigned char) count;
-                output[*location_counter++] = current_byte;
-            }
+            output[*location_counter++] = (unsigned char) count;
+            output[*location_counter++] = current_byte;
 
             width_count += count;
         }
@@ -47,7 +48,7 @@ result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
 
 
     /* create test to make sure result.test is true */
-    result.data = location_counter;
+    result.data = output;
     
     return result;
 }
