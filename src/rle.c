@@ -93,11 +93,12 @@ result_t rl8_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
                     output[location_counter++] = data[step];
                     step++;
                     subcount--;
-            }
+                }
                 if(subcount % 2 != 0){
                     step++;
                 }
-        }}
+            }
+        }
         else{
             int subcount = current_byte;
             while (subcount > 0){
@@ -240,15 +241,15 @@ result_t rl4_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
                 step_byte++;
                 step_nibble++;
                 step_nibble++;
-                
+
                 while (subcount > 0){
                     if (location_nibble % 2 == 0 && step_byte > 1){
                         output[location_counter++] = data[step];
                         step_byte++;
                         step_nibble++;
                         step_nibble++;
-                        subcount--;    
-                        
+                        subcount--;
+
                     }
                     else if (location_nibble % 2 != 0 && step_byte > 1){}
                     /*up to hear */
@@ -276,7 +277,6 @@ result_t rl4_decode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
 
     result.data = output;
     result.ok = true;
-
 
     return result;
 }
