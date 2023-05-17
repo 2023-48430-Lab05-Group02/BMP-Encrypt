@@ -50,6 +50,8 @@ result_t rl8_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
     /* create test to make sure result.test is true */
     result.data = output;
     
+    free(data);
+    
     return result;
 }
 result_t rl8_decode(u8_t** data, u32_t length) {
@@ -109,7 +111,9 @@ result_t rl4_encode(u8_t** data, u32_t length, BMPImageHeader_t* image_header) {
 
     /* create test to make sure result.test is true */
     result.data = output;
-
+    
+    free(data);
+    
     return result;
 }
 result_t rl4_decode(u8_t** data, u32_t length) {
