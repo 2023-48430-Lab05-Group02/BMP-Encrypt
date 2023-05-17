@@ -20,7 +20,7 @@
  * It has a name, and parent directory.
  */
 typedef struct file {
-    char* name;
+    char name[PATH_MAX];
     struct directory* parent;
 } file_t;
 
@@ -34,7 +34,7 @@ typedef struct file {
  * - An array of files with accompanying length and capacity.
  */
 typedef struct directory {
-    char* name;
+    char name[PATH_MAX];
     struct directory* parent;
 
     struct directory* subdirectories;
