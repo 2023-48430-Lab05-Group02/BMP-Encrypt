@@ -117,33 +117,40 @@ int main(int argc, char* argv[]) {
         print_menu_interactive();
 
         // Gather user input
-        i8_t *selected_option = malloc(sizeof(u8_t) * 2);
-        input_string(&selected_option, 1);
+        result_t input_result = input_number(1, 6, "Please"
+                                                   " select an option in the"
+                                                   " range 1.6");
+        i8_t* selected_option = input_result.data;
 
         // Execute on user command
-        if (strcmp(selected_option, "e\n") == 0)
+        if (*selected_option == 1)
+        // Encrypt
         {
 
         }
-        else if (strcmp(selected_option, "d\n") == 0)
+        else if (*selected_option == 2)
+        // Decrypt
         {
 
         }
-        else if (strcmp(selected_option, "c\n") == 0)
+        else if (*selected_option == 3)
+        // Compress
         {
 
         }
-        else if (strcmp(selected_option, "b\n") == 0)
+        else if (*selected_option == 4)
+        // Decompress
         {
 
         }
-        else if (strcmp(selected_option, "i\n") == 0)
+        else if (*selected_option == 5)
+        // Info
         {
 
         }
-        else if (strcmp(selected_option, "q\n") == 0)
+        else if (*selected_option == 6)
+        // Quit
         {
-            // If command is quit, then set run to false.
             interactive_mode = false;
         }
     }
