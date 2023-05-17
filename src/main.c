@@ -238,6 +238,6 @@
 
 int main() {
     char* text = malloc(PATH_MAX);
-    strcpy(text, "../src");
+    strcpy(text, "..\\src");
     directory_t root_dir = directory_tree_new_from_dir_path(text);
 }
