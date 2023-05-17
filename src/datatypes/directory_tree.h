@@ -5,6 +5,11 @@
 // Primary File Contributor: Macauley Lim
 // ---------------------------directory_tree.h----------------------------------
 
+// Standard Library Includes
+#ifdef __linux__
+#include <dirent.h> // PATH_MAX
+#endif
+
 // Other Includes
 #include "datatypes/short_sizes.h"
 

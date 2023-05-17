@@ -23,7 +23,7 @@
  */
 // Linux only includes
 #ifdef __linux__
-#include <dirent.h> // DIR, opendir, closedir
+#include <dirent.h> // DIR, opendir, closedir, PATH_MAXs
 #include <sys/stat.h> // S_ISDIR, stat
 
 // Windows only includes
@@ -121,7 +121,11 @@ void directory_tree_get_file_path(file_t* file, char* name) {
         if (parent->parent != NULL)
         {
             strcpy(left, parent->name);
+            #ifdef _WIN64
+            strcat(left, "\\");
+            #elif __linux__ // _WIN64
             strcat(left, "/");
+            #endif // _WIN64,__linux__
             strcat(left, right);
             strcpy(right, left);
             parent = parent->parent;
@@ -144,7 +148,11 @@ void directory_tree_get_directory_path(directory_t* directory, char* name) {
         if (parent != NULL)
         {
             strcpy(left, parent->name);
+            #ifdef _WIN64
             strcat(left, "\\");
+            #elif __linux__ // _WIN64
+            strcat(left, "/");
+            #endif // _WIN64,__linux__
             strcat(left, right);
             strcpy(right, left);
             parent = parent->parent;
@@ -232,14 +240,14 @@ void dir_to_dir_tree_recursive(directory_t* tree_dir) {
 #elif __linux__ // _WIN64
 void dir_to_dir_tree_recursive(directory_t* tree_dir) {
     DIR* directory;
-    char dir_path[PATH_MAX];
+    char dir_path[PATH_MAX-256];
     struct dirent* object;
     struct stat object_info;
 
     // Get the full directory path
     directory_tree_get_directory_path(tree_dir, dir_path);
 
-    directory = opendir(tree_dir->name);
+    directory = opendir(dir_path);
     // This should never occur as the directory should be checked by input code.
     if (directory == NULL) {
         printf("Unrecoverable error in directory tree.\n");
