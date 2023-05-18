@@ -14,7 +14,7 @@ result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
 
     int hight_count, width_count, count;
     unsigned char *output, current_byte;
-    output = malloc(sizeof(data) * 2);
+    output = malloc(sizeof(data) * 2); /*might need to de reference this */
     /* add test to see if output true*/
     int location_counter = 0;
 
@@ -25,7 +25,7 @@ result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
             current_byte = *data[hight_count * (int)image_header->width + width_count];
             count = 1;
 
-            while (count < 255 && width_count + count < (int)image_header->width && data[hight_count * (int)image_header->width + width_count + count] == data[hight_count * (int)image_header->width + width_count]) {
+            while (count < 255 && width_count + count < (int)image_header->width && *data[hight_count * (int)image_header->width + width_count + count] == *data[hight_count * (int)image_header->width + width_count]) {
                 count++;
             }
 
@@ -84,7 +84,7 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
     int step = 1;
     int location_counter = 0;
 
-    while (data[step] != 0 && *data[step + 1] != 1){
+    while (*data[step] != 0 && *data[step + 1] != 1){
         current_byte = *data[step];
 
         if (current_byte == 0) {
