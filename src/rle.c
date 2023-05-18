@@ -25,15 +25,39 @@ result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
             current_byte = *data[hight_count * (int)image_header->width + width_count];
             count = 1;
 
-            while (count < 255 && width_count + count < (int)image_header->width && data[hight_count * (int)image_header
-                  ->width + width_count + count] == data[hight_count * (int)image_header->width + width_count]) {
+            while (count < 255 && width_count + count < (int)image_header->width && data[hight_count * (int)image_header->width + width_count + count] == data[hight_count * (int)image_header->width + width_count]) {
                 count++;
             }
-            /* it would be better to compress unique pixels in absolute mode, as just using encoded mode can increase
-             * the total file size if there is a lot of unique pixels, might add later */
 
-            output[location_counter++] = (unsigned char) count;
-            output[location_counter++] = current_byte;
+            if (count == 1){
+                int subcount = 0;
+                while (*data[hight_count * (int)image_header->width + width_count + count + subcount] != *data[hight_count * (int)image_header->width + width_count + count + subcount + 1] && width_count + count + subcount < (int)image_header->width){
+                    subcount++;
+                }
+
+                subcount++; /*accounts for initial byte*/
+
+                if (*data[hight_count * (int)image_header->width + width_count + count + subcount] == *data[hight_count * (int)image_header->width + width_count + count + subcount + 1]) {
+                    subcount--; /*accounts for if last byte is start of encoded mode */
+                }
+
+                output[location_counter++] = 0; /*start absolute mode */
+                output[location_counter++] = (unsigned char) subcount; /*states number of bytes to follow */
+
+                int subsubcount = 0;
+                while (subsubcount <= subcount){
+                    output[location_counter++] = *data[hight_count * (int)image_header->width + width_count + subsubcount];
+                    subsubcount++;
+                }
+
+                subcount--; /* doesn't add initial byte to width_count as it will be added later */
+                width_count += subcount;
+
+            }
+            else {
+                output[location_counter++] = (unsigned char) count;
+                output[location_counter++] = current_byte;
+            }
 
             width_count += count;
         }
