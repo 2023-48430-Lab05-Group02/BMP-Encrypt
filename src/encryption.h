@@ -11,6 +11,7 @@
 
 // Other Includes
 #include "datatypes/result.h"
+#include "datatypes/short_sizes.h"
 
 // Static Defines
 #define FNV_PRIME 16777619u
@@ -24,33 +25,26 @@
  * simple to implement way to produce a fixed length key from a password.
  * Inputs:
  * const char* str[] which is the password.
+ * u64_t length which is the password length.
  * Outputs:
- * unsigned char which is the hashed value.
+ * u32_t which is the hashed value.
  */
-unsigned int fnv1a_hash(const char* str);
+u32_t fnv1a_hash(const char* str, u64_t length);
 /*
  * Encrypts data with a xor key.
  * Inputs:
  * - char* data - The data that is to be encrypted.
- * - int length - The length of the data that is to be encrypted.
- * - unsigned int* key - A pointer to they key that should be used for encryption.
- * The length of char* key[] must be XOR_KEY_SIZE.
- * Outputs:
- * result_t with ok = true, and data = nullptr.
- * Otherwise, result_T with ok = false, and a char[] error message.
+ * - u32_t length - The length of the data that is to be encrypted.
+ * - u32_t* key - A pointer to the key that should be used for encryption.
  */
-result_t xor_encrypt(char* data, unsigned int length, unsigned int* key);
+void xor_encrypt(char* data, u32_t length, const u32_t* key);
 /*
  * Decrypts data with a xor key.
  * Inputs:
  * - char* data - The data that is to be decrypted.
  * - int length - The length of the data that is to be decrypted.
- * - unsigned int* key - A pointer to they key that should be used for decryption.
- * The length of char* key[] must be XOR_KEY_SIZE.
- * Outputs:
- * result_t with ok = true, and data = nullptr.
- * Otherwise, result_T with ok = false, and a char[] error message.
+ * - u32_t* key - A pointer to the key that should be used for decryption.
  */
-result_t xor_decrypt(char* data, unsigned int length, unsigned int* key);
+void xor_decrypt(char* data, u32_t length, u32_t* key);
 
 #endif //ENCRYPTION_H
