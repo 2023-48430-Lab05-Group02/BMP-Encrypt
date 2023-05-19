@@ -28,7 +28,10 @@
 //------------------------------------------------------------------------------
 // Private Function Declarations
 //------------------------------------------------------------------------------
-
+void encrypt_file(char* input_name, char* output_name, u32_t* key, bool strict_verify, bool compress);
+void decrypt_file(char* input_name, char* output_name, u32_t* key, bool strict_verify, bool compress);
+void compress_file(char* input_name, char* output_name, bool strict_verify);
+void decompress_file(char* input_name, char* output_name, bool strict_verify);
 
 //------------------------------------------------------------------------------
 // Begin Main
@@ -56,7 +59,7 @@ int main(int argc, char* argv[]) {
     char password[PATH_MAX];
 
     // Encryption Mode Operation Variables
-    unsigned int *encryption_key = malloc(sizeof(unsigned int));
+    u32_t *encryption_key = malloc(sizeof(u32_t));
 
     //--------------------------------------------------------------------------
     // Process command line arguments
@@ -108,6 +111,14 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    // A key is required if in encrypt or decrypt mode.
+    if (!encryption_key_present && (encrypt_mode || decrypt_mode))
+    {
+        printf("An encryption key must be specified when using encrypt"
+               " or decrypt mode.\n");
+        return 0;
+    }
+
     // Check for errors in the command line arguments
     if (compress_mode && decompress_mode)
     {
@@ -156,37 +167,41 @@ int main(int argc, char* argv[]) {
             // Input file
             printf("Please enter file name to encrypt > ");
             input_string(input_file_name, PATH_MAX);
-            file_read(input_file, input_file_name);
 
             // Strict verification
             printf("Would you like to enable strict verification of the"
                    "incoming bmp file? > ");
             ignore_nonfatal = input_bool();
 
-            // Convert to BMP
-            option_t no_key ={false, NULL};
-            result_t bmp_result = bmp_from_file(input_file, no_key,
-                                                ignore_nonfatal);
+            // Encryption type
+            char choice[2];
+            bool valid = false;
 
-            fclose(input_file);
-
-            // Ensure BMP is valid.
-            if (!bmp_result.ok)
+            while (!valid)
             {
-                printf("An error occurred with the BMP file reading: %s\n",
-                       (char*) bmp_result.data);
-                printf("Please try again...\n");
-                continue;
-            }
-            else
-            {
-                bmp = bmp_result.data;
-            }
+                printf("Would you like to use a password [p] integer [i]"
+                       " key? > ");
+                input_string(choice, 1);
 
-            // Encryption password
-            printf("Please enter encryption password > ");
-            input_string(password, PATH_MAX);
-            *encryption_key = fnv1a_hash(password, strlen(password));
+                if (choice[0] == 'p')
+                {
+                    // Encryption password
+                    printf("Please enter encryption password > ");
+                    input_string(password, PATH_MAX);
+                    *encryption_key = fnv1a_hash(password, strlen(password));
+                    valid = true;
+                }
+                else if (choice[0] == 'i')
+                {
+                    // Encryption integer
+                    printf("Please enter encryption integer [i32] > ");
+                    *encryption_key = (u32_t) (input_number(MIN_i32, MAX_i32, "") + MAX_i32);
+                    valid = true;
+                }
+                else {
+                    printf("Please select a valid option.");
+                }
+            }
 
             // Compress?
             printf("Would you also like to compress if possible? > ");
@@ -195,13 +210,9 @@ int main(int argc, char* argv[]) {
             // Output file
             printf("Please enter output file name > ");
             input_string(output_file_name, PATH_MAX);
-            file_write(output_file, output_file_name);
 
-            // Complete the encryption step
-            option_t encrypt_key = {true, encryption_key};
-            bmp_to_file(output_file, bmp, encrypt_key,compress);
-
-            fclose(output_file);
+            encrypt_file(input_file_name, output_file_name,
+                         encryption_key, !ignore_nonfatal, compress);
         }
         else if (selected_option == 2)
         // Decrypt
@@ -246,44 +257,8 @@ int main(int argc, char* argv[]) {
         printf("Attempting file read from %s.\n", input_file_name);
         #endif
 
-        // Use file_read() eventually... but for now.
-        input_file = fopen(input_file_name, "r");
-        if (input_file == NULL)
-        {
-            printf("An error has occurred reading the file.\n");
-            return 0;
-        }
+        file_read(input_file, input_file_name);
 
-        // TEMPORARY FOR TESTING
-        option_t key;
-        if (encryption_key_present)
-        {
-            key.present = true;
-            key.data = encryption_key;
-        }
-        else
-        {
-            key.present = false;
-            key.data = NULL;
-        }
-
-        // Convert to BMP.
-        result_t bmp_result = bmp_from_file(input_file, key, !ignore_nonfatal);
-
-        if (bmp_result.ok)
-        {
-            bmp = bmp_result.data;
-            printf("Successfully read bmp with width: %u, height: %d.\n",
-                   bmp->imageHeader.width, bmp->imageHeader.height);
-        } else
-        {
-            printf("An error has occurred reading the BMP Data:\n"
-                   "%s.\n", (char *) bmp_result.data);
-            return 0;
-        }
-
-        // After all is done, make sure to free BMP.
-        bmp_destructor(bmp);
     }
     // Handle Decryption
     else if (decrypt_mode)
