@@ -17,7 +17,7 @@ void print_unsigned_int_binary(unsigned int num) {
         printf("%d", (num >> i) & 1);
 }
 
-result_t input_number(int min, int max, char error_message[]) {
+i32_t input_number(int min, int max, char error_message[]) {
     result_t result;
 
     result.ok = false;
@@ -25,7 +25,7 @@ result_t input_number(int min, int max, char error_message[]) {
 
     return result;
 }
-result_t input_string(char* str[], int max_length) {
+void input_string(char* str, int max_length) {
     result_t result;
 
     result.ok = false;
@@ -33,7 +33,7 @@ result_t input_string(char* str[], int max_length) {
 
     return result;
 }
-result_t file_read(char name[]) {
+void file_read(FILE* file, char name[]) {
     result_t result;
 
     result.ok = false;
@@ -41,7 +41,7 @@ result_t file_read(char name[]) {
 
     return result;
 }
-result_t file_write(char name[]) {
+void file_write(FILE* file, char name[]) {
     result_t result;
 
     result.ok = false;
