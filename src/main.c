@@ -28,10 +28,10 @@
 //------------------------------------------------------------------------------
 // Private Function Declarations
 //------------------------------------------------------------------------------
-void encrypt_file(char* input_name, char* output_name, u32_t* key, bool strict_verify, bool compress);
-void decrypt_file(char* input_name, char* output_name, u32_t* key, bool strict_verify, bool compress);
-void compress_file(char* input_name, char* output_name, bool strict_verify);
-void decompress_file(char* input_name, char* output_name, bool strict_verify);
+void encrypt_file(FILE* input, FILE* output, u32_t* key, bool strict_verify, bool compress);
+void decrypt_file(FILE* input, FILE* output, u32_t* key, bool strict_verify, bool compress);
+void compress_file(FILE* input, FILE* output, bool strict_verify);
+void decompress_file(FILE* input, FILE* output, bool strict_verify);
 
 //------------------------------------------------------------------------------
 // Begin Main
@@ -149,99 +149,6 @@ int main(int argc, char* argv[]) {
     }
 
     //--------------------------------------------------------------------------
-    // Interactive Mode
-    //--------------------------------------------------------------------------
-    while (interactive_mode)
-    {
-        // Print menu
-        print_menu_interactive();
-
-        // Gather user input
-        selected_option = input_number(1, 6,"Please select"
-                                            " an option in the range 1 to 6");
-
-        // Execute on user command
-        if (selected_option == 1)
-        // Encrypt
-        {
-            // Input file
-            printf("Please enter file name to encrypt > ");
-            input_string(input_file_name, PATH_MAX);
-
-            // Strict verification
-            printf("Would you like to enable strict verification of the"
-                   "incoming bmp file? > ");
-            ignore_nonfatal = input_bool();
-
-            // Encryption type
-            char choice[2];
-            bool valid = false;
-
-            while (!valid)
-            {
-                printf("Would you like to use a password [p] integer [i]"
-                       " key? > ");
-                input_string(choice, 1);
-
-                if (choice[0] == 'p')
-                {
-                    // Encryption password
-                    printf("Please enter encryption password > ");
-                    input_string(password, PATH_MAX);
-                    *encryption_key = fnv1a_hash(password, strlen(password));
-                    valid = true;
-                }
-                else if (choice[0] == 'i')
-                {
-                    // Encryption integer
-                    printf("Please enter encryption integer [i32] > ");
-                    *encryption_key = (u32_t) (input_number(MIN_i32, MAX_i32, "") + MAX_i32);
-                    valid = true;
-                }
-                else {
-                    printf("Please select a valid option.");
-                }
-            }
-
-            // Compress?
-            printf("Would you also like to compress if possible? > ");
-            bool compress = input_bool();
-
-            // Output file
-            printf("Please enter output file name > ");
-            input_string(output_file_name, PATH_MAX);
-
-            encrypt_file(input_file_name, output_file_name,
-                         encryption_key, !ignore_nonfatal, compress);
-        }
-        else if (selected_option == 2)
-        // Decrypt
-        {
-
-        }
-        else if (selected_option == 3)
-        // Compress
-        {
-
-        }
-        else if (selected_option == 4)
-        // Decompress
-        {
-
-        }
-        else if (selected_option == 5)
-        // Info
-        {
-
-        }
-        else if (selected_option == 6)
-        // Quit
-        {
-            interactive_mode = false;
-        }
-    }
-
-    //--------------------------------------------------------------------------
     // Command Line Mode
     //--------------------------------------------------------------------------
     // Note if ignore nonfatal is being used.
@@ -257,8 +164,13 @@ int main(int argc, char* argv[]) {
         printf("Attempting file read from %s.\n", input_file_name);
         #endif
 
-        file_read(input_file, input_file_name);
+        strcpy(output_file_name, input_file_name);
+        strcat(output_file_name, "e");
 
+        input_file = fopen(input_file_name, "r");
+        output_file = fopen(output_file_name, "w");
+
+        encrypt_file(input_file, output_file, encryption_key, !ignore_nonfatal, compress_mode);
     }
     // Handle Decryption
     else if (decrypt_mode)

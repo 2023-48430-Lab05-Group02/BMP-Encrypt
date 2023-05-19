@@ -1,11 +1,12 @@
+// ---------------------------------BMP-Encrypt---------------------------------
 // 48430 Introduction to C Programming
 // Lab: 5, Group: 2
-// Created by Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad
-// Person Responsible For File:
+// Copyright © 2023 Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad.
+// Primary File Contributor: Benjamin Hudson
+// ----------------------------------rle.c--------------------------------------
 
 #include "rle.h"
 #include <stdlib.h>
-#include <string.h>
 #include "./util/realloc.h"
 
 result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
