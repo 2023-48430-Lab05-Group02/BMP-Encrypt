@@ -91,7 +91,7 @@ result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
     image_header->imageSize = (u32_t)location_counter;
 
     result.ok = true;
-    safe_realloc(output, location_counter);
+    safe_realloc(output, (u32_t)location_counter);
     if (output == NULL){
         result.ok =false;
     }
