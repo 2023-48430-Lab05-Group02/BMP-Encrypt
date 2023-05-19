@@ -14,6 +14,7 @@
 
 // Other Includes
 #include "datatypes/result.h"
+#include "short_sizes.h"
 
 //------------------------------------------------------------------------------
 // Function Declarations
@@ -40,12 +41,14 @@ void print_unsigned_int_binary(unsigned int num);
  * Or if it failed, ok = false and a char[] message specifying why.
  */
 // Returns result_t data of int. Inputs: min, max and out of range error msg.
-result_t input_number(int min, int max, char error_message[]);
+i32_t input_number(int min, int max, char error_message[]);
 // Returns result_t data of nullptr. Pass in the char* buffer.
-result_t input_string(char* str[], int max_length);
+void input_string(char* str, int max_length);
+// Returns a bool.
+bool input_bool();
 // Returns result_t data of FILE*.
-result_t file_read(char name[]);
+void file_read(FILE* file, char name[]);
 // Returns result_t data of FILE*.
-result_t file_write(char name[]);
+void file_write(FILE* file, char name[]);
 
 #endif //INPUT_H

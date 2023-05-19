@@ -44,10 +44,18 @@ int main(int argc, char* argv[]) {
     bool encryption_key_present = false;
     bool ignore_nonfatal = false;
 
-    // Single file mode operation state
-    char input_file_name[256];
+    // Common Mode Operation Variables
+    char input_file_name[PATH_MAX];
+    char output_file_name[PATH_MAX];
+    FILE *input_file = NULL;
+    FILE* output_file = NULL;
+    BMP_t* bmp;
 
-    // Encryption mode operation state
+    // Interactive Mode Operation Variables
+    i32_t selected_option;
+    char password[PATH_MAX];
+
+    // Encryption Mode Operation Variables
     unsigned int *encryption_key = malloc(sizeof(unsigned int));
 
     //--------------------------------------------------------------------------
@@ -75,7 +83,8 @@ int main(int argc, char* argv[]) {
         }
         if (strcmp(argv[i], "--password") == 0 || strcmp(argv[i], "-P") == 0)
         {
-            *encryption_key = fnv1a_hash(argv[i + 1]);
+            *encryption_key = fnv1a_hash(argv[i + 1],
+                                         strlen(argv[i+1]));
         }
         if (strcmp(argv[i], "--input") == 0 || strcmp(argv[i], "-I") == 0)
         {
@@ -137,38 +146,84 @@ int main(int argc, char* argv[]) {
         print_menu_interactive();
 
         // Gather user input
-        result_t input_result = input_number(1, 6, "Please"
-                                                   " select an option in the"
-                                                   " range 1.6");
-        i8_t* selected_option = input_result.data;
+        selected_option = input_number(1, 6,"Please select"
+                                            " an option in the range 1 to 6");
 
         // Execute on user command
-        if (*selected_option == 1)
+        if (selected_option == 1)
         // Encrypt
         {
+            // Input file
+            printf("Please enter file name to encrypt > ");
+            input_string(input_file_name, PATH_MAX);
+            file_read(input_file, input_file_name);
 
+            // Strict verification
+            printf("Would you like to enable strict verification of the"
+                   "incoming bmp file? > ");
+            ignore_nonfatal = input_bool();
+
+            // Convert to BMP
+            option_t no_key ={false, NULL};
+            result_t bmp_result = bmp_from_file(input_file, no_key,
+                                                ignore_nonfatal);
+
+            fclose(input_file);
+
+            // Ensure BMP is valid.
+            if (!bmp_result.ok)
+            {
+                printf("An error occurred with the BMP file reading: %s\n",
+                       (char*) bmp_result.data);
+                printf("Please try again...\n");
+                continue;
+            }
+            else
+            {
+                bmp = bmp_result.data;
+            }
+
+            // Encryption password
+            printf("Please enter encryption password > ");
+            input_string(password, PATH_MAX);
+            *encryption_key = fnv1a_hash(password, strlen(password));
+
+            // Compress?
+            printf("Would you also like to compress if possible? > ");
+            bool compress = input_bool();
+
+            // Output file
+            printf("Please enter output file name > ");
+            input_string(output_file_name, PATH_MAX);
+            file_write(output_file, output_file_name);
+
+            // Complete the encryption step
+            option_t encrypt_key = {true, encryption_key};
+            bmp_to_file(output_file, bmp, encrypt_key,compress);
+
+            fclose(output_file);
         }
-        else if (*selected_option == 2)
+        else if (selected_option == 2)
         // Decrypt
         {
 
         }
-        else if (*selected_option == 3)
+        else if (selected_option == 3)
         // Compress
         {
 
         }
-        else if (*selected_option == 4)
+        else if (selected_option == 4)
         // Decompress
         {
 
         }
-        else if (*selected_option == 5)
+        else if (selected_option == 5)
         // Info
         {
 
         }
-        else if (*selected_option == 6)
+        else if (selected_option == 6)
         // Quit
         {
             interactive_mode = false;
@@ -187,8 +242,6 @@ int main(int argc, char* argv[]) {
     // Handle encryption
     if (encrypt_mode)
     {
-        FILE *input_file;
-
         #ifdef RUNTIME_DEBUG
         printf("Attempting file read from %s.\n", input_file_name);
         #endif
@@ -216,7 +269,6 @@ int main(int argc, char* argv[]) {
 
         // Convert to BMP.
         result_t bmp_result = bmp_from_file(input_file, key, !ignore_nonfatal);
-        BMP_t *bmp;
 
         if (bmp_result.ok)
         {

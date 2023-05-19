@@ -130,23 +130,11 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
         // Make sure that a key is provided if the file is encrypted.
         if(key.present == false)
         {
-            result.data ="NO ENCRYPTION KEY PROVIDED";
+            result.data ="NO DECRYPTION KEY PROVIDED";
             return result;
         }
 
-        result_t xor_result = xor_decrypt(bmp_raw.data,
-                                          bmp_raw.length,
-                                          key.data);
-
-        // Verify that the XOR decrypt has not returned any errors.
-        // Later checks will ensure the decryption has actually succeeded.
-        if (xor_result.ok == false)
-        {
-            char* error = malloc(256);
-            strcpy(error, "XOR DECRYPT FAILURE: ");
-            result.data = strcat(error, xor_result.data);
-            return result;
-        }
+        xor_decrypt(bmp_raw.data,bmp_raw.length,key.data);
     }
 
     // Check if reserved values are out of spec.
@@ -618,16 +606,7 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key, bool use_compr
     // Finally handle encryption.
     if (key.present)
     {
-        result_t xor_result = xor_encrypt(heap.data, heap.length, key.data);
-
-        // Handle Errors
-        if (!xor_result.ok)
-        {
-            result.ok = false;
-            result.data = malloc(256);
-            strcpy(result.data, "XOR Encryption Error: ");
-            strcat(result.data, xor_result.data);
-        }
+        xor_encrypt(heap.data, heap.length, key.data);
     }
 
     // And write the heap buffer to the file.
