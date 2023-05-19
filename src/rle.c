@@ -57,8 +57,9 @@ result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
  *                                mode */
                 }
 
-                output[location_counter++] = 0; /*start absolute mode */
-                output[location_counter++] = (unsigned char) subcount;
+                output[location_counter++] = (unsigned char)0; /*start absolute
+ *                                                               mode */
+                output[location_counter++] = (unsigned char)subcount;
                 /*states number of bytes to follow */
 
                 int subsubcount = 0;
@@ -75,18 +76,18 @@ result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
 
             }
             else {
-                output[location_counter++] = (unsigned char) count;
+                output[location_counter++] = (unsigned char)count;
                 output[location_counter++] = current_byte;
             }
 
             width_count += count;
         }
 
-        output[location_counter++] = 0;
-        output[location_counter++] = 0;
+        output[location_counter++] = (unsigned char)0;
+        output[location_counter++] = (unsigned char)0;
     }
-    output[location_counter++] = 0;
-    output[location_counter++] = 1;
+    output[location_counter++] = (unsigned char)0;
+    output[location_counter++] = (unsigned char)1;
     image_header->imageSize = (u32_t)location_counter;
 
     result.ok = true;
@@ -126,7 +127,7 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
                     step++;
 
                     while(section_size > 0){
-                        output[location_counter++] = 0;
+                        output[location_counter++] = (unsigned char)0;
                         section_size--;
                     }
 
