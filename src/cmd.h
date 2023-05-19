@@ -9,9 +9,13 @@
 #ifndef CMD_H
 #define CMD_H
 
+// Other includes
+#include "main.h"
+
 //------------------------------------------------------------------------------
 // Function Declarations
 //------------------------------------------------------------------------------
-
+void main_batch(ProgramState_t state);
+void main_single(ProgramState_t state);
 
 #endif //CMD_H
