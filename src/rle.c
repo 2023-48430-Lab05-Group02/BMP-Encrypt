@@ -11,46 +11,66 @@
 result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
     result_t result;
 
-
     int hight_count, width_count, count;
     unsigned char *output, current_byte;
-    output = malloc(sizeof(data) * 2); /*might need to de reference this */
+    output = malloc(sizeof(*data) * 2);
     /* add test to see if output true*/
     int location_counter = 0;
 
-    for (hight_count = 0; hight_count < (int)image_header->height; hight_count++) {
+    for (hight_count = 0; hight_count < (int)image_header->height;
+         hight_count++) {
+
         width_count = 0;
 
         while (width_count < (int)image_header->width) {
-            current_byte = *data[hight_count * (int)image_header->width + width_count];
+            current_byte = *data[hight_count * (int)image_header->width +
+                                 width_count];
             count = 1;
 
-            while (count < 255 && width_count + count < (int)image_header->width && *data[hight_count * (int)image_header->width + width_count + count] == *data[hight_count * (int)image_header->width + width_count]) {
+            while (count < 255 && width_count + count < (int)image_header->width
+                   && *data[hight_count * (int)image_header->width + width_count
+                   + count] == *data[hight_count * (int)image_header->width +
+                   width_count]) {
+
                 count++;
             }
 
             if (count == 1){
                 int subcount = 0;
-                while (*data[hight_count * (int)image_header->width + width_count + count + subcount] != *data[hight_count * (int)image_header->width + width_count + count + subcount + 1] && width_count + count + subcount < (int)image_header->width){
+                while (*data[hight_count * (int)image_header->width +
+                       width_count + count + subcount] != *data[hight_count *
+                       (int)image_header->width + width_count + count + subcount
+                       + 1] && width_count + count + subcount <
+                       (int)image_header->width){
+
                     subcount++;
                 }
 
                 subcount++; /*accounts for initial byte*/
 
-                if (*data[hight_count * (int)image_header->width + width_count + count + subcount] == *data[hight_count * (int)image_header->width + width_count + count + subcount + 1]) {
-                    subcount--; /*accounts for if last byte is start of encoded mode */
+                if (*data[hight_count * (int)image_header->width + width_count +
+                    count + subcount] == *data[hight_count *
+                    (int)image_header->width + width_count + count + subcount +
+                    1]) {
+
+                    subcount--; /*accounts for if last byte is start of encoded
+ *                                mode */
                 }
 
                 output[location_counter++] = 0; /*start absolute mode */
-                output[location_counter++] = (unsigned char) subcount; /*states number of bytes to follow */
+                output[location_counter++] = (unsigned char) subcount;
+                /*states number of bytes to follow */
 
                 int subsubcount = 0;
                 while (subsubcount <= subcount){
-                    output[location_counter++] = *data[hight_count * (int)image_header->width + width_count + subsubcount];
+                    output[location_counter++] = *data[hight_count *
+                    (int)image_header->width + width_count + subsubcount];
+
                     subsubcount++;
                 }
 
-                subcount--; /* doesn't add initial byte to width_count as it will be added later */
+                subcount--; /* doesn't add initial byte to width_count as it
+ *                             will be added later */
                 width_count += subcount;
 
             }
@@ -69,9 +89,12 @@ result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
     output[location_counter++] = 1;
     image_header->imageSize = (u32_t)location_counter;
 
-    /* create test to make sure result.test is true */
-    result.data = output;
     result.ok = true;
+    safe_realloc(output, location_counter);
+    if (output == NULL){
+        result.ok =false;
+    }
+    result.data = output;
 
     free(data);
 
@@ -96,8 +119,10 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
 
                     step++;
                     int section_size;
-                    section_size = *data[step]+((int)image_header->width * *data[step + 1]);
-                    output = safe_realloc(output, (u32_t)(location_counter + section_size + 1));
+                    section_size = *data[step]+((int)image_header->width *
+                                   *data[step + 1]);
+                    output = safe_realloc(output, (u32_t)
+                    (location_counter + section_size + 1));
                     step++;
 
                     while(section_size > 0){
@@ -111,7 +136,9 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
             else{
                 step++;
                 int subcount = *data[step];
-                output = safe_realloc(output, (u32_t)(location_counter + subcount));
+                output = safe_realloc(output, (u32_t)
+                (location_counter + subcount));
+
                 step++;
                 while (subcount > 0){
                     output[location_counter++] = *data[step];
@@ -126,7 +153,9 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
         else{
             int subcount = current_byte;
             while (subcount > 0){
-                output = safe_realloc(output, (u32_t)(location_counter + 1));
+                output = safe_realloc(output, (u32_t)
+                (location_counter + 1));
+
                 output[location_counter++] = *data[step + 1];
                 subcount--;
             }
@@ -137,8 +166,11 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
     }
 
     image_header->imageSize = (u32_t)location_counter;
-    result.data = output;
     result.ok = true;
+    if (output == NULL){
+        result.ok =false;
+    }
+    result.data = output;
 
     return result;
 }
