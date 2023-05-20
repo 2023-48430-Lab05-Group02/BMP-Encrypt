@@ -60,6 +60,7 @@ typedef struct directory {
 typedef struct file_iter {
     file_t** files;
     u32_t files_length;
+    u32_t files_capacity;
 } file_iter_t;
 
 /*
@@ -78,11 +79,11 @@ typedef struct directory_iter {
  * Returns a directory_t root directory, with default capacity but no files
  * or subdirectories.
  */
-directory_t directory_tree_new(char* raw_file_path);
+void directory_tree_new(directory_t* dir, char* raw_file_path);
 /*
  * Creates a new directory tree populated from a directory path dir_path.
  */
-directory_t directory_tree_new_from_dir_path(char* dir_path);
+void directory_tree_new_from_dir_path(directory_t* dir, char* dir_path);
 /*
  * Creates a new directory in the directory path with name and parent specified.
  */
@@ -104,16 +105,16 @@ void directory_tree_get_directory_path(directory_t* director, char* name);
 /*
  * Get a list of files with parent directory parent.
  */
-file_iter_t directory_tree_get_files(directory_t* parent);
+void directory_tree_get_files(file_iter_t* iter, directory_t* parent);
 /*
  * Recursive iterator that includes all files from below the directory using
  * their full path.
  */
-file_iter_t directory_tree_get_files_recursive(directory_t* parent);
+void directory_tree_get_files_recursive(file_iter_t* iter, directory_t* parent);
 /*
  * Get a list of subdirectories for parent directory parent.
  */
-directory_iter_t directory_tree_get_subdirectories(directory_t* parent);
+void directory_tree_get_subdirectories(directory_iter_t* iter, directory_t* parent);
 /*
  * Deconstruct the tree freeing all memory to prevent memory leaks.
  */
