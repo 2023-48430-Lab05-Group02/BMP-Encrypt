@@ -23,6 +23,30 @@
 #include "short_sizes.h"
 
 //------------------------------------------------------------------------------
+// Function Declarations
+//------------------------------------------------------------------------------
+/*
+ * Encrypt a file. Takes the file pointers input and output, the key if required
+ * Whether to strictly verify the file and whether to compress the output.
+ */
+void encrypt_file(FILE* input, FILE* output, u32_t key, bool strict_verify, bool compress);
+/*
+ * Decrypt a file. Takes the file pointers input and output, the key if required
+ * Whether to strictly verify the file and whether to compress the output.
+ */
+void decrypt_file(FILE* input, FILE* output, u32_t key, bool strict_verify, bool compress);
+/*
+ * Compress a file: Takes the input and output file pointers and whether to
+ * strictly verify the input file.
+ */
+void compress_file(FILE* input, FILE* output, bool strict_verify);
+/*
+ * Decompress a file: Takes the input and output file pointers and whether to
+ * strictly verify the input file.
+ */
+void decompress_file(FILE* input, FILE* output, bool strict_verify);
+
+//------------------------------------------------------------------------------
 // Structs
 //------------------------------------------------------------------------------
 typedef struct ProgramState {

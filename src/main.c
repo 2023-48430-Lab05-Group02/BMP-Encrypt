@@ -14,7 +14,6 @@
 
 // Other Includes
 #include "datatypes/bool.h"
-#include "datatypes/directory_tree.h"
 
 #include "encryption.h"
 #include "input.h"
@@ -178,5 +177,17 @@ int main(int argc, char* argv[]) {
 }
 
 //------------------------------------------------------------------------------
-// Private Function Definitions
+// Public Function Definitions
 //------------------------------------------------------------------------------
+void encrypt_file(FILE* input, FILE* output, u32_t key, bool strict_verify, bool compress) {
+
+}
+void decrypt_file(FILE* input, FILE* output, u32_t key, bool strict_verify, bool compress) {
+
+}
+void compress_file(FILE* input, FILE* output, bool strict_verify) {
+
+}
+void decompress_file(FILE* input, FILE* output, bool strict_verify) {
+
+}
