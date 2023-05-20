@@ -109,7 +109,7 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
     int step = 1;
     int location_counter = 0;
 
-    while (*data[step] != 0 && *data[step + 1] != 1){
+    while ((*data)[step] != 0 && (*data)[step + 1] != 1){
         current_byte = *data[step];
 
         if (current_byte == 0) {

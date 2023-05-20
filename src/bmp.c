@@ -404,7 +404,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
         if (bmp->imageHeader.compression == 1)
         {
             // RLE8
-            rle_result = rl8_decode(&bmp->pixelData,&bmp->imageHeader);
+            rle_result = rl8_decode(&bmp->pixelData, &bmp->imageHeader);
         }
         else if (bmp->imageHeader.compression == 2)
         {
@@ -562,11 +562,11 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key, bool use_compr
     // Write color table or mask table if present.
     if (bmp->bitMaskTable.present)
     {
-        heap_write(&heap, &bmp->bitMaskTable.data, sizeof(BMPMaskTableHeader_t), 1);
+        heap_write(&heap, bmp->bitMaskTable.data, sizeof(BMPMaskTableHeader_t), 1);
     }
     if (bmp->colorTable.present)
     {
-        heap_write(&heap, &bmp->colorTable.data, sizeof(BMPColorTableHeader_t), 1);
+        heap_write(&heap, bmp->colorTable.data, sizeof(BMPColorTableHeader_t), 1);
     }
 
     // Deal with compression encodings.
@@ -617,6 +617,9 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key, bool use_compr
 
     // And write the heap buffer to the file.
     fwrite(heap.data, heap.position, 1, output_file);
+
+    // Free the heap
+    free(heap.data);
 
     result.ok = true;
     return result;

@@ -172,7 +172,7 @@ void directory_tree_get_files_recursive(file_iter_t* iter, directory_t* dir) {
     if (iter->files_capacity <= (iter->files_length + dir->f_length))
     {
         iter->files = safe_realloc(iter->files, iter->files_capacity
-                                                * 2 * sizeof(file_t*));
+                                 + dir->f_length * 2 * (u32_t) sizeof(file_t*));
         iter->files_capacity = iter->files_capacity * 2;
     }
     // Add files from this dir.

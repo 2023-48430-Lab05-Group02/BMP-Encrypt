@@ -207,6 +207,8 @@ result_t encrypt_file(FILE* input, FILE* output, u32_t key, bool strict_verify, 
         return result;
     }
 
+    bmp_destructor(bmp);
+
     printf("Completed BMP encrypt.\n");
     result.ok = true;
     result.data = bmp;
@@ -236,6 +238,8 @@ result_t decrypt_file(FILE* input, FILE* output, u32_t key, bool strict_verify, 
         return result;
     }
 
+    bmp_destructor(bmp);
+
     printf("Completed BMP decrypt.\n");
     result.ok = true;
     result.data = bmp;
@@ -264,6 +268,8 @@ result_t compress_file(FILE* input, FILE* output, bool strict_verify) {
         return result;
     }
 
+    bmp_destructor(bmp);
+
     printf("Completed BMP compress.\n");
     result.ok = true;
     result.data = bmp;
@@ -291,9 +297,10 @@ result_t decompress_file(FILE* input, FILE* output, bool strict_verify) {
         return result;
     }
 
+    bmp_destructor(bmp);
+
     printf("Completed BMP decompress.\n");
     result.ok = true;
     result.data = bmp;
     return result;
-
 }
