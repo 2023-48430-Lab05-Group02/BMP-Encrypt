@@ -56,12 +56,14 @@ i32_t input_number(int min, int max, char error_message[]) {
             printf("Please enter the value again >");
         }
     }
+    printf("\n");
     return out;
 }
 void input_string(char* str, int max_length) {
     char format_string[10];
     snprintf(format_string, sizeof(format_string), "%%%ds", max_length);
     scanf(format_string, str);
+    printf("\n");
 }
 bool input_bool() {
     bool out;
@@ -87,9 +89,10 @@ bool input_bool() {
         else
         {
             printf("Invalid Boolean entered. Please enter the value"
-                   " [0, false], [1, true] again >");
+                   " [0, false, no], [1, true, yes] again >");
         }
     }
+    printf("\n");
     return out;
 }
 void input_file_read(FILE* file) {
@@ -98,7 +101,7 @@ void input_file_read(FILE* file) {
     snprintf(format_string, sizeof(format_string), "%%%ds", PATH_MAX);
     char path[PATH_MAX];
 
-    if (!valid)
+    while (!valid)
     {
         scanf(format_string, path);
         file = fopen(path, "r");
@@ -109,9 +112,10 @@ void input_file_read(FILE* file) {
         else
         {
             printf("File could not be found. Please enter your file name"
-                   "again >");
+                   " again >");
         }
     }
+    printf("\n");
 }
 void input_file_write(FILE* file) {
     bool valid = false;
@@ -119,7 +123,7 @@ void input_file_write(FILE* file) {
     snprintf(format_string, sizeof(format_string), "%%%ds", PATH_MAX);
     char path[PATH_MAX];
 
-    if (!valid)
+    while (!valid)
     {
         scanf(format_string, path);
         file = fopen(path, "w");
@@ -133,4 +137,5 @@ void input_file_write(FILE* file) {
                    "again >");
         }
     }
+    printf("\n");
 }

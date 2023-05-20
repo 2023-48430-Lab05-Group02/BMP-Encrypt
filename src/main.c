@@ -19,6 +19,7 @@
 #include "input.h"
 #include "int.h"
 #include "cmd.h"
+#include "bmp.h"
 
 // Static Defines
 #define RUNTIME_DEBUG
@@ -73,7 +74,6 @@ int main(int argc, char* argv[]) {
         if (strcmp(argv[i], "--encrypt") == 0 || strcmp(argv[i], "-E") == 0)
         {
             state.encrypt_mode = true;
-            i++;
         }
         if (strcmp(argv[i], "--decrypt") == 0 || strcmp(argv[i], "-D") == 0)
         {
@@ -81,13 +81,17 @@ int main(int argc, char* argv[]) {
         }
         if (strcmp(argv[i], "--key") == 0 || strcmp(argv[i], "-K") == 0)
         {
-            memcpy(&state.encryption_key, argv[i + 1], 4);
+            state.encryption_key = (u32_t) atoi(argv[i+1]) + MAX_i32;
+            //memcpy(&state.encryption_key, argv[i + 1], 4);
             state.encryption_key_present = true;
+            i++;
         }
         if (strcmp(argv[i], "--password") == 0 || strcmp(argv[i], "-P") == 0)
         {
             state.encryption_key = fnv1a_hash(argv[i + 1],
                                          strlen(argv[i+1]));
+            state.encryption_key_present = true;
+            i++;
         }
         if (strcmp(argv[i], "--input") == 0 || strcmp(argv[i], "-I") == 0)
         {
@@ -180,7 +184,18 @@ int main(int argc, char* argv[]) {
 // Public Function Definitions
 //------------------------------------------------------------------------------
 void encrypt_file(FILE* input, FILE* output, u32_t key, bool strict_verify, bool compress) {
-
+    BMP_t* bmp;
+    option_t key_option = {true, &key};
+    option_t no_key_option = {false, NULL};
+    result_t input_result = bmp_from_file(input, no_key_option, strict_verify);
+    if(!input_result.ok)
+    {
+        printf("An error occurred decoding BMP Data: %s", (char*) input_result.data);
+        exit(1);
+    }
+    bmp = input_result.data;
+    result_t output_result = bmp_to_file(output, bmp, key_option, compress);
+    printf("Completed BMP encrypt.");
 }
 void decrypt_file(FILE* input, FILE* output, u32_t key, bool strict_verify, bool compress) {
 

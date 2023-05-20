@@ -541,14 +541,20 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
 result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key, bool use_compression) {
     result_t result;
 
+    // Add to file header that this file is encrypted.
+    if (key.present)
+    {
+        bmp->fileHeader.reserved1 = 1;
+    }
+
     // Write the file header.
     fwrite(&bmp->fileHeader, sizeof(BMPFileHeader_t), 1, output_file);
 
     // Allocate a heap block to use as temporary buffer for encryption/decryption.
     heapBlock_t heap;
     heap.position = 0;
-    heap.length = bmp->fileHeader.size - 12;
-    heap.data = malloc(bmp->fileHeader.size - 12);
+    heap.length = bmp->fileHeader.size - 14;
+    heap.data = malloc(bmp->fileHeader.size - 14);
 
     // Write the Image Data Header
     heap_write(&heap, &bmp->imageHeader, sizeof(BMPImageHeader_t), 1);
@@ -556,11 +562,11 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key, bool use_compr
     // Write color table or mask table if present.
     if (bmp->bitMaskTable.present)
     {
-        heap_write(&heap, &bmp->bitMaskTable.data, sizeof(BMPImageHeader_t), 1);
+        heap_write(&heap, &bmp->bitMaskTable.data, sizeof(BMPMaskTableHeader_t), 1);
     }
     if (bmp->colorTable.present)
     {
-        heap_write(&heap, &bmp->colorTable.data, sizeof(BMPImageHeader_t), 1);
+        heap_write(&heap, &bmp->colorTable.data, sizeof(BMPColorTableHeader_t), 1);
     }
 
     // Deal with compression encodings.

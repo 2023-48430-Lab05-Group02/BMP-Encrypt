@@ -17,6 +17,7 @@
 #include "encryption.h"
 
 #include "main.h"
+#include "bmp.h"
 
 //------------------------------------------------------------------------------
 // Public Function Definitions
@@ -51,19 +52,14 @@ void main_interactive() {
                 printf("Please enter file name to encrypt >");
                 input_file_read(input_file);
 
-                // Strict verification
-                printf("Would you like to enable strict verification of the"
-                       " incoming bmp file? >");
-                ignore_nonfatal = input_bool();
-
                 // Encryption Key type
                 char choice[2];
                 bool valid = false;
 
                 while (!valid)
                 {
-                    printf("Would you like to use a password [p] integer [i]"
-                           " key? >");
+                    printf("Would you like to enter a password [p] "
+                           "integer [i] key? >");
                     input_string(choice, 1);
 
                     if (choice[0] == 'p')
@@ -71,14 +67,18 @@ void main_interactive() {
                         // Encryption password
                         printf("Please enter encryption password >");
                         input_string(password, PATH_MAX);
-                        encryption_key = fnv1a_hash(password, strlen(password));
+                        encryption_key = fnv1a_hash(password,
+                                                    strlen(password));
                         valid = true;
                     }
                     else if (choice[0] == 'i')
                     {
                         // Encryption integer
                         printf("Please enter encryption integer [i32] >");
-                        encryption_key = (u32_t) (input_number(MIN_i32, MAX_i32, "") + MAX_i32);
+                        encryption_key = (u32_t)
+                                (input_number(MIN_i32,
+                                              MAX_i32, "")
+                                 + MAX_i32);
                         valid = true;
                     }
                     else {
@@ -99,12 +99,157 @@ void main_interactive() {
             }
                 break;
             case 2: // Decrypt
+            {
+                // Input file
+                printf("Please enter file name to decrypt >");
+                input_file_read(input_file);
+
+                // Encryption Key type
+                char choice[2];
+                bool valid = false;
+
+                while (!valid)
+                {
+                    printf("Would you like to enter a password [p] "
+                           "integer [i] key? >");
+                    input_string(choice, 1);
+
+                    if (choice[0] == 'p')
+                    {
+                        // Encryption password
+                        printf("Please enter encryption password >");
+                        input_string(password, PATH_MAX);
+                        encryption_key = fnv1a_hash(password,
+                                                    strlen(password));
+                        valid = true;
+                    }
+                    else if (choice[0] == 'i')
+                    {
+                        // Encryption integer
+                        printf("Please enter encryption integer [i32] >");
+                        encryption_key = (u32_t)
+                                (input_number(MIN_i32,
+                                              MAX_i32, "")
+                                              + MAX_i32);
+                        valid = true;
+                    }
+                    else {
+                        printf("Please select a valid option.\n");
+                    }
+                }
+
+                // Compress?
+                printf("Would you also like to compress if possible? >");
+                bool compress = input_bool();
+
+                // Output file
+                printf("Please enter output file name >");
+                input_file_write(output_file);
+
+                decrypt_file(input_file, output_file, encryption_key,
+                             !ignore_nonfatal, compress);
+        }
                 break;
             case 3: // Compress
+            {
+                // Input file
+                printf("Please enter file name to compress >");
+                input_file_read(input_file);
+
+                // Output file
+                printf("Please enter output file name >");
+                input_file_write(output_file);
+
+                compress_file(input_file, output_file, !ignore_nonfatal);
+            }
                 break;
             case 4: // Decompress
+            {
+                // Input file
+                printf("Please enter file name to decompress >");
+                input_file_read(input_file);
+
+                // Output file
+                printf("Please enter output file name >");
+                input_file_write(output_file);
+
+                decompress_file(input_file, output_file, !ignore_nonfatal);
+            }
                 break;
             case 5: // Info
+            {
+                // Input file
+                printf("Please enter file name to get info of >");
+                input_file_read(input_file);
+
+                // Encryption Key type
+                char choice[2];
+                bool valid = false;
+                option_t encrypt = {false, NULL};
+
+                while (!valid)
+                {
+                    printf("Would you like to enter a password [p], "
+                           "integer [i] key or no decryption key [n]? >");
+                    input_string(choice, 1);
+
+                    if (choice[0] == 'p')
+                    {
+                        // Encryption password
+                        printf("Please enter encryption password >");
+                        input_string(password, PATH_MAX);
+                        encryption_key = fnv1a_hash(password,
+                                                    strlen(password));
+                        valid = true;
+                        encrypt.present = true;
+                        encrypt.data = &encryption_key;
+                    }
+                    else if (choice[0] == 'i')
+                    {
+                        // Encryption integer
+                        printf("Please enter encryption integer [i32] >");
+                        encryption_key = (u32_t)
+                                (input_number(MIN_i32,
+                                              MAX_i32, "")
+                                 + MAX_i32);
+                        valid = true;
+                        encrypt.present = true;
+                        encrypt.data = &encryption_key;
+                    }
+                    else if (choice[0] == 'n')
+                    {
+                        valid = true;
+                    }
+                    else {
+                        printf("Please select a valid option.\n");
+                    }
+                }
+
+                result_t result = bmp_from_file(input_file, encrypt,
+                                                !ignore_nonfatal);
+                if (result.ok)
+                {
+                    BMP_t* bmp = result.data;
+                    printf("File size: %u, Image width: %u,"
+                           " Image Height: %u, Compression State: %u,"
+                           " X Pixels Per Meter: %u, Y Pixels Per Meter: %u,"
+                           " Bit Depth: %u, (<8bit) colors used: %u,"
+                           " (<8bit) colors important: %u, image size: %u",
+                           bmp->fileHeader.size, bmp->imageHeader.width,
+                           bmp->imageHeader.height,
+                           bmp->imageHeader.compression,
+                           bmp->imageHeader.xPixelsPerMeter,
+                           bmp->imageHeader.yPixelsPerMeter,
+                           bmp->imageHeader.bitDepth, bmp->imageHeader.clrsUsed,
+                           bmp->imageHeader.clrsImportant,
+                           bmp->imageHeader.imageSize);
+                    free(bmp);
+                }
+                else
+                {
+                    printf("An error occurred: %s\n", (char*) result.data);
+                }
+            }
                 break;
             case 6: // Force non-fatal mode change.
                 ignore_nonfatal = !ignore_nonfatal;
@@ -114,7 +259,7 @@ void main_interactive() {
                     printf("Now ignoring non-fatal errors when reading or"
                            " writing BMP files.\n\n");
                 }
-                else if (!ignore_nonfatal)
+                else
                 {
                     printf("No longer ignoring non-fatal errors when reading"
                            " or writing BMP files.\n\n");
@@ -126,7 +271,6 @@ void main_interactive() {
                 break;
             default: // How did we get here?
                 exit(1);
-                break;
         }
     }
 }

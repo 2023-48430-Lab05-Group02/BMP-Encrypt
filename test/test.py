@@ -26,8 +26,8 @@ if mode == "read":
     valid_real_examples = os.listdir("./valid-examples")
     for file in valid_real_examples:
         print(f"-- TEST FILE: {file} --")
-        out = os.popen(f"{build_dir} --encrypt --input \"../test/valid-examples/{file}\" {'--ignore-nonfatal' if ignore_nonfatal else ''}").read()
-        if out.find("Successfully read bmp") != -1 and out.find("An error has occurred reading the BMP Data") == -1:
+        out = os.popen(f"{build_dir} --encrypt --password test123 --input \"../test/valid-examples/{file}\" {'--ignore-nonfatal' if ignore_nonfatal else ''}").read()
+        if out.find("Completed BMP encrypt") != -1 and out.find("An error has occurred reading the BMP Data") == -1:
             print("-- PASSED TEST --")
         else:
             print(f"{out}\n-- Test Failed --\n")
@@ -44,8 +44,8 @@ if mode == "read":
     valid_real_examples = os.listdir("./valid")
     for file in valid_real_examples:
         print(f"-- TEST FILE: {file} --")
-        out = os.popen(f"{build_dir} --encrypt --input \"../test/valid/{file}\" {'--ignore-nonfatal' if ignore_nonfatal else ''}").read()
-        if out.find("Successfully read bmp") != -1 and out.find("An error has occurred reading the BMP Data") == -1:
+        out = os.popen(f"{build_dir} --encrypt --password test123 --input \"../test/valid/{file}\" {'--ignore-nonfatal' if ignore_nonfatal else ''}").read()
+        if out.find("Completed BMP encrypt") != -1 and out.find("An error has occurred reading the BMP Data") == -1:
             print("-- PASSED TEST --")
         else:
             print(f"{out}\n-- Test Failed --\n")
@@ -62,7 +62,7 @@ if mode == "read":
     valid_real_examples = os.listdir("./questionable")
     for file in valid_real_examples:
         print(f"-- TEST FILE: {file} --")
-        out = os.popen(f"{build_dir} --encrypt --input \"../test/questionable/{file}\" {'--ignore-nonfatal' if ignore_nonfatal else ''}").read()
+        out = os.popen(f"{build_dir} --encrypt --password test123 --input \"../test/questionable/{file}\" {'--ignore-nonfatal' if ignore_nonfatal else ''}").read()
         error_occurred = out.find("An error has occurred") != -1 and out.find("Successfully read bmp") == -1
         if error_occurred and not ignore_nonfatal:
             print("-- PASSED TEST --")
@@ -87,7 +87,7 @@ if mode == "read":
     valid_real_examples = os.listdir("./corrupt")
     for file in valid_real_examples:
         print(f"-- TEST FILE: {file} --")
-        out = os.popen(f"{build_dir} --encrypt --input \"../test/corrupt/{file}\" {'--ignore-nonfatal' if ignore_nonfatal else ''}").read()
+        out = os.popen(f"{build_dir} --encrypt --password test123 --input \"../test/corrupt/{file}\" {'--ignore-nonfatal' if ignore_nonfatal else ''}").read()
         if out.find("An error has occurred") != -1 and out.find("Successfully read bmp") == -1:
             print("-- PASSED TEST --")
         else:

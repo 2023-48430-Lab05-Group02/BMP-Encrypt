@@ -7,6 +7,7 @@
 
 // Standard Library Includes
 #include <stdio.h>
+#include <string.h>
 
 // Public API includes
 #include "encryption.h"
@@ -27,13 +28,15 @@ u32_t fnv1a_hash(const char* str, u64_t length) {
 }
 void xor_encrypt(char* data, u32_t length, const u32_t* key) {
     // Variables
-    u32_t* block_ptr = (u32_t*) data;
-    u32_t block_len = length / 4;
+    i8_t keys[4];
+    u32_t rem;
+    memcpy(keys, key, 4);
 
-    for (u32_t i = 0; i < block_len; i++)
+    for (u32_t i = 0; i < length; i++)
     {
+        rem = length % 4;
         // Apply XOR operation using the generated key
-        block_ptr[i] = block_ptr[i] ^ *key;
+        data[i] = data[i] ^ keys[rem];
     }
 }
 void xor_decrypt(char* data, u32_t length, u32_t* key) {
