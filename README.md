@@ -13,15 +13,18 @@ get info about them.
 
 The program contains three modes:
 
-- Batch mode 
+- Batch mode:
+
 This mode allows specifying an entire folder structure for conversion with
 encryption, decryption, compression or decompression. All files must use
 the same conversion parameters (e.g. encryption key). In encryption mode,
 "e" will be appended to file extension while in decryption mode, "e" will be
 removed.
 
-- Command line
+- Command line:
+
 Short Arguments | Long Arguments:
+
     *  -B : Batch : --batch
     *  -I : Interactive : --interactive
     *  -E : Encrypt : --encrypt
@@ -33,5 +36,6 @@ Short Arguments | Long Arguments:
     *  -FC: Force compress output file if possible : --force-compress
     *  -FD: Force decompress output file if possible --force-decompress
 
-- Interactive mode
+- Interactive mode:
+
 Enter the interactive mode with -I and follow the prompts on screen.
