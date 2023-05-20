@@ -191,7 +191,7 @@ result_t encrypt_file(FILE* input, FILE* output, u32_t key, bool strict_verify, 
     result_t input_result = bmp_from_file(input, no_key_option, strict_verify); /*gets bmp.c to open file*/
     if(!input_result.ok) /*checks input is ok*/
     {
-        printf("An error occurred decoding BMP Data: %s", (char*) input_result.data);
+        printf("An error occurred decoding BMP Data: %s\n", (char*) input_result.data);
         result.ok = false;
         result.data = NULL;
         return result;
@@ -201,13 +201,13 @@ result_t encrypt_file(FILE* input, FILE* output, u32_t key, bool strict_verify, 
     result_t output_result = bmp_to_file(output, bmp, key_option, compress); /*gets bmp.c to creat new file, encrypts in process*/
     if(!output_result.ok) /*checks output is ok*/
     {
-        printf("An error occurred encoding BMP Data: %s", (char*) input_result.data);
+        printf("An error occurred encoding BMP Data: %s\n", (char*) input_result.data);
         result.ok = false;
         result.data = NULL;
         return result;
     }
 
-    printf("Completed BMP encrypt.");
+    printf("Completed BMP encrypt.\n");
     result.ok = true;
     result.data = bmp;
     return result;
@@ -220,7 +220,7 @@ result_t decrypt_file(FILE* input, FILE* output, u32_t key, bool strict_verify, 
     result_t input_result = bmp_from_file(input, key_option, strict_verify); /*gets bmp.c to open file, decrypts in process*/
     if(!input_result.ok) /*checks input is ok*/
     {
-        printf("An error occurred decoding BMP Data: %s", (char*) input_result.data); /*gets bmp.c to creat new file*/
+        printf("An error occurred decoding BMP Data: %s\n", (char*) input_result.data); /*gets bmp.c to creat new file*/
         result.ok = false;
         result.data = NULL;
         return result;
@@ -230,13 +230,13 @@ result_t decrypt_file(FILE* input, FILE* output, u32_t key, bool strict_verify, 
     result_t output_result = bmp_to_file(output, bmp, no_key_option, compress); /*gets bmp.c to creat new file*/
     if(!output_result.ok) /*checks output is ok*/
     {
-        printf("An error occurred encoding BMP Data: %s", (char*) input_result.data);
+        printf("An error occurred encoding BMP Data: %s\n", (char*) input_result.data);
         result.ok = false;
         result.data = NULL;
         return result;
     }
 
-    printf("Completed BMP decrypt.");
+    printf("Completed BMP decrypt.\n");
     result.ok = true;
     result.data = bmp;
     return result;
@@ -249,7 +249,7 @@ result_t compress_file(FILE* input, FILE* output, bool strict_verify) {
     result_t input_result = bmp_from_file(input, no_key_option, strict_verify); /*gets bmp.c to open file*/
     if(!input_result.ok) /*checks input is ok*/
     {
-        printf("An error occurred decoding BMP Data: %s", (char*) input_result.data);
+        printf("An error occurred decoding BMP Data: %s\n", (char*) input_result.data);
         result.ok = false;
         result.data = NULL;
         return result;
@@ -258,13 +258,13 @@ result_t compress_file(FILE* input, FILE* output, bool strict_verify) {
     result_t output_result = bmp_to_file(output, bmp, no_key_option, true); /*gets bmp.c to creat new file, compresses in process*/
     if(!output_result.ok) /*checks output is ok*/
     {
-        printf("An error occurred encoding BMP Data: %s", (char*) input_result.data);
+        printf("An error occurred encoding BMP Data: %s\n", (char*) input_result.data);
         result.ok = false;
         result.data = NULL;
         return result;
     }
 
-    printf("Completed BMP compress.");
+    printf("Completed BMP compress.\n");
     result.ok = true;
     result.data = bmp;
     return result;
@@ -276,7 +276,7 @@ result_t decompress_file(FILE* input, FILE* output, bool strict_verify) {
     result_t input_result = bmp_from_file(input, no_key_option, strict_verify); /*gets bmp.c to open file, decompresses in process*/
     if(!input_result.ok) /*checks input is ok*/
     {
-        printf("An error occurred decoding BMP Data: %s", (char*) input_result.data);
+        printf("An error occurred decoding BMP Data: %s\n", (char*) input_result.data);
         result.ok = false;
         result.data = NULL;
         return result;
@@ -285,13 +285,13 @@ result_t decompress_file(FILE* input, FILE* output, bool strict_verify) {
     result_t output_result = bmp_to_file(output, bmp, no_key_option, false); /*gets bmp.c to creat new file*/
     if(!output_result.ok) /*checks output is ok*/
     {
-        printf("An error occurred encoding BMP Data: %s", (char*) input_result.data);
+        printf("An error occurred encoding BMP Data: %s\n", (char*) input_result.data);
         result.ok = false;
         result.data = NULL;
         return result;
     }
 
-    printf("Completed BMP decompress.");
+    printf("Completed BMP decompress.\n");
     result.ok = true;
     result.data = bmp;
     return result;
