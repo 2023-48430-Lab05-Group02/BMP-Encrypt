@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
         if (strcmp(argv[i], "--batch") == 0
             || strcmp(argv[i], "-B") == 0)
         {
-            state.decompress_mode = true;
+            state.batch_mode = true;
         }
         if (strcmp(argv[i], "--interactive") == 0
             || strcmp(argv[i], "-I") == 0) {
