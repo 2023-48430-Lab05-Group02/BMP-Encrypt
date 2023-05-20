@@ -106,6 +106,11 @@ void directory_tree_get_directory_path(directory_t* director, char* name);
  */
 file_iter_t directory_tree_get_files(directory_t* parent);
 /*
+ * Recursive iterator that includes all files from below the directory using
+ * their full path.
+ */
+file_iter_t directory_tree_get_files_recursive(directory_t* parent);
+/*
  * Get a list of subdirectories for parent directory parent.
  */
 directory_iter_t directory_tree_get_subdirectories(directory_t* parent);
