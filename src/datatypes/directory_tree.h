@@ -58,7 +58,7 @@ typedef struct directory {
  * A list of files and accompanying length for iteration.
  */
 typedef struct file_iter {
-    file_t* files;
+    file_t** files;
     u32_t files_length;
 } file_iter_t;
 
@@ -105,6 +105,11 @@ void directory_tree_get_directory_path(directory_t* director, char* name);
  * Get a list of files with parent directory parent.
  */
 file_iter_t directory_tree_get_files(directory_t* parent);
+/*
+ * Recursive iterator that includes all files from below the directory using
+ * their full path.
+ */
+file_iter_t directory_tree_get_files_recursive(directory_t* parent);
 /*
  * Get a list of subdirectories for parent directory parent.
  */

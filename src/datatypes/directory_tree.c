@@ -47,6 +47,12 @@
  * with the files and directories physically at that location in the system.
  */
 void dir_to_dir_tree_recursive(directory_t* tree_dir);
+/*
+ * Recursive function to handle turning the directory tree into a single
+ * iterator.
+ */
+void directory_tree_get_files_recurse(directory_t* dir, u32_t* capacity,
+                                      file_iter_t* iter);
 
 //------------------------------------------------------------------------------
 // Public Function Definitions
@@ -166,11 +172,20 @@ void directory_tree_get_directory_path(directory_t* directory, char* name) {
 }
 file_iter_t directory_tree_get_files(directory_t* parent) {
     file_iter_t file_list = {
-        parent->files,
+        &parent->files,
         parent->f_length
     };
     return file_list;
 
+}
+file_iter_t directory_tree_get_files_recursive(directory_t* parent) {
+    u32_t capacity = 16;
+    file_iter_t file_list = {
+            malloc(capacity * sizeof(file_t*)),
+            0,
+    };
+    directory_tree_get_files_recurse(parent, &capacity, &file_list);
+    return file_list;
 }
 directory_iter_t directory_tree_get_subdirectories(directory_t* parent) {
     directory_iter_t directory_list = {
@@ -291,3 +306,23 @@ void dir_to_dir_tree_recursive(directory_t* tree_dir) {
     closedir(directory);
 }
 #endif // _WIN64,__linux__
+void directory_tree_get_files_recurse(directory_t* dir, u32_t* capacity,
+                                      file_iter_t* iter) {
+    // Realloc if necessary
+    if (*capacity < iter->files_length + dir->f_length)
+    {
+        safe_realloc(iter->files, *capacity * 2 * sizeof(file_t*));
+        *capacity *= 2;
+    }
+    // Add files from this dir.
+    for (u32_t i = 0; i < dir->f_length; i++)
+    {
+        iter->files[i + iter->files_length] = &dir->files[i];
+    }
+    iter->files_length += dir->f_length;
+    // Iterate sub directories
+    for (u32_t i = 0; i < dir->s_length; i++)
+    {
+        directory_tree_get_files_recurse(&dir->subdirectories[i], capacity, iter);
+    }
+}
