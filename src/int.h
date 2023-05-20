@@ -18,6 +18,6 @@
 /*
  * Part of the main function that runs in the case of interactive mode.
  */
-result_t main_interactive();
+void main_interactive();
 
 #endif //INT_H

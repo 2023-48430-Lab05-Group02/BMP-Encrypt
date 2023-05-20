@@ -16,12 +16,13 @@
 #include "input.h"
 #include "encryption.h"
 
+#include "main.h"
+
 //------------------------------------------------------------------------------
 // Public Function Definitions
 //------------------------------------------------------------------------------
-result_t main_interactive() {
+void main_interactive() {
     // Variables
-    result_t result;
     bool interactive = true;
     bool ignore_nonfatal = false;
     i32_t selected_option = -1;
@@ -45,29 +46,30 @@ result_t main_interactive() {
         switch (selected_option)
         {
             case 1: // Encrypt
+            {
                 // Input file
-                printf("Please enter file name to encrypt > ");
+                printf("Please enter file name to encrypt >");
                 input_file_read(input_file);
 
                 // Strict verification
                 printf("Would you like to enable strict verification of the"
-                       "incoming bmp file? > ");
+                       " incoming bmp file? >");
                 ignore_nonfatal = input_bool();
 
-                // Encryption type
+                // Encryption Key type
                 char choice[2];
                 bool valid = false;
 
                 while (!valid)
                 {
                     printf("Would you like to use a password [p] integer [i]"
-                           " key? > ");
+                           " key? >");
                     input_string(choice, 1);
 
                     if (choice[0] == 'p')
                     {
                         // Encryption password
-                        printf("Please enter encryption password > ");
+                        printf("Please enter encryption password >");
                         input_string(password, PATH_MAX);
                         encryption_key = fnv1a_hash(password, strlen(password));
                         valid = true;
@@ -75,8 +77,8 @@ result_t main_interactive() {
                     else if (choice[0] == 'i')
                     {
                         // Encryption integer
-                        printf("Please enter encryption integer [i32] > ");
-                        *encryption_key = (u32_t) (input_number(MIN_i32, MAX_i32, "") + MAX_i32);
+                        printf("Please enter encryption integer [i32] >");
+                        encryption_key = (u32_t) (input_number(MIN_i32, MAX_i32, "") + MAX_i32);
                         valid = true;
                     }
                     else {
@@ -85,15 +87,16 @@ result_t main_interactive() {
                 }
 
                 // Compress?
-                printf("Would you also like to compress if possible? > ");
+                printf("Would you also like to compress if possible? >");
                 bool compress = input_bool();
 
                 // Output file
-                printf("Please enter output file name > ");
-                input_string(output_file_name, PATH_MAX);
+                printf("Please enter output file name >");
+                input_file_write(output_file);
 
-                encrypt_file(input_file_name, output_file_name,
-                             encryption_key, !ignore_nonfatal, compress);
+                encrypt_file(input_file, output_file, encryption_key,
+                             !ignore_nonfatal, compress);
+            }
                 break;
             case 2: // Decrypt
                 break;
@@ -109,12 +112,12 @@ result_t main_interactive() {
                 if (ignore_nonfatal)
                 {
                     printf("Now ignoring non-fatal errors when reading or"
-                           " writing BMP files.\n");
+                           " writing BMP files.\n\n");
                 }
                 else if (!ignore_nonfatal)
                 {
                     printf("No longer ignoring non-fatal errors when reading"
-                           " or writing BMP files.\n");
+                           " or writing BMP files.\n\n");
                 }
                 break;
             case 7: // Quit
