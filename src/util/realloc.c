@@ -15,13 +15,13 @@
 //------------------------------------------------------------------------------
 // Public Function Definitions
 //------------------------------------------------------------------------------
-void safe_realloc(void* pointer, u32_t size) {
-    pointer = realloc(pointer, size);
+void* safe_realloc(void* pointer, u32_t size) {
+    void* output;
+    output = realloc(pointer, size);
 
-    if (pointer == NULL){
-        void* temp_ptr;
-        temp_ptr = malloc(size);
-        memcpy(temp_ptr, pointer, sizeof(*pointer));
-        pointer = temp_ptr;
+    if (output == NULL){
+        output = malloc(size);
+        memcpy(output, pointer, sizeof(*pointer));
     }
+    return output;
 }

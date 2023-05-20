@@ -123,7 +123,7 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
                     int section_size;
                     section_size = *data[step]+((int)image_header->width *
                                    *data[step + 1]);
-                    safe_realloc(output, (u32_t)
+                    output = safe_realloc(output, (u32_t)
                     (location_counter + section_size + 1));
                     step++;
 
@@ -138,7 +138,7 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
             else{
                 step++;
                 int subcount = *data[step];
-                safe_realloc(output, (u32_t)
+                output = safe_realloc(output, (u32_t)
                 (location_counter + subcount));
 
                 step++;
@@ -155,7 +155,7 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
         else{
             int subcount = current_byte;
             while (subcount > 0){
-                safe_realloc(output, (u32_t)
+                output = safe_realloc(output, (u32_t)
                 (location_counter + 1));
 
                 output[location_counter++] = *data[step + 1];
