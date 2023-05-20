@@ -57,7 +57,7 @@ void main_batch(ProgramState_t state) {
             strcpy(output_file_name, input_file_name);
             strcat(output_file_name, "e");
 
-            input_file = fopen(state.input_file_name, "r");
+            input_file = fopen(input_file_name, "r");
             output_file = fopen(output_file_name, "w");
 
             printf("Processing %s\n", input_file_name);
