@@ -7,10 +7,9 @@
 
 // Standard Library Includes
 #include <string.h>
+#include <stdlib.h> // strtol, _WIN64: PATH_MAX
 #ifdef __linux__
 #include <dirent.h> // PATH_MAX
-#elif _WIN64
-#include <stdlib.h> // PATH_MAX
 #endif
 
 // Public API
@@ -43,12 +42,12 @@ void print_unsigned_int_binary(unsigned int num) {
 i32_t input_number(int min, int max, char error_message[]) {
     bool valid = false;
     i32_t out;
-    char num[11];
+    char num[12];
 
     while (!valid)
     {
         scanf("%11s", num);
-        out = strtol(num, NULL, 10);
+        out = (i32_t) strtol(num, NULL, 10);
         if (out >= min && out <= max && out != 0)
         {
             valid = true;

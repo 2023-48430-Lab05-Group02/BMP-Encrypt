@@ -8,6 +8,7 @@
 // Standard Library Includes
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 // Public API Includes
 #include "main.h"
@@ -82,7 +83,6 @@ int main(int argc, char* argv[]) {
         if (strcmp(argv[i], "--key") == 0 || strcmp(argv[i], "-K") == 0)
         {
             state.encryption_key = (u32_t) atoi(argv[i+1]) + MAX_i32;
-            //memcpy(&state.encryption_key, argv[i + 1], 4);
             state.encryption_key_present = true;
             i++;
         }
