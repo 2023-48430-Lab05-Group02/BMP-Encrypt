@@ -114,8 +114,7 @@ void directory_tree_get_file_path(file_t* file, char* name) {
 
     strcpy(right, file->name);
 
-    while (!reached_root) {
-        if (parent->parent != NULL)
+        while (!reached_root)
         {
             strcpy(left, parent->name);
             #ifdef _WIN64
@@ -125,13 +124,16 @@ void directory_tree_get_file_path(file_t* file, char* name) {
             #endif // _WIN64,__linux__
             strcat(left, right);
             strcpy(right, left);
-            parent = parent->parent;
+            if (parent->parent == NULL)
+            {
+                reached_root = true;
+            }
+            else
+            {
+                parent = parent->parent;
+            }
         }
-        else
-        {
-            reached_root = true;
-        }
-    }
+
     strcpy(name, right);
 }
 void directory_tree_get_directory_path(directory_t* directory, char* name) {

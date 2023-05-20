@@ -8,6 +8,7 @@
 // Standard Library Includes
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #ifdef __linux__
 #include <dirent.h> // PATH_MAX
@@ -32,8 +33,13 @@
 void main_batch(ProgramState_t state) {
     // Tree
     directory_t root_dir;
-    root_dir = directory_tree_new_from_dir_path(state.input_file_name);
-    file_iter_t complete_iter = directory_tree_get_files_recursive(&root_dir);
+    file_iter_t complete_iter;
+    complete_iter.files_length = 0;
+    complete_iter.files_capacity = 128;
+    complete_iter.files = malloc(complete_iter.files_capacity * sizeof(file_t*));
+
+    directory_tree_new_from_dir_path(&root_dir, state.input_file_name);
+    directory_tree_get_files_recursive(&complete_iter, &root_dir);
 
     // Variables
     char input_file_name[PATH_MAX];
@@ -41,7 +47,7 @@ void main_batch(ProgramState_t state) {
     FILE* input_file;
     FILE* output_file;
 
-    printf("Beginning batch processing at path: %s", root_dir.name);
+    printf("Beginning batch processing at path: %s\n", root_dir.name);
 
     if(state.encrypt_mode) // Handle Encryption
     {
@@ -54,6 +60,7 @@ void main_batch(ProgramState_t state) {
             input_file = fopen(state.input_file_name, "r");
             output_file = fopen(output_file_name, "w");
 
+            printf("Processing %s\n", input_file_name);
             encrypt_file(input_file, output_file,
                          state.encryption_key,
                          !state.force_nonfatal_mode,
