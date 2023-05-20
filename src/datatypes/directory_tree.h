@@ -58,7 +58,7 @@ typedef struct directory {
  * A list of files and accompanying length for iteration.
  */
 typedef struct file_iter {
-    file_t* files;
+    file_t** files;
     u32_t files_length;
 } file_iter_t;
 

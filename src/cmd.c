@@ -32,19 +32,23 @@
 void main_batch(ProgramState_t state) {
     // Tree
     directory_t root_dir;
-    file_iter_t complete_iter;
     root_dir = directory_tree_new_from_dir_path(state.input_file_name);
+    file_iter_t complete_iter = directory_tree_get_files_recursive(&root_dir);
 
     // Variables
+    char input_file_name[PATH_MAX];
     char output_file_name[PATH_MAX];
     FILE* input_file;
     FILE* output_file;
+
+    printf("Beginning batch processing at path: %s", root_dir.name);
 
     if(state.encrypt_mode) // Handle Encryption
     {
         for (u32_t i = 0; i < complete_iter.files_length; i++)
         {
-            strcpy(output_file_name, complete_iter.files[i].name);
+            directory_tree_get_file_path(complete_iter.files[i], input_file_name);
+            strcpy(output_file_name, input_file_name);
             strcat(output_file_name, "e");
 
             input_file = fopen(state.input_file_name, "r");
@@ -60,7 +64,7 @@ void main_batch(ProgramState_t state) {
     {
         for (u32_t i = 0; i < complete_iter.files_length; i++)
         {
-            strcpy(output_file_name, complete_iter.files[i].name);
+            strcpy(output_file_name, complete_iter.files[i]->name);
             strcat(output_file_name, "e");
 
             input_file = fopen(state.input_file_name, "r");
@@ -76,7 +80,7 @@ void main_batch(ProgramState_t state) {
     {
         for (u32_t i = 0; i < complete_iter.files_length; i++)
         {
-            strcpy(output_file_name, complete_iter.files[i].name);
+            strcpy(output_file_name, complete_iter.files[i]->name);
             strcat(output_file_name, "e");
 
             input_file = fopen(state.input_file_name, "r");
@@ -89,7 +93,7 @@ void main_batch(ProgramState_t state) {
     {
         for (u32_t i = 0; i < complete_iter.files_length; i++)
         {
-            strcpy(output_file_name, complete_iter.files[i].name);
+            strcpy(output_file_name, complete_iter.files[i]->name);
             strcat(output_file_name, "e");
 
             input_file = fopen(state.input_file_name, "r");
@@ -98,6 +102,7 @@ void main_batch(ProgramState_t state) {
             decompress_file(input_file, output_file, !state.force_nonfatal_mode);
         }
     }
+    directory_tree_deconstructor(&root_dir);
 }
 void main_single(ProgramState_t state) {
     // Variables

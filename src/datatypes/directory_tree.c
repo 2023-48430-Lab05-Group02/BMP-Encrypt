@@ -172,7 +172,7 @@ void directory_tree_get_directory_path(directory_t* directory, char* name) {
 }
 file_iter_t directory_tree_get_files(directory_t* parent) {
     file_iter_t file_list = {
-        parent->files,
+        &parent->files,
         parent->f_length
     };
     return file_list;
@@ -181,7 +181,7 @@ file_iter_t directory_tree_get_files(directory_t* parent) {
 file_iter_t directory_tree_get_files_recursive(directory_t* parent) {
     u32_t capacity = 16;
     file_iter_t file_list = {
-            malloc(capacity),
+            malloc(capacity * sizeof(file_t*)),
             0,
     };
     directory_tree_get_files_recurse(parent, &capacity, &file_list);
@@ -311,13 +311,13 @@ void directory_tree_get_files_recurse(directory_t* dir, u32_t* capacity,
     // Realloc if necessary
     if (*capacity < iter->files_length + dir->f_length)
     {
-        safe_realloc(iter->files, *capacity * 2);
+        safe_realloc(iter->files, *capacity * 2 * sizeof(file_t*));
         *capacity *= 2;
     }
     // Add files from this dir.
     for (u32_t i = 0; i < dir->f_length; i++)
     {
-        iter->files[i + iter->files_length] = dir->files[i];
+        iter->files[i + iter->files_length] = &dir->files[i];
     }
     iter->files_length += dir->f_length;
     // Iterate sub directories
