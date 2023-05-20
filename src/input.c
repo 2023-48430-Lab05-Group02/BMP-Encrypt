@@ -1,51 +1,136 @@
+// ---------------------------------BMP-Encrypt---------------------------------
 // 48430 Introduction to C Programming
 // Lab: 5, Group: 2
-// Created by Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad
-// Person Responsible For File:
+// Copyright © 2023 Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad.
+// Primary File Contributor: Joseph Rico
+// ----------------------------------input.c------------------------------------
 
+// Standard Library Includes
+#include <string.h>
+#ifdef __linux__
+#include <dirent.h> // PATH_MAX
+#elif _WIN64
+#include <stdlib.h> // PATH_MAX
+#endif
+
+// Public API
 #include "input.h"
 
 void print_menu_help() {
-    printf("Help Test");
+    printf("------------BMP Encrypt------------\n"
+           "");
 }
 void print_menu_interactive() {
-    printf("Interactive Test");
+    printf("Which action would you like to perform:\n");
+    printf("1. Encrypt\n"
+           "2. Decrypt\n"
+           "3. Compress\n"
+           "4. Decompress\n"
+           "5. Info\n"
+           "6. Force non-fatal BMP files to be processed\n"
+           "7. Quit\n");
+    printf("Select your choice >");
 }
 
 void print_unsigned_int_binary(unsigned int num) {
     for (int i = sizeof(unsigned int) * 8 - 1; i >= 0; i--)
         printf("%d", (num >> i) & 1);
 }
-
+// Note that the number in question may never be zero with this implementation.
 i32_t input_number(int min, int max, char error_message[]) {
-    result_t result;
+    bool valid = false;
+    i32_t out;
+    char num[11];
 
-    result.ok = false;
-    result.data = "CODE INCOMPLETE";
-
-    return result;
+    while (!valid)
+    {
+        scanf("%11s", num);
+        out = strtol(num, NULL, 10);
+        if (out >= min && out <= max && out != 0)
+        {
+            valid = true;
+        }
+        else
+        {
+            printf("%s\n", error_message);
+            printf("Please enter the value again >");
+        }
+    }
+    return out;
 }
 void input_string(char* str, int max_length) {
-    result_t result;
-
-    result.ok = false;
-    result.data = "CODE INCOMPLETE";
-
-    return result;
+    char format_string[10];
+    snprintf(format_string, sizeof(format_string), "%%%ds", max_length);
+    scanf(format_string, str);
 }
-void file_read(FILE* file, char name[]) {
-    result_t result;
+bool input_bool() {
+    bool out;
+    bool valid = false;
+    char state[6];
 
-    result.ok = false;
-    result.data = "CODE INCOMPLETE";
+    while (!valid)
+    {
+        scanf("%5s", state);
 
-    return result;
+        if (state[0] == '0' || strcmp(state, "false") == 0
+                            || strcmp(state, "yes") == 0)
+        {
+            valid = true;
+            out = false;
+        }
+        else if (state[0] == '1' || strcmp(state, "true") == 0
+                                 || strcmp(state, "no") == 0)
+        {
+            valid = true;
+            out = true;
+        }
+        else
+        {
+            printf("Invalid Boolean entered. Please enter the value"
+                   " [0, false], [1, true] again >");
+        }
+    }
+    return out;
 }
-void file_write(FILE* file, char name[]) {
-    result_t result;
+void input_file_read(FILE* file) {
+    bool valid = false;
+    char format_string[10];
+    snprintf(format_string, sizeof(format_string), "%%%ds", PATH_MAX);
+    char path[PATH_MAX];
 
-    result.ok = false;
-    result.data = "CODE INCOMPLETE";
+    if (!valid)
+    {
+        scanf(format_string, path);
+        file = fopen(path, "r");
+        if (file != NULL)
+        {
+            valid = true;
+        }
+        else
+        {
+            printf("File could not be found. Please enter your file name"
+                   "again >");
+        }
+    }
+}
+void input_file_write(FILE* file) {
+    bool valid = false;
+    char format_string[10];
+    snprintf(format_string, sizeof(format_string), "%%%ds", PATH_MAX);
+    char path[PATH_MAX];
 
-    return result;
+    if (!valid)
+    {
+        scanf(format_string, path);
+        file = fopen(path, "w");
+        if (file != NULL)
+        {
+            valid = true;
+        }
+        else
+        {
+            printf("File could not be found. Please enter your file name"
+                   "again >");
+        }
+    }
 }
