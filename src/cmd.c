@@ -75,7 +75,7 @@ void main_batch(ProgramState_t state) {
         {
             directory_tree_get_file_path(complete_iter.files[i], input_file_name);
             strcpy(output_file_name, input_file_name);
-            strcat(output_file_name, "e");
+            strcat(output_file_name, "d");
 
             input_file = fopen(input_file_name, "r");
             output_file = fopen(output_file_name, "w");
@@ -92,7 +92,7 @@ void main_batch(ProgramState_t state) {
         {
             directory_tree_get_file_path(complete_iter.files[i], input_file_name);
             strcpy(output_file_name, input_file_name);
-            strcat(output_file_name, "e");
+            strcat(output_file_name, "c");
 
             input_file = fopen(input_file_name, "r");
             output_file = fopen(output_file_name, "w");
@@ -106,7 +106,7 @@ void main_batch(ProgramState_t state) {
         {
             directory_tree_get_file_path(complete_iter.files[i], input_file_name);
             strcpy(output_file_name, input_file_name);
-            strcat(output_file_name, "e");
+            strcat(output_file_name, "b");
 
             input_file = fopen(input_file_name, "r");
             output_file = fopen(output_file_name, "w");
