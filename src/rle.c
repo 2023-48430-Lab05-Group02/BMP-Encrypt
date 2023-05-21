@@ -12,23 +12,21 @@
 result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
     result_t result;
 
-    int hight_count, width_count, count;
+    int hight_count, width_count, count; //initialize variables
     unsigned char *output, current_byte;
-    output = malloc(sizeof(*data) * 2);
+    output = malloc(sizeof(*data) * 2); //max decompression can be 2 * the size
     /* add test to see if output true*/
     int location_counter = 0;
 
-    for (hight_count = 0; hight_count < (int)image_header->height;
-         hight_count++) {
+    for (hight_count = 0; hight_count < (int)image_header->height; hight_count++) { //main for loop
 
         width_count = 0;
 
-        while (width_count < (int)image_header->width) {
-            current_byte = *data[hight_count * (int)image_header->width +
-                                 width_count];
+        while (width_count < (int)image_header->width) { //loop for every line of bmp
+            current_byte = *data[hight_count * (int)image_header->width + width_count];
             count = 1;
 
-            while (count < 255 && width_count + count < (int)image_header->width
+            while (count < 255 && width_count + count < (int)image_header->width //gets amount of same pixels in row for encoded mode
                    && *data[hight_count * (int)image_header->width + width_count
                    + count] == *data[hight_count * (int)image_header->width +
                    width_count]) {
@@ -36,47 +34,46 @@ result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
                 count++;
             }
 
-            if (count == 1){
-                int subcount = 0;
-                while (*data[hight_count * (int)image_header->width +
-                       width_count + count + subcount] != *data[hight_count *
-                       (int)image_header->width + width_count + count + subcount
-                       + 1] && width_count + count + subcount <
-                       (int)image_header->width){
+            if (count == 1){ //if no same pixels must be in absolute mode
+                int subcount = 0; //finds amount of unique pixels in row
+                while (*data[hight_count * (int)image_header->width + width_count + count + subcount] != *data[hight_count * (int)image_header->width + width_count + count + subcount + 1] && width_count + count + subcount < (int)image_header->width){
 
                     subcount++;
                 }
 
                 subcount++; /*accounts for initial byte*/
 
-                if (*data[hight_count * (int)image_header->width + width_count +
-                    count + subcount] == *data[hight_count *
-                    (int)image_header->width + width_count + count + subcount +
-                    1]) {
-
-                    subcount--; /*accounts for if last byte is start of encoded
- *                                mode */
+                if (subcount < 3){ //if < 3 will be recognised as an escape sequence or delta
+                    output[location_counter++] = (unsigned char)count;
+                    output[location_counter++] = current_byte;
                 }
 
-                output[location_counter++] = (unsigned char)0; /*start absolute
- *                                                               mode */
-                output[location_counter++] = (unsigned char)subcount;
-                /*states number of bytes to follow */
+                else { // write data in absolute mode
+                    if (*data[hight_count * (int) image_header->width + width_count + count + subcount] == *data[hight_count * (int) image_header->width +width_count + count + subcount + 1]) {
 
-                int subsubcount = 0;
-                while (subsubcount <= subcount){
-                    output[location_counter++] = *data[hight_count *
-                    (int)image_header->width + width_count + subsubcount];
+                        subcount--; /*accounts for if last byte is start of encoded mode */
+                    }
 
-                    subsubcount++;
+                    output[location_counter++] = (unsigned char) 0; /*start absolute mode */
+                    output[location_counter++] = (unsigned char) subcount; /*states number of bytes to follow */
+
+                    int subsubcount = 0;
+                    while (subsubcount <= subcount) { //adds colour data in absolute mode
+
+                        output[location_counter++] = *data[hight_count * (int) image_header->width + width_count +subsubcount];
+                        subsubcount++;
+                    }
+                    if(subcount % 2 != 0) { //fills out to 16bit word length
+                        output[location_counter++] = (unsigned char) 0;
+                    }
+
+
+                    subcount--; /* doesn't add initial byte to width_count as it will be added later */
+                    width_count += subcount;
                 }
-
-                subcount--; /* doesn't add initial byte to width_count as it
- *                             will be added later */
-                width_count += subcount;
 
             }
-            else {
+            else { //if there is a row of like pixels, puts the amount then the colour for absolute mode
                 output[location_counter++] = (unsigned char)count;
                 output[location_counter++] = current_byte;
             }
@@ -84,77 +81,74 @@ result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
             width_count += count;
         }
 
-        output[location_counter++] = (unsigned char)0;
+        output[location_counter++] = (unsigned char)0; //end of line character
         output[location_counter++] = (unsigned char)0;
     }
-    output[location_counter++] = (unsigned char)0;
+    output[location_counter++] = (unsigned char)0; //end of file character
     output[location_counter++] = (unsigned char)1;
-    image_header->imageSize = (u32_t)location_counter;
+    image_header->imageSize = (u32_t)location_counter; //set new image length
 
     result.ok = true;
-    safe_realloc(output, (u32_t)location_counter);
-    if (output == NULL){
+    safe_realloc(output, (u32_t)location_counter); //put new data in allocation right size for it
+    if (output == NULL){ //test if realloc worked
         result.ok =false;
     }
     result.data = output;
 
-    free(data);
+    free(data); //free the allocation with input data
 
     return result;
 }
 result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
     result_t result;
-    unsigned char *output, current_byte;
+    unsigned char *output, current_byte; //initialise variables
     output = malloc(1);
     int step = 1;
     int location_counter = 0;
 
-    while (*data[step] != 0 && *data[step + 1] != 1){
+    while (*data[step] != 0 && *data[step + 1] != 1){ //main loop
         current_byte = *data[step];
 
-        if (current_byte == 0) {
+        if (current_byte == 0) { //tests for absolute mode
 
-            if (*data[step + 1] < 3) {
+            if (*data[step + 1] < 3) { //test for escape character or delta
                 step++;
 
-                if (*data[step] == 2){
+                if (*data[step] == 2){ //test for delta
 
                     step++;
                     int section_size;
-                    section_size = *data[step]+((int)image_header->width *
-                                   *data[step + 1]);
-                    output = safe_realloc(output, (u32_t)
-                    (location_counter + section_size + 1));
+                    section_size = *data[step]+((int)image_header->width * *data[step + 1]); //calculate amount of pixels to be skipped
+                    output = safe_realloc(output, (u32_t)(location_counter + section_size + 1)); //allocates new memory
                     step++;
 
                     while(section_size > 0){
-                        output[location_counter++] = (unsigned char)0;
+                        output[location_counter++] = (unsigned char)0; //sets skipped pixels to 0
                         section_size--;
                     }
 
                 }
             }
 
-            else{
+            else{ //if absolute mode
                 step++;
-                int subcount = *data[step];
-                output = safe_realloc(output, (u32_t)
-                (location_counter + subcount));
+                int subcount = *data[step]; //gets amount of unique pixels
+                output = safe_realloc(output, (u32_t)(location_counter + subcount)); //allocates new memory
 
                 step++;
-                while (subcount > 0){
+                while (subcount > 0){ //takes data from absolute mode
                     output[location_counter++] = *data[step];
                     step++;
                     subcount--;
                 }
-                if(subcount % 2 != 0){
+                if(subcount % 2 != 0){ //accounts for filling out work length
                     step++;
                 }
             }
         }
-        else{
+        else{ //if in encoded mode
             int subcount = current_byte;
-            while (subcount > 0){
+            while (subcount > 0){ //takes data out of encoded mode
                 output = safe_realloc(output, (u32_t)
                 (location_counter + 1));
 
@@ -167,12 +161,13 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
 
     }
 
-    image_header->imageSize = (u32_t)location_counter;
+    image_header->imageSize = (u32_t)location_counter; //set new image length
     result.ok = true;
-    if (output == NULL){
+    if (output == NULL){ //test if realloc worked
         result.ok =false;
     }
     result.data = output;
+    free(data); //free input allocation
 
     return result;
 }
