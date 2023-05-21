@@ -10,7 +10,7 @@
 #define OPTION_H
 
 // Other Includes
-#include "bool.h"
+#include "bool.h" // bool
 
 //------------------------------------------------------------------------------
 // Structs

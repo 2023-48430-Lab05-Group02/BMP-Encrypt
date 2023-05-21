@@ -6,21 +6,19 @@
 // -----------------------------------main.c------------------------------------
 
 // Standard Library Includes
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include <string.h> // strcmp
 
 // Public API Includes
 #include "main.h"
 
 // Other Includes
-#include "datatypes/bool.h"
+#include "datatypes/bool.h" // bool true false
 
-#include "encryption.h"
-#include "input.h"
-#include "int.h"
-#include "cmd.h"
-#include "bmp.h"
+#include "encryption.h" // fnv1a_hash
+#include "input.h" // print_menu_help
+#include "int.h" // main_interactive
+#include "cmd.h" // main_batch main_single
+#include "bmp.h" // bmp bmp_from_file bmp_to_file
 
 // Static Defines
 #define RUNTIME_DEBUG

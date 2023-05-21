@@ -9,12 +9,11 @@
 #ifndef RLE_H
 #define RLE_H
 
-// Public API Includes
-#include "bmp.h"
-
 // Other Includes
-#include "datatypes/result.h"
-#include "datatypes/short_sizes.h"
+#include "datatypes/result.h" // result_t
+#include "datatypes/short_sizes.h" // u8_t
+
+#include "bmp.h" // BMPImageHeader_t
 
 //------------------------------------------------------------------------------
 // Function Declarations

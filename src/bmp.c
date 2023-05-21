@@ -6,18 +6,18 @@
 // -----------------------------------bmp.c-------------------------------------
 
 // Standard Library Includes
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <math.h>
+#include <stdlib.h> // malloc abs free
+#include <string.h> // strcpy strcat memcpy
+#include <stdio.h> // ftell fseek rewind fread printf fwrite
+#include <math.h> // pow ceil
 
 // Public API Includes
 #include "bmp.h"
 
 // Other Includes
-#include "input.h"
-#include "rle.h"
-#include "encryption.h"
+#include "input.h" // print_unsigned_int_binary
+#include "rle.h" // rl8_decode rl8_encode
+#include "encryption.h" // xor_decrypt xor_encrypt
 
 //------------------------------------------------------------------------------
 // Static Defines
@@ -29,6 +29,12 @@
 //------------------------------------------------------------------------------
 // Private Structs
 //------------------------------------------------------------------------------
+/*
+ * A heap block that contains a pointer to binary data, a length (or capacity)
+ * of this data allocation and the current position of the end of written data.
+ * This position can be used by heap_write() to append to the data block.
+ * A heap block should be used with either heap_read or heap_write not both.
+ */
 typedef struct heapBlock {
     u32_t position;
     u32_t length;
@@ -440,7 +446,8 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
                 bits_per_row += padding_needed;
             }
         }
-        f64_t bits_count = (f64_t)bits_per_row * (f64_t) abs(bmp->imageHeader.height);
+        f64_t bits_count = (f64_t)bits_per_row
+                * (f64_t) abs(bmp->imageHeader.height);
         f64_t bytes = bits_count / 8.0;
 
         // Check if the number of bytes in the image is larger than a 4 byte int
@@ -538,7 +545,8 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
     result.data = bmp;
     return result;
 }
-result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key, bool use_compression) {
+result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
+                     bool use_compression) {
     result_t result;
 
     // Add to file header that this file is encrypted.
@@ -557,28 +565,33 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key, bool use_compr
     heap.data = malloc(bmp->fileHeader.size - 14);
 
     // Write the Image Data Header
-    heap_write(&heap, &bmp->imageHeader, sizeof(BMPImageHeader_t), 1);
+    heap_write(&heap, &bmp->imageHeader,
+               sizeof(BMPImageHeader_t), 1);
 
     // Write color table or mask table if present.
     if (bmp->bitMaskTable.present)
     {
-        heap_write(&heap, bmp->bitMaskTable.data, sizeof(BMPMaskTableHeader_t), 1);
+        heap_write(&heap, bmp->bitMaskTable.data,
+                   sizeof(BMPMaskTableHeader_t), 1);
     }
     if (bmp->colorTable.present)
     {
-        heap_write(&heap, bmp->colorTable.data, sizeof(BMPColorTableHeader_t), 1);
+        heap_write(&heap, bmp->colorTable.data,
+                   sizeof(BMPColorTableHeader_t), 1);
     }
 
     // Deal with compression encodings.
     u8_t** pixelp = &bmp->pixelData;
     u32_t size = bmp->imageHeader.imageSize;
-    if (bmp->imageHeader.compression == 1 && bmp->imageHeader.bitDepth != 8 && use_compression)
+    if (bmp->imageHeader.compression == 1
+        && bmp->imageHeader.bitDepth != 8 && use_compression)
     {
         result.ok = false;
         result.data = "Attempting to compress non 8-bit file with RLE8.";
         return result;
     }
-    else if (bmp->imageHeader.compression == 1 && bmp->imageHeader.bitDepth == 8 && use_compression)
+    else if (bmp->imageHeader.compression == 1
+             && bmp->imageHeader.bitDepth == 8 && use_compression)
     {
         result_t rle_result = rl8_encode(pixelp, &bmp->imageHeader);
 
@@ -592,13 +605,15 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key, bool use_compr
         }
         size = *(u32_t*) rle_result.data;
     }
-    else if (bmp->imageHeader.compression == 2 && bmp->imageHeader.bitDepth != 4 && use_compression)
+    else if (bmp->imageHeader.compression == 2
+             && bmp->imageHeader.bitDepth != 4 && use_compression)
     {
         result.ok = false;
         result.data = "Attempting to compress non 4-bit file with RLE4.";
         return result;
     }
-    else if (bmp->imageHeader.compression == 2 && bmp->imageHeader.bitDepth == 4 && use_compression)
+    else if (bmp->imageHeader.compression == 2
+             && bmp->imageHeader.bitDepth == 4 && use_compression)
     {
         result.ok = false;
         result.data = "RLE-4 IS UNSUPPORTED";
@@ -665,7 +680,8 @@ result_t heap_write(heapBlock_t* dst, void* src, u64_t size, u32_t length) {
     if ((dst->length - dst->position) < write_length)
     {
         result.ok = false;
-        result.data = "NOT ENOUGH BYTES REMAINING IN HEAP BUFFER TO PREVENT OVERFLOW WHEN WRITING";
+        result.data = "NOT ENOUGH BYTES REMAINING IN HEAP BUFFER TO PREVENT"
+                      " OVERFLOW WHEN WRITING";
         return result;
     }
 

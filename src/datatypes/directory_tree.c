@@ -6,9 +6,9 @@
 // ---------------------------directory_tree.c----------------------------------
 
 // Standard Library Includes
-#include <stdlib.h> // exit
-#include <stdio.h> // printf
-#include <string.h> // strcmp
+#include <stdlib.h> // exit malloc
+#include <stdio.h> // printf snprintf
+#include <string.h> // strcmp strcpy strcat
 /*
  * This library include requires some more explanation. The primary purpose of
  * it is to allow the code to access the subdirectories of a directory to bulk
@@ -23,7 +23,7 @@
  */
 // Linux only includes
 #ifdef __linux__
-#include <dirent.h> // DIR, opendir, closedir, PATH_MAXs
+#include <dirent.h> // DIR, opendir, closedir, PATH_MAX
 #include <sys/stat.h> // S_ISDIR, stat
 
 // Windows only includes
@@ -36,8 +36,8 @@
 #include "directory_tree.h"
 
 // Other Includes
-#include "../util/realloc.h"
-#include "bool.h"
+#include "../util/realloc.h" // safe_realloc
+#include "bool.h" // true false bool
 
 //------------------------------------------------------------------------------
 // Private Function Declarations

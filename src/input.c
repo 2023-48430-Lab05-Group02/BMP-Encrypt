@@ -6,11 +6,12 @@
 // ----------------------------------input.c------------------------------------
 
 // Standard Library Includes
-#include <string.h>
-#include <stdlib.h> // strtol, _WIN64: PATH_MAX
+#include <string.h> // strcmp
+#include <stdlib.h> // strtol
 #ifdef __linux__
 #include <dirent.h> // PATH_MAX
 #endif
+// Windows uses PATH_MAX from mingw/cygwin limits.h
 
 // Public API
 #include "input.h"

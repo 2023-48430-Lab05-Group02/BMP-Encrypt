@@ -6,18 +6,21 @@
 // -----------------------------------int.c-------------------------------------
 
 // Standard Library Includes
-#include <stdlib.h>
-#include <string.h>
+#include <string.h> // strlen
+#include <stdio.h> // FILE printf
 
 // Public API Includes
 #include "int.h"
 
 // Other Includes
-#include "input.h"
-#include "encryption.h"
+#include "datatypes/bool.h" // bool true false
+#include "datatypes/short_sizes.h" // u32_t i32_t
+#include "datatypes/option.h" // option_t
 
-#include "main.h"
-#include "bmp.h"
+#include "input.h" // input_number input_file_read input_string input_file_write
+#include "encryption.h" // fnv1a_hash
+#include "bmp.h" // bmp bmp_from_file bmp_to_file
+#include "main.h" // encrypt_file decrypt_file compress_file decompress_file
 
 //------------------------------------------------------------------------------
 // Public Function Definitions

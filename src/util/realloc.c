@@ -6,8 +6,8 @@
 // --------------------------------realloc.c------------------------------------
 
 // Standard Library Includes
-#include <stdlib.h>
-#include <string.h>
+#include <stdlib.h> // realloc malloc
+#include <string.h> // memcpy
 
 // Public API Includes
 #include "realloc.h"

@@ -10,12 +10,12 @@
 #define BMP_H
 
 // Standard Library Includes
-#include <stdio.h>
+#include <stdio.h> // File
 
 // Other Includes
-#include "datatypes/result.h"
-#include "datatypes/option.h"
-#include "datatypes/short_sizes.h"
+#include "datatypes/result.h" // result_t
+#include "datatypes/option.h" // option_t
+#include "datatypes/short_sizes.h" // u8_t u16_t u32_t i32_t
 
 //------------------------------------------------------------------------------
 // Structs

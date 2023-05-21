@@ -10,7 +10,7 @@
 #define CMD_H
 
 // Other includes
-#include "main.h"
+#include "main.h" // ProgramState_t
 
 //------------------------------------------------------------------------------
 // Function Declarations

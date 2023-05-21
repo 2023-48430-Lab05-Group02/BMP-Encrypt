@@ -10,11 +10,11 @@
 #define INPUT_H
 
 // Standard Library Includes
-#include <stdio.h>
+#include <stdio.h> // FILE printf scanf snprintf fopen
 
 // Other Includes
-#include "datatypes/result.h"
-#include "short_sizes.h"
+#include "datatypes/bool.h" // bool true false
+#include "short_sizes.h" // i32_t
 
 //------------------------------------------------------------------------------
 // Function Declarations
