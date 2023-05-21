@@ -27,6 +27,11 @@
 // Begin Main
 //------------------------------------------------------------------------------
 int main(int argc, char* argv[]) {
+    #ifdef RUNTIME_DEBUG
+    // Disable Stdout buffering so in debug mode we can see the output.
+    setvbuf(stdout, NULL, _IONBF, 0);
+    #endif // RUNTIME_DEBUG
+
     ProgramState_t state = {
       false,
       false,
@@ -206,6 +211,8 @@ result_t encrypt_file(FILE* input, FILE* output, u32_t key, bool strict_verify, 
     }
 
     bmp_destructor(bmp);
+    fclose(input);
+    fclose(output);
 
     printf("Completed BMP encrypt.\n");
     result.ok = true;
@@ -237,6 +244,8 @@ result_t decrypt_file(FILE* input, FILE* output, u32_t key, bool strict_verify, 
     }
 
     bmp_destructor(bmp);
+    fclose(input);
+    fclose(output);
 
     printf("Completed BMP decrypt.\n");
     result.ok = true;
@@ -267,6 +276,8 @@ result_t compress_file(FILE* input, FILE* output, bool strict_verify) {
     }
 
     bmp_destructor(bmp);
+    fclose(input);
+    fclose(output);
 
     printf("Completed BMP compress.\n");
     result.ok = true;
@@ -296,6 +307,8 @@ result_t decompress_file(FILE* input, FILE* output, bool strict_verify) {
     }
 
     bmp_destructor(bmp);
+    fclose(input);
+    fclose(output);
 
     printf("Completed BMP decompress.\n");
     result.ok = true;

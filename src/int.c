@@ -25,6 +25,8 @@
 //------------------------------------------------------------------------------
 // Public Function Definitions
 //------------------------------------------------------------------------------
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 void main_interactive() {
     // Variables
     bool interactive = true;
@@ -151,7 +153,7 @@ void main_interactive() {
 
                 decrypt_file(input_file, output_file, encryption_key,
                              !ignore_nonfatal, compress);
-        }
+            }
                 break;
             case 3: // Compress
             {
@@ -246,12 +248,13 @@ void main_interactive() {
                            bmp->imageHeader.bitDepth, bmp->imageHeader.clrsUsed,
                            bmp->imageHeader.clrsImportant,
                            bmp->imageHeader.imageSize);
-                    free(bmp);
+                    bmp_destructor(bmp);
                 }
                 else
                 {
                     printf("An error occurred: %s\n", (char*) result.data);
                 }
+                fclose(input_file);
             }
                 break;
             case 6: // Force non-fatal mode change.
@@ -277,3 +280,4 @@ void main_interactive() {
         }
     }
 }
+#pragma GCC diagnostic pop
