@@ -144,14 +144,49 @@ void main_single(ProgramState_t state) {
     }
     else if (state.decrypt_mode) // Handle Decryption
     {
-        // TODO: Complete decrypt mode, compress mode, decompress mode...
+#ifdef RUNTIME_DEBUG
+        printf("Attempting file read from %s.\n", state.input_file_name);
+#endif
+
+        strcpy(output_file_name, state.input_file_name);
+        strcat(output_file_name, "d");
+
+        input_file = fopen(state.input_file_name, "r");
+        output_file = fopen(output_file_name, "w");
+
+        decrypt_file(input_file, output_file, state.encryption_key,
+                     !state.force_nonfatal_mode, state.compress_mode);
+
     }
     else if (state.compress_mode) // Handle compression
     {
+#ifdef RUNTIME_DEBUG
+        printf("Attempting file read from %s.\n", state.input_file_name);
+#endif
+
+        strcpy(output_file_name, state.input_file_name);
+        strcat(output_file_name, "c");
+
+        input_file = fopen(state.input_file_name, "r");
+        output_file = fopen(output_file_name, "w");
+
+        compress_file(input_file, output_file,
+                     !state.force_nonfatal_mode);
 
     }
     else if (state.decompress_mode) // Handle decompression
     {
+#ifdef RUNTIME_DEBUG
+        printf("Attempting file read from %s.\n", state.input_file_name);
+#endif
 
+        strcpy(output_file_name, state.input_file_name);
+        strcat(output_file_name, "b");
+
+        input_file = fopen(state.input_file_name, "r");
+        output_file = fopen(output_file_name, "w");
+
+        decompress_file(input_file, output_file,
+                      !state.force_nonfatal_mode);
     }
 }

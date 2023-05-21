@@ -581,7 +581,7 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
     if (bmp->colorTable.present)
     {
         heap_write(&heap, bmp->colorTable.data,
-                   sizeof(BMPColorTableHeader_t), 1);
+                   bmp->imageHeader.clrsUsed * 4, 1);
     }
 
     // Deal with compression encodings.
@@ -594,8 +594,7 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
         result.data = "Attempting to compress non 8-bit file with RLE8.";
         return result;
     }
-    else if (bmp->imageHeader.compression == 1
-             && bmp->imageHeader.bitDepth == 8 && use_compression)
+    else if (bmp->imageHeader.bitDepth == 8 && use_compression)
     {
         result_t rle_result = rl8_encode(pixelp, &bmp->imageHeader);
 
@@ -616,8 +615,7 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
         result.data = "Attempting to compress non 4-bit file with RLE4.";
         return result;
     }
-    else if (bmp->imageHeader.compression == 2
-             && bmp->imageHeader.bitDepth == 4 && use_compression)
+    else if (bmp->imageHeader.bitDepth == 4 && use_compression)
     {
         result.ok = false;
         result.data = "RLE-4 IS UNSUPPORTED";
