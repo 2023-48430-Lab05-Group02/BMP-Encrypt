@@ -98,7 +98,7 @@ bool input_bool() {
     printf("\n");
     return out;
 }
-void input_file_read(FILE* file) {
+void input_file_read(FILE** file) {
     bool valid = false;
     char format_string[10];
     snprintf(format_string, sizeof(format_string), "%%%ds", PATH_MAX);
@@ -107,7 +107,7 @@ void input_file_read(FILE* file) {
     while (!valid)
     {
         scanf(format_string, path);
-        file = fopen(path, "r");
+        *file = fopen(path, "r");
         if (file != NULL)
         {
             valid = true;
@@ -120,7 +120,7 @@ void input_file_read(FILE* file) {
     }
     printf("\n");
 }
-void input_file_write(FILE* file) {
+void input_file_write(FILE** file) {
     bool valid = false;
     char format_string[10];
     snprintf(format_string, sizeof(format_string), "%%%ds", PATH_MAX);
@@ -129,7 +129,7 @@ void input_file_write(FILE* file) {
     while (!valid)
     {
         scanf(format_string, path);
-        file = fopen(path, "w");
+        *file = fopen(path, "w");
         if (file != NULL)
         {
             valid = true;

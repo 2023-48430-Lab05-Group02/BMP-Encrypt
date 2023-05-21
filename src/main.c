@@ -7,6 +7,7 @@
 
 // Standard Library Includes
 #include <string.h> // strcmp
+#include <stdlib.h> // atoi
 
 // Public API Includes
 #include "main.h"

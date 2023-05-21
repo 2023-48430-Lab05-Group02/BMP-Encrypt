@@ -47,8 +47,8 @@ void input_string(char* str, int max_length);
 // Returns a bool.
 bool input_bool();
 // Returns result_t data of FILE*.
-void input_file_read(FILE* file);
+void input_file_read(FILE** file);
 // Returns result_t data of FILE*.
-void input_file_write(FILE* file);
+void input_file_write(FILE** file);
 
 #endif //INPUT_H

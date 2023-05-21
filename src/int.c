@@ -8,6 +8,7 @@
 // Standard Library Includes
 #include <string.h> // strlen
 #include <stdio.h> // FILE printf
+#include <stdlib.h> // exit
 
 // Public API Includes
 #include "int.h"
@@ -33,8 +34,8 @@ void main_interactive() {
     bool ignore_nonfatal = false;
     i32_t selected_option = -1;
 
-    FILE* input_file = NULL;
-    FILE* output_file = NULL;
+    FILE* input_file;
+    FILE* output_file;
 
     char password[PATH_MAX];
     u32_t encryption_key;
@@ -55,7 +56,7 @@ void main_interactive() {
             {
                 // Input file
                 printf("Please enter file name to encrypt >");
-                input_file_read(input_file);
+                input_file_read(&input_file);
 
                 // Encryption Key type
                 char choice[2];
@@ -97,7 +98,7 @@ void main_interactive() {
 
                 // Output file
                 printf("Please enter output file name >");
-                input_file_write(output_file);
+                input_file_write(&output_file);
 
                 encrypt_file(input_file, output_file, encryption_key,
                              !ignore_nonfatal, compress);
@@ -107,7 +108,7 @@ void main_interactive() {
             {
                 // Input file
                 printf("Please enter file name to decrypt >");
-                input_file_read(input_file);
+                input_file_read(&input_file);
 
                 // Encryption Key type
                 char choice[2];
@@ -149,7 +150,7 @@ void main_interactive() {
 
                 // Output file
                 printf("Please enter output file name >");
-                input_file_write(output_file);
+                input_file_write(&output_file);
 
                 decrypt_file(input_file, output_file, encryption_key,
                              !ignore_nonfatal, compress);
@@ -159,11 +160,11 @@ void main_interactive() {
             {
                 // Input file
                 printf("Please enter file name to compress >");
-                input_file_read(input_file);
+                input_file_read(&input_file);
 
                 // Output file
                 printf("Please enter output file name >");
-                input_file_write(output_file);
+                input_file_write(&output_file);
 
                 compress_file(input_file, output_file, !ignore_nonfatal);
             }
@@ -172,11 +173,11 @@ void main_interactive() {
             {
                 // Input file
                 printf("Please enter file name to decompress >");
-                input_file_read(input_file);
+                input_file_read(&input_file);
 
                 // Output file
                 printf("Please enter output file name >");
-                input_file_write(output_file);
+                input_file_write(&output_file);
 
                 decompress_file(input_file, output_file, !ignore_nonfatal);
             }
@@ -185,7 +186,7 @@ void main_interactive() {
             {
                 // Input file
                 printf("Please enter file name to get info of >");
-                input_file_read(input_file);
+                input_file_read(&input_file);
 
                 // Encryption Key type
                 char choice[2];
@@ -236,10 +237,10 @@ void main_interactive() {
                 {
                     BMP_t* bmp = result.data;
                     printf("File size: %u, Image width: %u,"
-                           " Image Height: %u, Compression State: %u,"
-                           " X Pixels Per Meter: %u, Y Pixels Per Meter: %u,"
+                           " Image Height: %u, Compression State: %u,\n"
+                           " X Pixels Per Meter: %u, Y Pixels Per Meter: %u,\n"
                            " Bit Depth: %u, (<8bit) colors used: %u,"
-                           " (<8bit) colors important: %u, image size: %u",
+                           " (<8bit) colors important: %u, image size: %u\n\n",
                            bmp->fileHeader.size, bmp->imageHeader.width,
                            bmp->imageHeader.height,
                            bmp->imageHeader.compression,
