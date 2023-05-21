@@ -554,6 +554,10 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
     {
         bmp->fileHeader.reserved1 = 1;
     }
+    else
+    {
+        bmp->fileHeader.reserved1 = 0;
+    }
 
     // Write the file header.
     fwrite(&bmp->fileHeader, sizeof(BMPFileHeader_t), 1, output_file);
