@@ -17,11 +17,12 @@
 #elif _WIN64
 #include <stdlib.h> // PATH_MAX
 #endif
+#include <stdio.h> // FILE
 
 // Other includes
-#include "datatypes/bool.h"
-#include "short_sizes.h"
-#include "datatypes/result.h"
+#include "datatypes/bool.h" // bool
+#include "short_sizes.h" //u32_t
+#include "datatypes/result.h" // result_t
 
 //------------------------------------------------------------------------------
 // Function Declarations

@@ -5,9 +5,17 @@
 // Primary File Contributor: Benjamin Hudson
 // ----------------------------------rle.c--------------------------------------
 
+// Standard Library Includes
+#include <stdlib.h> // malloc free
+
+// Public API Includes
 #include "rle.h"
-#include <stdlib.h>
-#include "./util/realloc.h"
+
+// Other Includes
+#include "datatypes/result.h" // result_t
+
+#include "bmp.h" // BMPImageHeader_t
+#include "util/realloc.h" // safe_realloc
 
 result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
     result_t result;

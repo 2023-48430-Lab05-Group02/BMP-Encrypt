@@ -6,8 +6,7 @@
 // ---------------------------encryption.c--------------------------------------
 
 // Standard Library Includes
-#include <stdio.h>
-#include <string.h>
+#include <string.h> // memcpy
 
 // Public API includes
 #include "encryption.h"

@@ -6,22 +6,25 @@
 // -----------------------------------cmd.c-------------------------------------
 
 // Standard Library Includes
-#include <stdio.h>
-#include <string.h>
+#include <stdio.h> // printf
+#include <string.h> // strcpy strcat fopen
+#include <stdlib.h> // malloc
 
 #ifdef __linux__
 #include <dirent.h> // PATH_MAX
 #endif
+// Windows uses PATH_MAX from mingw/cygwin limits.h
 
 // Public API Includes
 #include "cmd.h"
 
 // Other Includes
 #include "datatypes/directory_tree.h"
-#include "datatypes/short_sizes.h"
-#include "datatypes/bool.h"
-
-#include "main.h"
+/*
+ * directory_t file_iter_t directory_tree_new_from_dir_path
+ * directory_tree_get_files_recursive directory_tree_get_file_path
+ */
+#include "datatypes/short_sizes.h" // u32_t
 
 // Static Defines
 #define RUNTIME_DEBUG
@@ -32,8 +35,13 @@
 void main_batch(ProgramState_t state) {
     // Tree
     directory_t root_dir;
-    root_dir = directory_tree_new_from_dir_path(state.input_file_name);
-    file_iter_t complete_iter = directory_tree_get_files_recursive(&root_dir);
+    file_iter_t complete_iter;
+    complete_iter.files_length = 0;
+    complete_iter.files_capacity = 128;
+    complete_iter.files = malloc(complete_iter.files_capacity * sizeof(file_t*));
+
+    directory_tree_new_from_dir_path(&root_dir, state.input_file_name);
+    directory_tree_get_files_recursive(&complete_iter, &root_dir);
 
     // Variables
     char input_file_name[PATH_MAX];
@@ -41,7 +49,7 @@ void main_batch(ProgramState_t state) {
     FILE* input_file;
     FILE* output_file;
 
-    printf("Beginning batch processing at path: %s", root_dir.name);
+    printf("Beginning batch processing at path: %s\n", root_dir.name);
 
     if(state.encrypt_mode) // Handle Encryption
     {
@@ -51,9 +59,10 @@ void main_batch(ProgramState_t state) {
             strcpy(output_file_name, input_file_name);
             strcat(output_file_name, "e");
 
-            input_file = fopen(state.input_file_name, "r");
+            input_file = fopen(input_file_name, "r");
             output_file = fopen(output_file_name, "w");
 
+            printf("Processing %s\n", input_file_name);
             encrypt_file(input_file, output_file,
                          state.encryption_key,
                          !state.force_nonfatal_mode,
@@ -64,10 +73,11 @@ void main_batch(ProgramState_t state) {
     {
         for (u32_t i = 0; i < complete_iter.files_length; i++)
         {
-            strcpy(output_file_name, complete_iter.files[i]->name);
-            strcat(output_file_name, "e");
+            directory_tree_get_file_path(complete_iter.files[i], input_file_name);
+            strcpy(output_file_name, input_file_name);
+            strcat(output_file_name, "d");
 
-            input_file = fopen(state.input_file_name, "r");
+            input_file = fopen(input_file_name, "r");
             output_file = fopen(output_file_name, "w");
 
             decrypt_file(input_file, output_file,
@@ -80,10 +90,11 @@ void main_batch(ProgramState_t state) {
     {
         for (u32_t i = 0; i < complete_iter.files_length; i++)
         {
-            strcpy(output_file_name, complete_iter.files[i]->name);
-            strcat(output_file_name, "e");
+            directory_tree_get_file_path(complete_iter.files[i], input_file_name);
+            strcpy(output_file_name, input_file_name);
+            strcat(output_file_name, "c");
 
-            input_file = fopen(state.input_file_name, "r");
+            input_file = fopen(input_file_name, "r");
             output_file = fopen(output_file_name, "w");
 
             compress_file(input_file, output_file, !state.force_nonfatal_mode);
@@ -93,10 +104,11 @@ void main_batch(ProgramState_t state) {
     {
         for (u32_t i = 0; i < complete_iter.files_length; i++)
         {
-            strcpy(output_file_name, complete_iter.files[i]->name);
-            strcat(output_file_name, "e");
+            directory_tree_get_file_path(complete_iter.files[i], input_file_name);
+            strcpy(output_file_name, input_file_name);
+            strcat(output_file_name, "b");
 
-            input_file = fopen(state.input_file_name, "r");
+            input_file = fopen(input_file_name, "r");
             output_file = fopen(output_file_name, "w");
 
             decompress_file(input_file, output_file, !state.force_nonfatal_mode);
@@ -132,7 +144,7 @@ void main_single(ProgramState_t state) {
     }
     else if (state.decrypt_mode) // Handle Decryption
     {
-
+        // TODO: Complete decrypt mode, compress mode, decompress mode...
     }
     else if (state.compress_mode) // Handle compression
     {

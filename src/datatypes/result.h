@@ -10,14 +10,14 @@
 #define RESULT_H
 
 // Other Includes
-#include "bool.h"
+#include "bool.h" // bool
 
 //------------------------------------------------------------------------------
 // Structs
 //------------------------------------------------------------------------------
 /*
  * A way of representing whether a function has returned a valid result or not.
- * If ok is false, data must contain a char[] with an error message.
+ * If ok is false, data must contain a char array with an error message.
  * Else, data is the return value of the function.
  */
 typedef struct result_struct {

@@ -10,8 +10,8 @@
 #define ENCRYPTION_H
 
 // Other Includes
-#include "datatypes/result.h"
-#include "datatypes/short_sizes.h"
+#include "datatypes/result.h" // result_t
+#include "datatypes/short_sizes.h" // u32_t u64_t i8_t
 
 // Static Defines
 #define FNV_PRIME 16777619u

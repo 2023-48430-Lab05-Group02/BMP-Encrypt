@@ -10,11 +10,11 @@
 #define INPUT_H
 
 // Standard Library Includes
-#include <stdio.h>
+#include <stdio.h> // FILE printf scanf snprintf fopen
 
 // Other Includes
-#include "datatypes/result.h"
-#include "short_sizes.h"
+#include "datatypes/bool.h" // bool true false
+#include "short_sizes.h" // i32_t
 
 //------------------------------------------------------------------------------
 // Function Declarations
@@ -47,8 +47,8 @@ void input_string(char* str, int max_length);
 // Returns a bool.
 bool input_bool();
 // Returns result_t data of FILE*.
-void input_file_read(FILE* file);
+void input_file_read(FILE** file);
 // Returns result_t data of FILE*.
-void input_file_write(FILE* file);
+void input_file_write(FILE** file);
 
 #endif //INPUT_H

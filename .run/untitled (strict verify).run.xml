@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="untitled (strict verify)" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--encrypt --password test123 --batch --input ./valid" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/test" PASS_PARENT_ENVS_2="true" PROJECT_NAME="untitled" TARGET_NAME="untitled" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="untitled" RUN_TARGET_NAME="untitled">
+  <configuration default="false" name="untitled (strict verify)" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--decrypt --password test123 --batch --input valid" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/test" PASS_PARENT_ENVS_2="true" PROJECT_NAME="untitled" TARGET_NAME="untitled" CONFIG_NAME="Debug-MSYS2" RUN_TARGET_PROJECT_NAME="untitled" RUN_TARGET_NAME="untitled">
     <method v="2">
       <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
     </method>

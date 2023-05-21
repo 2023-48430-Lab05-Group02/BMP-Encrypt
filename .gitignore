@@ -70,3 +70,13 @@ venv/
 
 # test .path file
 test/.exepath
+
+# Encrypted BMP files...
+*.bmpe
+*.bmpee
+*.bmpeee
+*.bmpeeee
+*.bmpeeeee
+*.bmpeeeeee
+*.bmpeeeeeee
+*.bmpeeeeeeee

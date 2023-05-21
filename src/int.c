@@ -6,30 +6,36 @@
 // -----------------------------------int.c-------------------------------------
 
 // Standard Library Includes
-#include <stdlib.h>
-#include <string.h>
+#include <string.h> // strlen
+#include <stdio.h> // FILE printf
+#include <stdlib.h> // exit
 
 // Public API Includes
 #include "int.h"
 
 // Other Includes
-#include "input.h"
-#include "encryption.h"
+#include "datatypes/bool.h" // bool true false
+#include "datatypes/short_sizes.h" // u32_t i32_t
+#include "datatypes/option.h" // option_t
 
-#include "main.h"
-#include "bmp.h"
+#include "input.h" // input_number input_file_read input_string input_file_write
+#include "encryption.h" // fnv1a_hash
+#include "bmp.h" // bmp bmp_from_file bmp_to_file
+#include "main.h" // encrypt_file decrypt_file compress_file decompress_file
 
 //------------------------------------------------------------------------------
 // Public Function Definitions
 //------------------------------------------------------------------------------
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 void main_interactive() {
     // Variables
     bool interactive = true;
     bool ignore_nonfatal = false;
     i32_t selected_option = -1;
 
-    FILE* input_file = NULL;
-    FILE* output_file = NULL;
+    FILE* input_file;
+    FILE* output_file;
 
     char password[PATH_MAX];
     u32_t encryption_key;
@@ -50,7 +56,7 @@ void main_interactive() {
             {
                 // Input file
                 printf("Please enter file name to encrypt >");
-                input_file_read(input_file);
+                input_file_read(&input_file);
 
                 // Encryption Key type
                 char choice[2];
@@ -92,7 +98,7 @@ void main_interactive() {
 
                 // Output file
                 printf("Please enter output file name >");
-                input_file_write(output_file);
+                input_file_write(&output_file);
 
                 encrypt_file(input_file, output_file, encryption_key,
                              !ignore_nonfatal, compress);
@@ -102,7 +108,7 @@ void main_interactive() {
             {
                 // Input file
                 printf("Please enter file name to decrypt >");
-                input_file_read(input_file);
+                input_file_read(&input_file);
 
                 // Encryption Key type
                 char choice[2];
@@ -144,21 +150,21 @@ void main_interactive() {
 
                 // Output file
                 printf("Please enter output file name >");
-                input_file_write(output_file);
+                input_file_write(&output_file);
 
                 decrypt_file(input_file, output_file, encryption_key,
                              !ignore_nonfatal, compress);
-        }
+            }
                 break;
             case 3: // Compress
             {
                 // Input file
                 printf("Please enter file name to compress >");
-                input_file_read(input_file);
+                input_file_read(&input_file);
 
                 // Output file
                 printf("Please enter output file name >");
-                input_file_write(output_file);
+                input_file_write(&output_file);
 
                 compress_file(input_file, output_file, !ignore_nonfatal);
             }
@@ -167,11 +173,11 @@ void main_interactive() {
             {
                 // Input file
                 printf("Please enter file name to decompress >");
-                input_file_read(input_file);
+                input_file_read(&input_file);
 
                 // Output file
                 printf("Please enter output file name >");
-                input_file_write(output_file);
+                input_file_write(&output_file);
 
                 decompress_file(input_file, output_file, !ignore_nonfatal);
             }
@@ -180,7 +186,7 @@ void main_interactive() {
             {
                 // Input file
                 printf("Please enter file name to get info of >");
-                input_file_read(input_file);
+                input_file_read(&input_file);
 
                 // Encryption Key type
                 char choice[2];
@@ -231,10 +237,10 @@ void main_interactive() {
                 {
                     BMP_t* bmp = result.data;
                     printf("File size: %u, Image width: %u,"
-                           " Image Height: %u, Compression State: %u,"
-                           " X Pixels Per Meter: %u, Y Pixels Per Meter: %u,"
+                           " Image Height: %u, Compression State: %u,\n"
+                           " X Pixels Per Meter: %u, Y Pixels Per Meter: %u,\n"
                            " Bit Depth: %u, (<8bit) colors used: %u,"
-                           " (<8bit) colors important: %u, image size: %u",
+                           " (<8bit) colors important: %u, image size: %u\n\n",
                            bmp->fileHeader.size, bmp->imageHeader.width,
                            bmp->imageHeader.height,
                            bmp->imageHeader.compression,
@@ -243,12 +249,13 @@ void main_interactive() {
                            bmp->imageHeader.bitDepth, bmp->imageHeader.clrsUsed,
                            bmp->imageHeader.clrsImportant,
                            bmp->imageHeader.imageSize);
-                    free(bmp);
+                    bmp_destructor(bmp);
                 }
                 else
                 {
                     printf("An error occurred: %s\n", (char*) result.data);
                 }
+                fclose(input_file);
             }
                 break;
             case 6: // Force non-fatal mode change.
@@ -274,3 +281,4 @@ void main_interactive() {
         }
     }
 }
+#pragma GCC diagnostic pop

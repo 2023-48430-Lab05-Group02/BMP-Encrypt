@@ -18,8 +18,11 @@ The program contains three modes:
 This mode allows specifying an entire folder structure for conversion with
 encryption, decryption, compression or decompression. All files must use
 the same conversion parameters (e.g. encryption key). In encryption mode,
-"e" will be appended to file extension while in decryption mode, "e" will be
-removed.
+"e" will be appended to file extension. In decryption mode "d' will be
+appended. In compress mode "c" will be appended and in decompress mode
+"b' will be appended. This is so you can differentiate the input and
+output files from the program and in case of any damage to your files
+you will continue to have the original file.
 
 - Command line:
 

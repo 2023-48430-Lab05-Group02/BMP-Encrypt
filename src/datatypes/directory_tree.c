@@ -6,9 +6,9 @@
 // ---------------------------directory_tree.c----------------------------------
 
 // Standard Library Includes
-#include <stdlib.h> // exit
-#include <stdio.h> // printf
-#include <string.h> // strcmp
+#include <stdlib.h> // exit malloc
+#include <stdio.h> // printf snprintf
+#include <string.h> // strcmp strcpy strcat
 /*
  * This library include requires some more explanation. The primary purpose of
  * it is to allow the code to access the subdirectories of a directory to bulk
@@ -23,7 +23,7 @@
  */
 // Linux only includes
 #ifdef __linux__
-#include <dirent.h> // DIR, opendir, closedir, PATH_MAXs
+#include <dirent.h> // DIR, opendir, closedir, PATH_MAX
 #include <sys/stat.h> // S_ISDIR, stat
 
 // Windows only includes
@@ -36,8 +36,8 @@
 #include "directory_tree.h"
 
 // Other Includes
-#include "../util/realloc.h"
-#include "bool.h"
+#include "../util/realloc.h" // safe_realloc
+#include "bool.h" // true false bool
 
 //------------------------------------------------------------------------------
 // Private Function Declarations
@@ -47,42 +47,32 @@
  * with the files and directories physically at that location in the system.
  */
 void dir_to_dir_tree_recursive(directory_t* tree_dir);
-/*
- * Recursive function to handle turning the directory tree into a single
- * iterator.
- */
-void directory_tree_get_files_recurse(directory_t* dir, u32_t* capacity,
-                                      file_iter_t* iter);
 
 //------------------------------------------------------------------------------
 // Public Function Definitions
 //------------------------------------------------------------------------------
-directory_t directory_tree_new(char* raw_file_path) {
-    directory_t directory;
+void directory_tree_new(directory_t* dir, char* raw_file_path) {
+    strcpy(dir->name, raw_file_path);
+    dir->parent = NULL;
 
-    strcpy(directory.name, raw_file_path);
-    directory.parent = NULL;
+    dir->subdirectories = malloc(sizeof(directory_t) * 3);
+    dir->s_length = 0;
+    dir->s_capacity = 3;
 
-    directory.subdirectories = malloc(sizeof(directory_t) * 3);
-    directory.s_length = 0;
-    directory.s_capacity = 3;
-
-    directory.files = malloc(sizeof(file_t) * 16);
-    directory.f_length = 0;
-    directory.f_capacity = 16;
-
-    return directory;
+    dir->files = malloc(sizeof(file_t) * 16);
+    dir->f_length = 0;
+    dir->f_capacity = 16;
 }
-directory_t directory_tree_new_from_dir_path(char* dir_path) {
-    directory_t empty_dir = directory_tree_new(dir_path);
-    dir_to_dir_tree_recursive(&empty_dir);
-    return empty_dir;
+void directory_tree_new_from_dir_path(directory_t* dir, char* dir_path) {
+    directory_tree_new(dir,dir_path);
+    dir_to_dir_tree_recursive(dir);
 }
 directory_t* directory_tree_new_directory(char* name, directory_t* parent) {
     if (parent->s_capacity == parent->s_length)
     {
-        safe_realloc(parent->subdirectories,
+        parent->subdirectories = safe_realloc(parent->subdirectories,
                      parent->s_capacity * 2 * sizeof(directory_t));
+        parent->s_capacity *= 2;
     }
 
     directory_t* dir = &parent->subdirectories[parent->s_length];
@@ -104,8 +94,9 @@ directory_t* directory_tree_new_directory(char* name, directory_t* parent) {
 file_t* directory_tree_new_file(char* name, directory_t* parent) {
     if (parent->f_capacity == parent->f_length)
     {
-        safe_realloc(parent->files,
+        parent->files = safe_realloc(parent->files,
                      parent->f_capacity * 2 * sizeof(file_t));
+        parent->f_capacity *= 2;
     }
     file_t file;
     strcpy(file.name, name);
@@ -123,8 +114,7 @@ void directory_tree_get_file_path(file_t* file, char* name) {
 
     strcpy(right, file->name);
 
-    while (!reached_root) {
-        if (parent->parent != NULL)
+        while (!reached_root)
         {
             strcpy(left, parent->name);
             #ifdef _WIN64
@@ -134,13 +124,16 @@ void directory_tree_get_file_path(file_t* file, char* name) {
             #endif // _WIN64,__linux__
             strcat(left, right);
             strcpy(right, left);
-            parent = parent->parent;
+            if (parent->parent == NULL)
+            {
+                reached_root = true;
+            }
+            else
+            {
+                parent = parent->parent;
+            }
         }
-        else
-        {
-            reached_root = true;
-        }
-    }
+
     strcpy(name, right);
 }
 void directory_tree_get_directory_path(directory_t* directory, char* name) {
@@ -170,29 +163,33 @@ void directory_tree_get_directory_path(directory_t* directory, char* name) {
     }
     strcpy(name, right);
 }
-file_iter_t directory_tree_get_files(directory_t* parent) {
-    file_iter_t file_list = {
-        &parent->files,
-        parent->f_length
-    };
-    return file_list;
-
+void directory_tree_get_files(file_iter_t* iter, directory_t* parent) {
+    iter->files = &parent->files;
+    iter->files_length = parent->f_length;
 }
-file_iter_t directory_tree_get_files_recursive(directory_t* parent) {
-    u32_t capacity = 16;
-    file_iter_t file_list = {
-            malloc(capacity * sizeof(file_t*)),
-            0,
-    };
-    directory_tree_get_files_recurse(parent, &capacity, &file_list);
-    return file_list;
+void directory_tree_get_files_recursive(file_iter_t* iter, directory_t* dir) {
+    // Realloc if necessary
+    if (iter->files_capacity <= (iter->files_length + dir->f_length))
+    {
+        iter->files = safe_realloc(iter->files, iter->files_capacity
+                                 + dir->f_length * 2 * (u32_t) sizeof(file_t*));
+        iter->files_capacity = iter->files_capacity * 2;
+    }
+    // Add files from this dir.
+    for (u32_t i = 0; i < dir->f_length; i++)
+    {
+        iter->files[i + iter->files_length] = &dir->files[i];
+    }
+    iter->files_length += dir->f_length;
+    // Iterate sub directories
+    for (u32_t i = 0; i < dir->s_length; i++)
+    {
+        directory_tree_get_files_recursive(iter, &dir->subdirectories[i]);
+    }
 }
-directory_iter_t directory_tree_get_subdirectories(directory_t* parent) {
-    directory_iter_t directory_list = {
-        parent->subdirectories,
-        parent->s_length
-    };
-    return directory_list;
+void directory_tree_get_subdirectories(directory_iter_t* iter, directory_t* parent) {
+    iter->directories = parent->subdirectories;
+    iter->directories_length = parent->s_length;
 }
 void directory_tree_deconstructor(directory_t* directory) {
     free(directory->files);
@@ -201,7 +198,10 @@ void directory_tree_deconstructor(directory_t* directory) {
         directory_tree_deconstructor(&directory->subdirectories[i]);
     }
     free(directory->subdirectories);
-    free(directory);
+    // Free only if not root directory since that is always stack allocated.
+    if (directory->parent != NULL) {
+        free(directory);
+    }
 }
 //------------------------------------------------------------------------------
 // Private Function Definitions
@@ -306,23 +306,3 @@ void dir_to_dir_tree_recursive(directory_t* tree_dir) {
     closedir(directory);
 }
 #endif // _WIN64,__linux__
-void directory_tree_get_files_recurse(directory_t* dir, u32_t* capacity,
-                                      file_iter_t* iter) {
-    // Realloc if necessary
-    if (*capacity < iter->files_length + dir->f_length)
-    {
-        safe_realloc(iter->files, *capacity * 2 * sizeof(file_t*));
-        *capacity *= 2;
-    }
-    // Add files from this dir.
-    for (u32_t i = 0; i < dir->f_length; i++)
-    {
-        iter->files[i + iter->files_length] = &dir->files[i];
-    }
-    iter->files_length += dir->f_length;
-    // Iterate sub directories
-    for (u32_t i = 0; i < dir->s_length; i++)
-    {
-        directory_tree_get_files_recurse(&dir->subdirectories[i], capacity, iter);
-    }
-}
