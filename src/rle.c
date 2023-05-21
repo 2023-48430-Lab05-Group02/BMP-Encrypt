@@ -28,16 +28,16 @@ result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
 
     for (hight_count = 0; hight_count < (int)image_header->height; hight_count++) { //main for loop
 
-        width_count = 0;
+        width_count = 1;
 
         while (width_count < (int)image_header->width) { //loop for every line of bmp
             current_byte = *data[hight_count * (int)image_header->width + width_count];
             count = 1;
 
-            while (count < 255 && width_count + count < (int)image_header->width //gets amount of same pixels in row for encoded mode
-                   && *data[hight_count * (int)image_header->width + width_count
-                   + count] == *data[hight_count * (int)image_header->width +
-                   width_count]) {
+            while (count < 255
+            && width_count + count < (int)image_header->width
+            && *data[(hight_count * (int)image_header->width) + width_count + count]
+            == *data[hight_count * (int)image_header->width + width_count]) {
 
                 count++;
             }
