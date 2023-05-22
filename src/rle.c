@@ -92,9 +92,10 @@ result_t rl8_encode(u8_t** input, BMPImageHeader_t* image_header) {
 
             width_count += count;
         }
-
-        output[location_counter++] = (unsigned char)0; //end of line character
-        output[location_counter++] = (unsigned char)0;
+        if (height_count < image_header->height) {
+            output[location_counter++] = (unsigned char) 0; //end of line character
+            output[location_counter++] = (unsigned char) 0;
+        }
     }
     output[location_counter++] = (unsigned char)0; //end of file character
     output[location_counter++] = (unsigned char)1;
