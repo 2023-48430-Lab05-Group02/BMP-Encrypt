@@ -26,8 +26,6 @@
 //------------------------------------------------------------------------------
 // Public Function Definitions
 //------------------------------------------------------------------------------
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 void main_interactive() {
     // Variables
     bool interactive = true;
@@ -281,4 +279,3 @@ void main_interactive() {
         }
     }
 }
-#pragma GCC diagnostic pop

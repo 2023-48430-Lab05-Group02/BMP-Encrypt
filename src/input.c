@@ -78,13 +78,13 @@ bool input_bool() {
         scanf("%5s", state);
 
         if (state[0] == '0' || strcmp(state, "false") == 0
-                            || strcmp(state, "yes") == 0)
+                            || strcmp(state, "no") == 0)
         {
             valid = true;
             out = false;
         }
         else if (state[0] == '1' || strcmp(state, "true") == 0
-                                 || strcmp(state, "no") == 0)
+                                 || strcmp(state, "yes") == 0)
         {
             valid = true;
             out = true;

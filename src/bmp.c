@@ -385,32 +385,30 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
         return result;
     }
 
-    //-- Processing File: RLE Decode Branch of Pixel Data Read
-    // If the data is RLE8/RLE4 encoded, read and decode the data.
+    //-- Handle reading pixel data.
+    // Read the rest of the file.
+    u8_t** pixelp = &bmp->pixelData;
+    bmp->pixelData = malloc(bmp_raw.length - bmp_raw.position);
+    read_result = heap_read(bmp->pixelData, &bmp_raw,
+                            bmp_raw.length - bmp_raw.position, 1);
+
+    // Return error if heap read fails.
+    if (read_result.ok == false)
+    {
+        char* error = malloc(256);
+        strcpy(error, "RLE DECODE FAILURE: ");
+        result.data = strcat(error, read_result.data);
+        return result;
+    }
+
+    // If compressed:
     if (bmp->imageHeader.compression == 1 || bmp->imageHeader.compression == 2)
     {
-        // Variables
-        bmp->pixelData = malloc(bmp->imageHeader.imageSize);
         result_t rle_result;
-
-        // Read the BMP Pixel Data.
-        read_result = heap_read(bmp->pixelData, &bmp_raw,
-                                bmp->imageHeader.imageSize, 1);
-
-        // Return error if heap read fails.
-        if (read_result.ok == false)
-        {
-            char* error = malloc(256);
-            strcpy(error, "RLE DECODE FAILURE: ");
-            result.data = strcat(error, read_result.data);
-            return result;
-        }
-
-        // Apply the appropriate kind of decode.
         if (bmp->imageHeader.compression == 1)
         {
             // RLE8
-            rle_result = rl8_decode(&bmp->pixelData, &bmp->imageHeader);
+            rle_result = rl8_decode(pixelp, &bmp->imageHeader);
         }
         else if (bmp->imageHeader.compression == 2)
         {
@@ -419,7 +417,6 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
             result.data = "RLE-4 IS UNSUPPORTED";
             return result;
         }
-
         // Check to make sure the RLE result is okay.
         if (rle_result.ok == false)
         {
@@ -428,13 +425,9 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
             result.data = strcat(error, rle_result.data);
             return result;
         }
-
-        // Set pixel bytes and image size to uncompressed quantity.
-        bmp->imageHeader.imageSize = *(u32_t*) rle_result.data;
-        pixel_bytes = *(u32_t*) rle_result.data;
+        bmp->imageHeader.compression = 0;
     }
-    //-- Processing File: Uncompressed data branch of pixel read
-    else
+    else // Uncompressed branch.
     {
         // Determine the final number of bytes of data we should be receiving
         u32_t bits_per_row = bmp->imageHeader.width * bmp->imageHeader.bitDepth;
@@ -447,7 +440,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
             }
         }
         f64_t bits_count = (f64_t)bits_per_row
-                * (f64_t) abs(bmp->imageHeader.height);
+                           * (f64_t) abs(bmp->imageHeader.height);
         f64_t bytes = bits_count / 8.0;
 
         // Check if the number of bytes in the image is larger than a 4 byte int
@@ -468,22 +461,8 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
             result.data = "PIXEL DATA SIZE DOES NOT MATCH EXPECTED";
             return result;
         }
-
-        bmp->pixelData = malloc(pixel_bytes);
-
-        // Read the BMP Pixel Data.
-        read_result = heap_read(bmp->pixelData, &bmp_raw,
-                                pixel_bytes, 1);
-
-        // Return error if heap read fails.
-        if (read_result.ok == false)
-        {
-            char* error = malloc(256);
-            strcpy(error, "PIXEL DATA READ FAILURE: ");
-            result.data = strcat(error, read_result.data);
-            return result;
-        }
     }
+    bmp->pixelData = *pixelp;
 
     // DEBUG: Print first 4 bytes of pixel data for manual inspection.
     #ifdef RUNTIME_DEBUG
