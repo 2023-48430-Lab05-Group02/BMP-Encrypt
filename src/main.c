@@ -205,7 +205,7 @@ result_t encrypt_file(FILE* input, FILE* output, u32_t key, bool strict_verify, 
     result_t output_result = bmp_to_file(output, bmp, key_option, compress); /*gets bmp.c to creat new file, encrypts in process*/
     if(!output_result.ok) /*checks output is ok*/
     {
-        printf("An error occurred encoding BMP Data: %s\n", (char*) input_result.data);
+        printf("An error occurred encoding BMP Data: %s\n", (char*) output_result.data);
         result.ok = false;
         result.data = NULL;
         return result;
@@ -238,7 +238,7 @@ result_t decrypt_file(FILE* input, FILE* output, u32_t key, bool strict_verify, 
     result_t output_result = bmp_to_file(output, bmp, no_key_option, compress); /*gets bmp.c to creat new file*/
     if(!output_result.ok) /*checks output is ok*/
     {
-        printf("An error occurred encoding BMP Data: %s\n", (char*) input_result.data);
+        printf("An error occurred encoding BMP Data: %s\n", (char*) output_result.data);
         result.ok = false;
         result.data = NULL;
         return result;
@@ -270,7 +270,7 @@ result_t compress_file(FILE* input, FILE* output, bool strict_verify) {
     result_t output_result = bmp_to_file(output, bmp, no_key_option, true); /*gets bmp.c to creat new file, compresses in process*/
     if(!output_result.ok) /*checks output is ok*/
     {
-        printf("An error occurred encoding BMP Data: %s\n", (char*) input_result.data);
+        printf("An error occurred encoding BMP Data: %s\n", (char*) output_result.data);
         result.ok = false;
         result.data = NULL;
         return result;
@@ -301,7 +301,7 @@ result_t decompress_file(FILE* input, FILE* output, bool strict_verify) {
     result_t output_result = bmp_to_file(output, bmp, no_key_option, false); /*gets bmp.c to creat new file*/
     if(!output_result.ok) /*checks output is ok*/
     {
-        printf("An error occurred encoding BMP Data: %s\n", (char*) input_result.data);
+        printf("An error occurred encoding BMP Data: %s\n", (char*) output_result.data);
         result.ok = false;
         result.data = NULL;
         return result;

@@ -5,10 +5,10 @@
 ### Encrypt Mode
 
 #### 1 BPP
-Encrypt produces filesize much smaller than expected. No Errors.
+Fixed
 
 #### 8 BPP
-Also broken
+Fixed
 
 #### 32 BPP
 Encrypt produces correct file that can then be decrypted successfully.
@@ -16,10 +16,10 @@ Encrypt produces correct file that can then be decrypted successfully.
 ### Decrypt Mode
 
 #### 1 BPP
-Unable to produce 1 BPP encrypted file for testing.
+Fixed
 
 #### 8 BPP
-Unable to produce 8 BPP encrypted file for testing.
+Fixed
 
 #### 32 BPP
 Successful decrypt performed.

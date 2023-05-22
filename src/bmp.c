@@ -527,6 +527,7 @@ result_t bmp_from_file(FILE* input_file, option_t key, bool strict_verify) {
 result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
                      bool use_compression) {
     result_t result;
+    result_t heap_op_result;
 
     // Add to file header that this file is encrypted.
     if (key.present)
@@ -537,12 +538,6 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
     {
         bmp->fileHeader.reserved1 = 0;
     }
-
-    // Allocate a heap block to use as temporary buffer for encryption/decryption.
-    heapBlock_t heap;
-    heap.position = 0;
-    heap.length = bmp->fileHeader.size - 14;
-    heap.data = malloc(bmp->fileHeader.size - 14);
 
     // Reset file size.
     bmp->fileHeader.size = 54;
@@ -594,27 +589,82 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
     // Add Pixel size to overall file size.
     bmp->fileHeader.size += bmp->imageHeader.imageSize;
 
+    // Add optional extras to the file size.
+    if (bmp->colorTable.present)
+    {
+        bmp->fileHeader.size += bmp->imageHeader.clrsUsed * 4;
+    }
+    if (bmp->bitMaskTable.present)
+    {
+        bmp->fileHeader.size += sizeof(BMPMaskTableHeader_t);
+    }
+
     //-- ASSEMBLE THE FILE
 
+    // Allocate a heap block to use as temporary buffer for encryption/decryption.
+    heapBlock_t heap;
+    heap.position = 0;
+    heap.length = bmp->fileHeader.size - 14;
+    heap.data = malloc(bmp->fileHeader.size - 14);
+
+    #ifdef RUNTIME_DEBUG
+    printf("Allocating heap buffer with size: %u\n",
+           bmp->fileHeader.size - 14);
+    #endif
+
     // Write the Image Data Header
-    heap_write(&heap, &bmp->imageHeader,
+    heap_op_result = heap_write(&heap, &bmp->imageHeader,
                sizeof(BMPImageHeader_t), 1);
+    // Handle Errors
+    if (!heap_op_result.ok)
+    {
+        result.ok = false;
+        result.data = malloc(256);
+        strcpy(result.data, "Heap Write Error: ");
+        strcat(result.data, heap_op_result.data);
+        return result;
+    }
 
     // Write color table or mask table if present.
     if (bmp->bitMaskTable.present)
     {
-        heap_write(&heap, bmp->bitMaskTable.data,
+        heap_op_result = heap_write(&heap, bmp->bitMaskTable.data,
                    sizeof(BMPMaskTableHeader_t), 1);
-        bmp->fileHeader.size += sizeof(BMPMaskTableHeader_t);
+        // Handle Errors
+        if (!heap_op_result.ok)
+        {
+            result.ok = false;
+            result.data = malloc(256);
+            strcpy(result.data, "Heap Write Error: ");
+            strcat(result.data, heap_op_result.data);
+            return result;
+        }
     }
     if (bmp->colorTable.present)
     {
-        heap_write(&heap, bmp->colorTable.data,
+        heap_op_result = heap_write(&heap, bmp->colorTable.data,
                    bmp->imageHeader.clrsUsed * 4, 1);
-        bmp->fileHeader.size += bmp->imageHeader.clrsUsed * 4;
+        // Handle Errors
+        if (!heap_op_result.ok)
+        {
+            result.ok = false;
+            result.data = malloc(256);
+            strcpy(result.data, "Heap Write Error: ");
+            strcat(result.data, heap_op_result.data);
+            return result;
+        }
     }
 
-    heap_write(&heap, *pixelp, bmp->imageHeader.imageSize, 1);
+    heap_op_result = heap_write(&heap, *pixelp, bmp->imageHeader.imageSize, 1);
+    // Handle Errors
+    if (!heap_op_result.ok)
+    {
+        result.ok = false;
+        result.data = malloc(256);
+        strcpy(result.data, "Heap Write Error: ");
+        strcat(result.data, heap_op_result.data);
+        return result;
+    }
 
     // Finally handle encryption.
     if (key.present)

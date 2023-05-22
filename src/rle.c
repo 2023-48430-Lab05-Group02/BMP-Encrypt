@@ -104,14 +104,15 @@ result_t rl8_encode(u8_t** input, BMPImageHeader_t* image_header) {
     result.ok = true;
     output = safe_realloc(output, (u32_t)location_counter); //put new data in allocation right size for it
     if (output == NULL){ //test if realloc worked
-        result.ok =false;
+        result.data = "REALLOC FAIL";
+        result.ok = false;
     }
-    result.data = output;
 
     *input = output;
 
     free(data); //free the allocation with input data
 
+    result.ok = true;
     return result;
 }
 result_t rl8_decode(u8_t** input, BMPImageHeader_t* image_header) {
@@ -180,13 +181,14 @@ result_t rl8_decode(u8_t** input, BMPImageHeader_t* image_header) {
     image_header->imageSize = (u32_t)location_counter; //set new image length
     result.ok = true;
     if (output == NULL){ //test if realloc worked
-        result.ok =false;
+        result.data = "REALLOC FAIL";
+        result.ok = false;
     }
-    result.data = output;
 
     *input = output;
 
     free(data); //free input allocation
 
+    result.ok = true;
     return result;
 }
