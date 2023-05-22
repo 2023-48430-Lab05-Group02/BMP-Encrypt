@@ -17,34 +17,38 @@
 #include "bmp.h" // BMPImageHeader_t
 #include "util/realloc.h" // safe_realloc
 
-result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
+result_t rl8_encode(u8_t** input, BMPImageHeader_t* image_header) {
     result_t result;
-
+    u8_t* data = *input; //solves mysteryx seg fault, I HATE THAT THIS WORKS
     int hight_count, width_count, count; //initialize variables
     unsigned char *output, current_byte;
-    output = malloc(sizeof(*data) * 2); //max decompression can be 2 * the size
+    output = malloc((image_header->imageSize * 2) + (u32_t)(image_header->height * 2) + 2); //max decompression can be 2 * the size
+
     /* add test to see if output true*/
     int location_counter = 0;
 
+
     for (hight_count = 0; hight_count < (int)image_header->height; hight_count++) { //main for loop
 
-        width_count = 1;
+        width_count = 0;
 
         while (width_count < (int)image_header->width) { //loop for every line of bmp
-            current_byte = *data[hight_count * (int)image_header->width + width_count];
+            current_byte = data[(hight_count * (int)image_header->width) + width_count];
             count = 1;
 
             while (count < 255
             && width_count + count < (int)image_header->width
-            && *data[(hight_count * (int)image_header->width) + width_count + count]
-            == *data[hight_count * (int)image_header->width + width_count]) {
+            && data[(hight_count * (int)image_header->width) + width_count + count]
+            == current_byte) {
 
                 count++;
             }
 
             if (count == 1){ //if no same pixels must be in absolute mode
                 int subcount = 0; //finds amount of unique pixels in row
-                while (*data[hight_count * (int)image_header->width + width_count + count + subcount] != *data[hight_count * (int)image_header->width + width_count + count + subcount + 1] && width_count + count + subcount < (int)image_header->width){
+                while (data[hight_count * (int)image_header->width + width_count + count + subcount]
+                != data[hight_count * (int)image_header->width + width_count + count + subcount + 1]
+                && width_count + count + subcount < (int)image_header->width){
 
                     subcount++;
                 }
@@ -57,7 +61,7 @@ result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
                 }
 
                 else { // write data in absolute mode
-                    if (*data[hight_count * (int) image_header->width + width_count + count + subcount] == *data[hight_count * (int) image_header->width +width_count + count + subcount + 1]) {
+                    if (data[hight_count * (int) image_header->width + width_count + count + subcount] == data[hight_count * (int) image_header->width +width_count + count + subcount + 1]) {
 
                         subcount--; /*accounts for if last byte is start of encoded mode */
                     }
@@ -68,7 +72,7 @@ result_t rl8_encode(u8_t** data, BMPImageHeader_t* image_header) {
                     int subsubcount = 0;
                     while (subsubcount <= subcount) { //adds colour data in absolute mode
 
-                        output[location_counter++] = *data[hight_count * (int) image_header->width + width_count +subsubcount];
+                        output[location_counter++] = data[hight_count * (int) image_header->width + width_count +subsubcount];
                         subsubcount++;
                     }
                     if(subcount % 2 != 0) { //fills out to 16bit word length

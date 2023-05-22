@@ -596,6 +596,7 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
     }
     else if (bmp->imageHeader.bitDepth == 8 && use_compression)
     {
+
         result_t rle_result = rl8_encode(pixelp, &bmp->imageHeader);
 
         // Handle Errors
