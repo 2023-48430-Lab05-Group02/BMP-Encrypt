@@ -559,9 +559,6 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
         bmp->fileHeader.reserved1 = 0;
     }
 
-    // Write the file header.
-    fwrite(&bmp->fileHeader, sizeof(BMPFileHeader_t), 1, output_file);
-
     // Allocate a heap block to use as temporary buffer for encryption/decryption.
     heapBlock_t heap;
     heap.position = 0;
@@ -572,16 +569,21 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
     heap_write(&heap, &bmp->imageHeader,
                sizeof(BMPImageHeader_t), 1);
 
+    // Reset file size.
+    bmp->fileHeader.size = 54;
+
     // Write color table or mask table if present.
     if (bmp->bitMaskTable.present)
     {
         heap_write(&heap, bmp->bitMaskTable.data,
                    sizeof(BMPMaskTableHeader_t), 1);
+        bmp->fileHeader.size += sizeof(BMPMaskTableHeader_t);
     }
     if (bmp->colorTable.present)
     {
         heap_write(&heap, bmp->colorTable.data,
                    bmp->imageHeader.clrsUsed * 4, 1);
+        bmp->fileHeader.size += bmp->imageHeader.clrsUsed * 4;
     }
 
     // Deal with compression encodings.
@@ -628,6 +630,9 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
     // No need to do any special processing for compression 3 bitfields or no
     // compression at all.
 
+    // Add Pixel size to overall file size.
+    bmp->fileHeader.size += bmp->imageHeader.imageSize;
+
     heap_write(&heap, *pixelp, bmp->imageHeader.imageSize, 1);
 
     // Finally handle encryption.
@@ -635,6 +640,9 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
     {
         xor_encrypt(heap.data, heap.length, key.data);
     }
+
+    // Write the file header.
+    fwrite(&bmp->fileHeader, sizeof(BMPFileHeader_t), 1, output_file);
 
     // And write the heap buffer to the file.
     fwrite(heap.data, heap.position, 1, output_file);
