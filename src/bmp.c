@@ -586,7 +586,6 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
 
     // Deal with compression encodings.
     u8_t** pixelp = &bmp->pixelData;
-    u32_t size = bmp->imageHeader.imageSize;
     if (bmp->imageHeader.compression == 1
         && bmp->imageHeader.bitDepth != 8 && use_compression)
     {
@@ -607,7 +606,6 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
             strcpy(result.data, "RLE8 Encode Error: ");
             strcat(result.data, rle_result.data);
         }
-        size = *(u32_t*) rle_result.data;
     }
     else if (bmp->imageHeader.compression == 2
              && bmp->imageHeader.bitDepth != 4 && use_compression)
@@ -625,7 +623,7 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
     // No need to do any special processing for compression 3 bitfields or no
     // compression at all.
 
-    heap_write(&heap, *pixelp, size, 1);
+    heap_write(&heap, *pixelp, bmp->imageHeader.imageSize, 1);
 
     // Finally handle encryption.
     if (key.present)
