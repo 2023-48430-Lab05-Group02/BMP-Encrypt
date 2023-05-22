@@ -606,6 +606,7 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
             strcpy(result.data, "RLE8 Encode Error: ");
             strcat(result.data, rle_result.data);
         }
+        bmp->imageHeader.compression = 1;
     }
     else if (bmp->imageHeader.compression == 2
              && bmp->imageHeader.bitDepth != 4 && use_compression)
@@ -619,6 +620,10 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
         result.ok = false;
         result.data = "RLE-4 IS UNSUPPORTED";
         return result;
+    }
+    else
+    {
+        bmp->imageHeader.compression = 0;
     }
     // No need to do any special processing for compression 3 bitfields or no
     // compression at all.
