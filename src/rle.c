@@ -107,30 +107,33 @@ result_t rl8_encode(u8_t** input, BMPImageHeader_t* image_header) {
     }
     result.data = output;
 
+    *input = output;
+
     free(data); //free the allocation with input data
 
     return result;
 }
-result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
+result_t rl8_decode(u8_t** input, BMPImageHeader_t* image_header) {
     result_t result;
+    u8_t* data = *input;
     unsigned char *output, current_byte; //initialise variables
     output = malloc(1);
     int step = 1;
     int location_counter = 0;
 
-    while (*data[step] != 0 && *data[step + 1] != 1){ //main loop
-        current_byte = *data[step];
+    while (data[step] != 0 && data[step + 1] != 1){ //main loop
+        current_byte = data[step];
 
         if (current_byte == 0) { //tests for absolute mode
 
-            if (*data[step + 1] < 3) { //test for escape character or delta
+            if (data[step + 1] < 3) { //test for escape character or delta
                 step++;
 
-                if (*data[step] == 2){ //test for delta
+                if (data[step] == 2){ //test for delta
 
                     step++;
                     int section_size;
-                    section_size = *data[step]+((int)image_header->width * *data[step + 1]); //calculate amount of pixels to be skipped
+                    section_size = data[step]+((int)image_header->width * data[step + 1]); //calculate amount of pixels to be skipped
                     output = safe_realloc(output, (u32_t)(location_counter + section_size + 1)); //allocates new memory
                     step++;
 
@@ -144,12 +147,12 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
 
             else{ //if absolute mode
                 step++;
-                int subcount = *data[step]; //gets amount of unique pixels
+                int subcount = data[step]; //gets amount of unique pixels
                 output = safe_realloc(output, (u32_t)(location_counter + subcount)); //allocates new memory
 
                 step++;
                 while (subcount > 0){ //takes data from absolute mode
-                    output[location_counter++] = *data[step];
+                    output[location_counter++] = data[step];
                     step++;
                     subcount--;
                 }
@@ -164,7 +167,7 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
                 output = safe_realloc(output, (u32_t)
                 (location_counter + 1));
 
-                output[location_counter++] = *data[step + 1];
+                output[location_counter++] = data[step + 1];
                 subcount--;
             }
             step ++;
@@ -179,6 +182,9 @@ result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header) {
         result.ok =false;
     }
     result.data = output;
+
+    *input = output;
+
     free(data); //free input allocation
 
     return result;

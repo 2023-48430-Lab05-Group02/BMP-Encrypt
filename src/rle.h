@@ -28,6 +28,6 @@
  * Or result_t with ok = false and data char[] error message.
  */
 result_t rl8_encode(u8_t** input, BMPImageHeader_t* image_header);
-result_t rl8_decode(u8_t** data, BMPImageHeader_t* image_header);
+result_t rl8_decode(u8_t** input, BMPImageHeader_t* image_header);
 
 #endif //RLE_H
