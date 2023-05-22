@@ -119,10 +119,10 @@ result_t rl8_decode(u8_t** input, BMPImageHeader_t* image_header) {
     u8_t* data = *input;
     unsigned char *output, current_byte; //initialise variables
     output = malloc(1);
-    int step = 1;
+    int step = 0;
     int location_counter = 0;
 
-    while (data[step] != 0 && data[step + 1] != 1){ //main loop
+    while (!(data[step] == 0 && data[step + 1] == 1)){ //main loop
         current_byte = data[step];
 
         if (current_byte == 0) { //tests for absolute mode
