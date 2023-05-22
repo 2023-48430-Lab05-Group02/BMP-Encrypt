@@ -565,26 +565,8 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
     heap.length = bmp->fileHeader.size - 14;
     heap.data = malloc(bmp->fileHeader.size - 14);
 
-    // Write the Image Data Header
-    heap_write(&heap, &bmp->imageHeader,
-               sizeof(BMPImageHeader_t), 1);
-
     // Reset file size.
     bmp->fileHeader.size = 54;
-
-    // Write color table or mask table if present.
-    if (bmp->bitMaskTable.present)
-    {
-        heap_write(&heap, bmp->bitMaskTable.data,
-                   sizeof(BMPMaskTableHeader_t), 1);
-        bmp->fileHeader.size += sizeof(BMPMaskTableHeader_t);
-    }
-    if (bmp->colorTable.present)
-    {
-        heap_write(&heap, bmp->colorTable.data,
-                   bmp->imageHeader.clrsUsed * 4, 1);
-        bmp->fileHeader.size += bmp->imageHeader.clrsUsed * 4;
-    }
 
     // Deal with compression encodings.
     u8_t** pixelp = &bmp->pixelData;
@@ -632,6 +614,26 @@ result_t bmp_to_file(FILE* output_file, BMP_t* bmp, option_t key,
 
     // Add Pixel size to overall file size.
     bmp->fileHeader.size += bmp->imageHeader.imageSize;
+
+    //-- ASSEMBLE THE FILE
+
+    // Write the Image Data Header
+    heap_write(&heap, &bmp->imageHeader,
+               sizeof(BMPImageHeader_t), 1);
+
+    // Write color table or mask table if present.
+    if (bmp->bitMaskTable.present)
+    {
+        heap_write(&heap, bmp->bitMaskTable.data,
+                   sizeof(BMPMaskTableHeader_t), 1);
+        bmp->fileHeader.size += sizeof(BMPMaskTableHeader_t);
+    }
+    if (bmp->colorTable.present)
+    {
+        heap_write(&heap, bmp->colorTable.data,
+                   bmp->imageHeader.clrsUsed * 4, 1);
+        bmp->fileHeader.size += bmp->imageHeader.clrsUsed * 4;
+    }
 
     heap_write(&heap, *pixelp, bmp->imageHeader.imageSize, 1);
 
