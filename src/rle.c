@@ -32,36 +32,44 @@ result_t rl8_encode(u8_t** input, BMPImageHeader_t* image_header) {
 
         width_count = 0;
 
-        while (width_count < (int)image_header->width) { //loop for every line of bmp
-            current_byte = data[(hight_count * (int)image_header->width) + width_count];
+        while (width_count <
+               (int) image_header->width) { //loop for every line of bmp
+            current_byte = data[(hight_count * (int) image_header->width) +
+                                width_count];
             count = 1;
 
             while (count < 255
-            && width_count + count < (int)image_header->width
-            && data[(hight_count * (int)image_header->width) + width_count + count]
-            == current_byte) {
+                   && width_count + count < (int) image_header->width
+                   && data[(hight_count * (int) image_header->width) +
+                           width_count + count]
+                      == current_byte) {
 
                 count++;
             }
 
-            if (count == 1){ //if no same pixels must be in absolute mode
+            if (count == 1) { //if no same pixels must be in absolute mode
                 int subcount = 0; //finds amount of unique pixels in row
-                while (data[hight_count * (int)image_header->width + width_count + count + subcount]
-                != data[hight_count * (int)image_header->width + width_count + count + subcount + 1]
-                && width_count + count + subcount < (int)image_header->width){
+                while (data[hight_count * (int) image_header->width +
+                            width_count + count + subcount]
+                       != data[hight_count * (int) image_header->width +
+                               width_count + count + subcount + 1]
+                       && width_count + count + subcount <
+                          (int) image_header->width) {
 
                     subcount++;
                 }
 
                 subcount++; /*accounts for initial byte*/
 
-                if (subcount < 3){ //if < 3 will be recognised as an escape sequence or delta
-                    output[location_counter++] = (unsigned char)count;
+                if (subcount <
+                    3) { //if < 3 will be recognised as an escape sequence or delta
+                    output[location_counter++] = (unsigned char) count;
                     output[location_counter++] = current_byte;
-                }
-
-                else { // write data in absolute mode
-                    if (data[hight_count * (int) image_header->width + width_count + count + subcount] == data[hight_count * (int) image_header->width +width_count + count + subcount + 1]) {
+                } else { // write data in absolute mode
+                    if (data[hight_count * (int) image_header->width +
+                             width_count + count + subcount] ==
+                        data[hight_count * (int) image_header->width +
+                             width_count + count + subcount + 1]) {
 
                         subcount--; /*accounts for if last byte is start of encoded mode */
                     }
@@ -70,12 +78,15 @@ result_t rl8_encode(u8_t** input, BMPImageHeader_t* image_header) {
                     output[location_counter++] = (unsigned char) subcount; /*states number of bytes to follow */
 
                     int subsubcount = 0;
-                    while (subsubcount <= subcount) { //adds colour data in absolute mode
+                    while (subsubcount <=
+                           subcount) { //adds colour data in absolute mode
 
-                        output[location_counter++] = data[hight_count * (int) image_header->width + width_count +subsubcount];
+                        output[location_counter++] = data[
+                                hight_count * (int) image_header->width +
+                                width_count + subsubcount];
                         subsubcount++;
                     }
-                    if(subcount % 2 != 0) { //fills out to 16bit word length
+                    if (subcount % 2 != 0) { //fills out to 16bit word length
                         output[location_counter++] = (unsigned char) 0;
                     }
 
@@ -84,17 +95,17 @@ result_t rl8_encode(u8_t** input, BMPImageHeader_t* image_header) {
                     width_count += subcount;
                 }
 
-            }
-            else { //if there is a row of like pixels, puts the amount then the colour for absolute mode
-                output[location_counter++] = (unsigned char)count;
+            } else { //if there is a row of like pixels, puts the amount then the colour for absolute mode
+                output[location_counter++] = (unsigned char) count;
                 output[location_counter++] = current_byte;
             }
 
             width_count += count;
         }
-
-        output[location_counter++] = (unsigned char)0; //end of line character
-        output[location_counter++] = (unsigned char)0;
+        if (hight_count < image_header->height) {
+            output[location_counter++] = (unsigned char) 0; //end of line character
+            output[location_counter++] = (unsigned char) 0;
+        }
     }
     output[location_counter++] = (unsigned char)0; //end of file character
     output[location_counter++] = (unsigned char)1;
