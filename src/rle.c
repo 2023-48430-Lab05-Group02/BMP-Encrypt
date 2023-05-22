@@ -19,7 +19,7 @@
 
 result_t rl8_encode(u8_t** input, BMPImageHeader_t* image_header) {
     result_t result;
-    u8_t* data = *input; //solves mysteryx seg fault, I HATE THAT THIS WORKS
+    u8_t* data = *input; //solves mystery seg fault, I HATE THAT THIS WORKS
     int hight_count, width_count, count; //initialize variables
     unsigned char *output, current_byte;
     output = malloc((image_header->imageSize * 2) + (u32_t)(image_header->height * 2) + 2); //max decompression can be 2 * the size
