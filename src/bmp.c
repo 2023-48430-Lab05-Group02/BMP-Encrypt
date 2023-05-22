@@ -651,7 +651,7 @@ void bmp_destructor(BMP_t* bmp) {
     {
         free(bmp->bitMaskTable.data);
     }
-    //free(bmp->pixelData);
+    free(bmp->pixelData);
     free(bmp);
 }
 //------------------------------------------------------------------------------

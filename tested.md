@@ -27,14 +27,10 @@ Successful decrypt performed.
 ### Compress Mode
 
 #### 1 BPP
-Some serious issues with this:
-![img.png](img.png)
-[Right is original, left is after "compression"]
+Fixed
 
 #### 8 BPP
-Serious issues here as well, compression seems rather broken:
-![img_1.png](img_1.png)
-[Right is original, left is after "compression"]
+Fixed
 
 #### 32 BPP
 Working as expected.
