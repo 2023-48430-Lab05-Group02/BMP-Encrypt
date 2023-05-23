@@ -21,9 +21,21 @@
 //------------------------------------------------------------------------------
 void print_menu_help() {
     printf("------------BMP Encrypt------------\n"
-           "");
+           "Short Arg | Name/Short Description       | Long Arg\n"
+           "*  -B     | Batch                        | --batch\n"
+           "*  -I     | Interactive                  | --interactive\n"
+           "*  -E     | Encrypt                      | --encrypt\n"
+           "*  -D     | Decrypt                      | --decrypt\n"
+           "*  -K     | Key                          | --key\n"
+           "*  -P     | Password                     | --password\n"
+           "*  -I     | Input file                   | --input\n"
+           "*  -FF    | Ignore non-fatal errors      | --force-nonfatal\n"
+           "*  -FC    | Force compress output file   | --force-compress\n"
+           "*  -FD    | Force decompress output file | --force-decompress\n"
+    );
 }
 void print_menu_interactive() {
+    printf("------------BMP Encrypt------------\n");
     printf("Which action would you like to perform:\n");
     printf("1. Encrypt\n"
            "2. Decrypt\n"

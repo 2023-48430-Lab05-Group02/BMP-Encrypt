@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="untitled (strict verify)" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--decrypt --password test123 --input 8bpp-320x240-encrypted.bmp" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/test" PASS_PARENT_ENVS_2="true" PROJECT_NAME="untitled" TARGET_NAME="untitled" CONFIG_NAME="Debug-MSYS2" RUN_TARGET_PROJECT_NAME="untitled" RUN_TARGET_NAME="untitled">
+  <configuration default="false" name="untitled (strict verify)" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--decrypt --password test123 --input 8bpp-320x240-encrypted.bmp" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/test" PASS_PARENT_ENVS_2="true" PROJECT_NAME="bmpe" TARGET_NAME="bmpe" CONFIG_NAME="Debug-MSYS2" RUN_TARGET_PROJECT_NAME="bmpe" RUN_TARGET_NAME="bmpe">
     <method v="2">
       <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
     </method>

@@ -3,6 +3,8 @@
 // Lab: 5, Group: 2
 // Copyright © 2023 Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad.
 // Primary File Contributor: Macauley Lim
+// ----------------------------Compile Instructions-----------------------------
+//
 // -----------------------------------main.c------------------------------------
 
 // Standard Library Includes
