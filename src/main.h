@@ -4,8 +4,23 @@
 // Copyright © 2023 Benjamin Hudson, Joseph Rico, Macauley Lim, Osmaan Ahmad.
 // Primary File Contributor: Macauley Lim
 // ----------------------------Compile Instructions-----------------------------
-//
-// -----------------------------------main.c------------------------------------
+/* Ed already has all the required dependencies installed for the program to
+ * function. If compiling on Linux, Cmake 3.23+, Make, GCC12+ are required.
+ * These should be provided by the "build-essentials" package or your
+ * distribution's equivalent. On Windows, compiling using MSVC may or may not
+ * be functional and is untested. The recommended environment is Mingw with the
+ * packages above installed.
+ *
+ * To compile the program, a CMakeLists.txt file has been provided for Cmake to
+ * use. To use CMake to produce a new make file if necessary, it can be run
+ * using "cmake .". This will regenerate the Makefile. Then, to build the
+ * program, simply run "make". A makefile capable of running on Ed has already
+ * been provided for the developers' convenience. After running make,
+ * an executable, "bmpe" or "bmpe.exe" [Windows] will be present in the root
+ * directory. You can run it using ./bmpe. Interactive mode can be entered
+ * by adding -I. Otherwise, see the report or help message for other options.
+*/
+// -----------------------------------main.h------------------------------------
 
 // Include guards
 #ifndef MAIN_H
@@ -21,7 +36,7 @@
 
 // Other includes
 #include "datatypes/bool.h" // bool
-#include "short_sizes.h" //u32_t
+#include "datatypes/short_sizes.h" //u32_t
 #include "datatypes/result.h" // result_t
 
 //------------------------------------------------------------------------------
